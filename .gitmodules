@@ -1,0 +1,3 @@
+[submodule "Amstelvar"]
+	path = Amstelvar
+	url = git@github.com:TypeNetwork/Amstelvar
