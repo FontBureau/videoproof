@@ -1,0 +1,18 @@
+
+#proof *[data-axes]::after {
+	text-align: left;
+}
+
+#proof-grid {
+	padding: 1rem;
+	word-break: break-all;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+}
+
+#proof-grid span {
+	display: inline-block;
+	margin-right: 0.3em;
+	min-width: 1em;
+	line-height: 1.5;
+}

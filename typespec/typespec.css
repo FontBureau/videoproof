@@ -1,0 +1,108 @@
+
+/* CONTROLS */
+
+#currently-editing {
+	background-color: #EEF;
+	padding: 2px 0.5em;
+}
+
+
+/* LABELS */
+
+#typespec article label {
+	font-family: "MomentumSansText", sans-serif;
+	font-size: 16px;
+	text-align: right;
+}
+
+#typespec .H1 label {
+/* 	font-size: 2.5rem; */
+}
+
+#typespec .H2 label {
+/* 	font-size: 2rem; */
+}
+
+#typespec .H3 label {
+/* 	font-size: 1.5rem; */
+}
+
+#typespec .T1 label {
+/* 	font-size: 1.25rem; */
+}
+
+#typespec .T2 label {
+/* 	font-size: 1rem; */
+}
+
+
+
+
+/* STYLES LAYOUT */
+
+#typespec article {
+	display: table;
+	border-collapse: collapse;
+	margin-bottom: 2rem;
+	font-feature-settings: "rvrn" 1;
+	text-rendering: optimizeLegibility;
+}
+
+#typespec article h1, #typespec article h2, #typespec article h3 {
+	font-weight: normal;
+}
+
+#typespec article > .row {
+	display: table-row;
+}
+
+#typespec article > .row > * {
+	display: table-cell;
+	vertical-align: baseline;
+	position: relative;
+	border: none;
+	padding: 0.5rem 0.5rem 1rem;
+}
+
+#typespec article p {
+	font-size: inherit;
+	line-height: inherit;
+	font-variation-settings: inherit;
+}
+
+#typespec article .current {
+	background-color: #EEF;
+}
+
+/* DEFAULTS */
+
+#typespec article {
+	max-width: 40em;
+	font-size: 14pt;
+}
+
+#typespec article h1 {
+	font-size: 64pt;
+	line-height: 60pt;
+}
+
+#typespec article h2 {
+	font-size: 36pt;
+	line-height: 36pt;
+}
+
+#typespec article h3 {
+	font-size: 18pt;
+	line-height: 24pt;
+}
+
+#typespec article .T1-target {
+	font-size: 18pt;
+	line-height: 24pt;
+}
+
+#typespec article .T2-target {
+	font-size: inherit;
+	line-height: 20pt;
+}
+

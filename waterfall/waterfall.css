@@ -1,0 +1,28 @@
+
+#waterfall *[data-axes]::after {
+	text-align: left;
+	white-space: nowrap;
+}
+
+#waterfallll {
+	line-height: 1.2 !important;
+	list-style: none;
+}
+
+#waterfallll li {
+	position: relative;
+	list-style: none;
+	padding-left: 2rem;
+}
+
+#waterfallll li::before {
+	content: attr(data-size);
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 10px;
+	font-family: "MomentumSansText", sans-serif;
+	vertical-align: baseline;
+}

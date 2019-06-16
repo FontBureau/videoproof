@@ -1,0 +1,401 @@
+
+body.dropzone::after {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(64, 64, 64, 0.9);
+	color: white;
+	font-size: 3rem;
+	text-align: center;
+	vertical-align: middle;
+	padding: 40% 1rem;
+	content: "Drop your own font file(s) here";
+	z-index: 1000;
+}
+
+#reset {
+	color: red;
+}
+
+#typetools *:focus {
+	outline: none;
+}
+
+/* CONTROLS */
+
+#typetools aside.content-filters {
+	padding-top: 2.625rem;
+}
+
+#controls > * {
+	margin: 1em 0;
+}
+
+#controls select {
+	font-size: 80%;
+}
+
+#controls input {
+	vertical-align: baseline;
+}
+
+#controls label {
+	display: inline;
+	line-height: inherit;
+}
+
+#controls h3 {
+	border: none;
+	margin-bottom: 0;
+}
+
+#controls h3 + * {
+	margin-top: 0;
+}
+
+#controls h3.inline {
+	display: inline;
+}
+
+#controls h3 label {
+	font: inherit;
+	color: inherit;
+	line-height: inherit;
+	text-transform: inherit;
+	letter-spacing: inherit;
+}
+
+#controls #add-your-own-button {
+	font-size: 0.8rem;
+	display: block;
+	text-align: right;
+}
+
+#controls #custom-fonts {
+	position: absolute;
+	left: -200vw;
+}
+
+
+#controls #size-leading {
+	display: grid;
+	grid-template-columns: min-content 3.5em min-content 3.5em auto 3.5em;
+	grid-template-rows: auto;
+	align-items: center;
+	grid-gap: 0.3em;
+}
+
+#controls #size-leading input {
+	font-size: 85%;
+	width: 4em;
+}
+
+#controls #size-leading label[for="edit-leading"] {
+	text-align: right;
+}
+
+/* sliders */
+
+#controls .slider {
+	display: grid;
+	grid-template-columns: auto 3.5em;
+	grid-template-rows: auto auto;
+	grid-gap: 0.5em 0;
+	align-items: baseline;
+	width: 100%;
+	padding: 0;
+	text-indent: 0;
+	margin: 1em 0;
+}
+
+#controls label {
+	text-transform: none;
+	color: black;
+	font-weight: bold;
+	letter-spacing: 0;
+}
+
+#controls .slider label abbr {
+	color: #999;
+}
+
+#controls .slider label abbr::before {
+	content: "(";
+}
+
+#controls .slider label abbr::after {
+	content: ")";
+}
+
+#controls .slider input[type=number] {
+	border: none;
+	color: #999;
+	width: 100%;
+	max-width: 4em;
+	text-align: right;
+}
+
+#controls .slider input[type=range] {
+	grid-column: 1/3;
+	grid-row: 2;
+	width: 100%;
+/*
+	width: calc(100% - 6em);
+	margin: 0 3em;
+*/
+}
+
+
+// SLIDERS see form-controls.scss
+
+/*
+input[type=range]::before {
+	display: none;
+	position: absolute;
+	right: 105%;
+	content: attr(min);
+}
+
+input[type=range]::after {
+	display: none;
+	position: absolute;
+	left: 105%;
+	content: attr(max);
+}
+*/
+
+input[type=range][disabled] {
+	opacity: 0.5;
+}
+
+
+/* alignment */
+
+#alignment-color {
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	grid-template-rows: auto auto;
+	grid-gap: 0.25rem;
+}
+
+#alignment-color label:first-of-type {
+	grid-row: 1;
+	grid-column: 1/5;
+}
+
+#alignment-color label[for=foreground] {
+	grid-row: 1;
+	grid-column: 5;
+}
+
+#alignment-color label[for=background] {
+	grid-row: 1;
+	grid-column: 6;
+}
+
+#alignment-color > * {
+	grid-row: 2;
+}
+
+#alignment-color input {
+	position: absolute;
+	left: -200vw;
+}
+
+#alignment-color input + label {
+	display: inline-block;
+	width: 0.333in;
+	height: 0.333in;
+	color: transparent;
+	background-size: cover;
+	background-position: center center;
+}
+
+#alignment-color #align-left + label {
+	background-image: url("data:image/svg+xml,%3Csvg width='9' height='9' viewBox='0 0 9 9' xmlns='http%3A//www.w3.org/2000/svg' xmlns%3Axlink='http%3A//www.w3.org/1999/xlink'%3E%3Cline stroke='%23CCC' x1='0' y1='2' x2='6' y2='2'/%3E%3Cstyle%3Eline{stroke-width:0.8}%3C/style%3E%3Cline stroke='%23CCC' x1='0' y1='4' x2='8' y2='4'/%3E%3Cline stroke='%23CCC' x1='0' y1='6' x2='4' y2='6'/%3E%3C/svg%3E");
+}
+
+#alignment-color #align-center + label {
+	background-image: url("data:image/svg+xml,%3Csvg width='9' height='9' viewBox='0 0 9 9' xmlns='http%3A//www.w3.org/2000/svg' xmlns%3Axlink='http%3A//www.w3.org/1999/xlink'%3E%3Cline stroke='%23CCC' x1='1' y1='2' x2='7' y2='2'/%3E%3Cstyle%3Eline{stroke-width:0.8}%3C/style%3E%3Cline stroke='%23CCC' x1='0' y1='4' x2='8' y2='4'/%3E%3Cline stroke='%23CCC' x1='2' y1='6' x2='6' y2='6'/%3E%3C/svg%3E");
+}
+
+#alignment-color #align-right + label {
+	background-image: url("data:image/svg+xml,%3Csvg width='9' height='9' viewBox='0 0 9 9' xmlns='http%3A//www.w3.org/2000/svg' xmlns%3Axlink='http%3A//www.w3.org/1999/xlink'%3E%3Cline stroke='%23CCC' x1='8' y1='2' x2='2' y2='2'/%3E%3Cstyle%3Eline{stroke-width:0.8}%3C/style%3E%3Cline stroke='%23CCC' x1='8' y1='4' x2='0' y2='4'/%3E%3Cline stroke='%23CCC' x1='8' y1='6' x2='4' y2='6'/%3E%3C/svg%3E");
+}
+
+#alignment-color #align-left:checked + label {
+	background-image: url("data:image/svg+xml,%3Csvg width='9' height='9' viewBox='0 0 9 9' xmlns='http%3A//www.w3.org/2000/svg' xmlns%3Axlink='http%3A//www.w3.org/1999/xlink'%3E%3Cline stroke='black' x1='0' y1='2' x2='6' y2='2'/%3E%3Cstyle%3Eline{stroke-width:0.8}%3C/style%3E%3Cline stroke='black' x1='0' y1='4' x2='8' y2='4'/%3E%3Cline stroke='black' x1='0' y1='6' x2='4' y2='6'/%3E%3C/svg%3E");
+}
+
+#alignment-color #align-center:checked + label {
+	background-image: url("data:image/svg+xml,%3Csvg width='9' height='9' viewBox='0 0 9 9' xmlns='http%3A//www.w3.org/2000/svg' xmlns%3Axlink='http%3A//www.w3.org/1999/xlink'%3E%3Cline stroke='black' x1='1' y1='2' x2='7' y2='2'/%3E%3Cstyle%3Eline{stroke-width:0.8}%3C/style%3E%3Cline stroke='black' x1='0' y1='4' x2='8' y2='4'/%3E%3Cline stroke='black' x1='2' y1='6' x2='6' y2='6'/%3E%3C/svg%3E");
+}
+
+#alignment-color #align-right:checked + label {
+	background-image: url("data:image/svg+xml,%3Csvg width='9' height='9' viewBox='0 0 9 9' xmlns='http%3A//www.w3.org/2000/svg' xmlns%3Axlink='http%3A//www.w3.org/1999/xlink'%3E%3Cline stroke='black' x1='8' y1='2' x2='2' y2='2'/%3E%3Cstyle%3Eline{stroke-width:0.8}%3C/style%3E%3Cline stroke='black' x1='8' y1='4' x2='0' y2='4'/%3E%3Cline stroke='black' x1='8' y1='6' x2='4' y2='6'/%3E%3C/svg%3E");
+}
+
+#alignment-color #align-justify + label {
+	background-image: url("data:image/svg+xml,%3Csvg width='9' height='9' viewBox='0 0 9 9' xmlns='http%3A//www.w3.org/2000/svg' xmlns%3Axlink='http%3A//www.w3.org/1999/xlink'%3E%3Cline stroke='%23CCC' x1='0' y1='2' x2='8' y2='2'/%3E%3Cstyle%3Eline{stroke-width:0.8}%3C/style%3E%3Cline stroke='%23CCC' x1='0' y1='4' x2='8' y2='4'/%3E%3Cline stroke='%23CCC' x1='0' y1='6' x2='8' y2='6'/%3E%3C/svg%3E");
+}
+
+#alignment-color #align-justify:checked + label {
+	background-image: url("data:image/svg+xml,%3Csvg width='9' height='9' viewBox='0 0 9 9' xmlns='http%3A//www.w3.org/2000/svg' xmlns%3Axlink='http%3A//www.w3.org/1999/xlink'%3E%3Cline stroke='black' x1='0' y1='2' x2='8' y2='2'/%3E%3Cstyle%3Eline{stroke-width:0.8}%3C/style%3E%3Cline stroke='black' x1='0' y1='4' x2='8' y2='4'/%3E%3Cline stroke='black' x1='0' y1='6' x2='8' y2='6'/%3E%3C/svg%3E");
+}
+
+/* color */
+
+#alignment-color .color .sp-replacer {
+	margin: 0.03in 0 0;
+	padding: 0;
+	border: none;
+}
+
+#alignment-color .color .sp-preview {
+	position: relative;
+	margin: 0;
+	height: 0.23in;
+	width: 0.25in;
+}
+
+#alignment-color .color .sp-dd {
+	display: none;
+}
+
+
+/* ANIMATIION */
+
+#animation-controls {
+	display: grid;
+	grid-template-columns: 2em 1fr 3em 1fr 2em;
+	align-items: center;
+}
+
+#animation-controls > * {
+	width: 100% !important;
+	text-align: center;
+	vertical-align: middle;
+}
+
+#animation-controls button.back {
+	grid-column: 2;
+	justify-self: end;
+}
+
+#animation-controls button.play-pause {
+	grid-column: 3;
+}
+
+#animation-controls button.forward {
+	grid-column: 4;
+	justify-self: center;
+}
+
+#animation-controls #animation-scrub {
+	grid-column: 1 / 5;
+	grid-row: 2;
+}
+
+#animation-controls label[for="animation-scrub"] {
+	grid-column: 5;
+	grid-row: 2;
+	height: 1em;
+}
+
+#animation-controls label[for="animation-scrub"]::after {
+	content: "%";
+}
+
+/* CSS OUTPUT */
+
+#css-output {
+	margin-top: 1rem;
+	padding: 1rem;
+	white-space: pre;
+	-moz-tab-size: 2;
+	tab-size: 2;
+	overflow: scroll;
+	line-height: 1.3;
+	font-family: Monaco, Consolas, Courier, monospace;
+	border: 3px double blue;
+	max-width: 100%;
+}
+
+#css-output::before {
+	display: block;
+	content: "/* CSS */";
+	margin-bottom: 1em;
+}
+
+
+/* colophon */
+
+output#aniparams {
+	color: #09f;
+	font-size: 0.75rem;
+	font-family: Verdana;
+	font-weight: normal;
+	font-style: normal;
+	font-feature-settings: normal;
+	line-height: 1.2;
+	padding-left: 1rem;
+}
+
+.blue-params {
+	display: none;
+/*
+	position: absolute;
+	top: 100%;
+	right: 0;
+	max-width: 100%;
+*/
+	color: #09f;
+	font-size: 0.75rem;
+/* 	content: attr(data-style) ": size " attr(data-size-leading) ", " attr(data-axes); */
+	font-family: Verdana;
+	font-weight: normal;
+	font-style: normal;
+	font-feature-settings: normal;
+	line-height: 1.2;
+	text-align: right;
+}
+
+.show-parameters .blue-params, .show-parameters.blue-params {
+	display: block;
+}
+
+
+
+/* CONTENT */
+
+#mode-sections {
+	padding: 1rem;
+}
+
+#mode-sections > section {
+	display: none;
+}
+
+#mode-sections > section:first-child {
+	display: block;
+}
+
+#mode-sections figure {
+	width: 100%;
+	max-width: none;
+	margin: 0;
+}
+
+.variable-demo-target {
+	text-rendering: optimizeLegibility;
+	animation-name: videoproof;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-duration: 60s;
+}
+
+.paused .variable-demo-target {
+	animation-play-state: paused !important;
+}
