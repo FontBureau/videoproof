@@ -308,6 +308,10 @@ input[type=range][disabled] {
 	content: "%";
 }
 
+input#animation-duration {
+	width: 4em;
+}
+
 /* CSS OUTPUT */
 
 #css-output {

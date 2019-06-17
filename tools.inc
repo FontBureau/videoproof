@@ -468,6 +468,9 @@ class TypeTools {
 			<input type='range' min="0" max="100" step="0.1" id='animation-scrub' value='0'>
 			<label for='animation-scrub'>0</label>
 		</div>
+		
+		<label for='animation-duration'>Full cycle</label>
+		<input id='animation-duration' type='number' min="1" step="1" value="60">sec
 <?php
 		return "";
 	}

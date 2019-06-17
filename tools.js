@@ -306,8 +306,8 @@
 			});
 		});
 		//close the loop
-		keyframes.push(keyframes[0]);
 		var perstep = 100 / keyframes.length;
+		keyframes.push(keyframes[0]);
 		$.each(keyframes, function(i, axes) {
 			var percent = Math.round(10*(perstep * i))/10;
 			keyframes[i] = percent + '% { font-variation-settings: ' + axesToFVS(axes) + '; outline-offset: ' + percent + 'px; }';
@@ -342,6 +342,10 @@
 			$('html').toggleClass('paused');
 			videoproofOutputInterval ? stop() : start();
 		});
+		
+		$('#animation-duration').on('change input', function() {
+			$('.variable-demo-target').css('animation-duration', this.value + 's');
+		}).trigger('change');
 		
 		start();
 	}
