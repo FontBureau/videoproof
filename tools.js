@@ -320,8 +320,9 @@
 		var mode = $('#select-mode')[0];
 		
 		var start = function() {
+			$('html').removeClass('paused');
 			videoproofOutputInterval = setInterval(function() {
-				var css = videoproofActiveTarget ? getComputedStyle(videoproofActiveTarget) : {}
+				var css = videoproofActiveTarget ? getComputedStyle(videoproofActiveTarget) : {};
 				var percent = parseFloat(css.outlineOffset);
 				var bits = [
 					mode.options[mode.selectedIndex].textContent,
@@ -334,20 +335,31 @@
 		};
 		
 		var stop = function() {
-			clearInterval(videoproofOutputInterval);
-			videoproofOutputInterval = null;
+			$('html').addClass('paused');
+			if (videoproofOutputInterval) {
+				clearInterval(videoproofOutputInterval);
+				videoproofOutputInterval = null;
+			}
 		};
 		
 		$('#animation-controls button.play-pause').on('click', function() {
-			$('html').toggleClass('paused');
 			videoproofOutputInterval ? stop() : start();
 		});
 		
 		$('#animation-duration').on('change input', function() {
 			$('.variable-demo-target').css('animation-duration', this.value + 's');
 		}).trigger('change');
+
+		//the animation doesn't take without this, and I don't know why
+		$('.variable-demo-target').css('animation-name', 'none');
+		setTimeout(function() {
+			$('.variable-demo-target').css('animation-name', '');
+			stop();
+		}, 100);
+
+		$('#first-play').css('cursor', 'pointer').on('click', start);
 		
-		start();
+// 		start();
 	}
 
 	$(window).on('load', function() {
@@ -361,13 +373,6 @@
 
 			$('#select-mode').trigger('change');
 			$('#select-font').trigger('change');
-			
-			setTimeout(function() {
-				$('.variable-demo-target').css('animation-name', 'none');
-				setTimeout(function() {
-					$('.variable-demo-target').css('animation-name', '');
-				}, 100);
-			}, 100);
 		},100);
 	});
 })();

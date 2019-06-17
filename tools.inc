@@ -7,7 +7,7 @@ class TypeTools {
 	
 	private $tools = array(
 // 		'typespec' => "Ramp", 
-		'proof' => "Glyphs",
+		'proof' => "Array",
 		'waterfall' => "Waterfall",
 //		'grid' => "Grid",
 		'logopogo' => "Logo Pogo", 
@@ -288,7 +288,7 @@ class TypeTools {
 			
 			<div class="content-main">
 				<a class="content-options-show-filters" href="#">Sidebar</a>
-				<output id='aniparams'>Hello param</output>
+				<output id='aniparams'>This animation will eat your CPU alive (depending on browser), so it doesn’t auto-start. Ready? <span id='first-play'>▶️</span></output>
 
 <?php
 		return "";
