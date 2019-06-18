@@ -147,7 +147,7 @@ class TypeTools {
 <?php foreach ($this->fontinfo as $filebase => $info): ?>
 			@font-face {
 				font-family: "<?= $info->name ?> Demo";
-				src: url("/fonts/<?= $filebase ?>.woff") format("woff");
+				src: url("/fonts/<?= $filebase ?>.woff2") format("woff2");
 				font-weight: 100 900;
 			}
 <?php endforeach; ?>

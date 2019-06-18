@@ -280,7 +280,7 @@
 				mimetype = "application/font-sfnt";
 				format = "opentype";
 			} else if (file.name.match(/\.(woff2?)$/)) {
-				mimetype = "application/font-woff";
+				mimetype = "application/font-" + RegExp.$1;
 				format = RegExp.$1;
 			} else {
 				alert(file.name + " not a supported file type");
