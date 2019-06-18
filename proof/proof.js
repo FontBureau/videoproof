@@ -24,14 +24,17 @@ $(function() {
 		if (font.match(/^custom-/) && window.fontInfo[font] && window.fontInfo[font].fontobj) {
 			populateGrid(window.fontInfo[font].fontobj);
 		} else {
-			var url = '/fonts/' + font + '.woff';
-			window.opentype.load(url, function (err, font) {
-				if (err) {
-					alert(err);
-					return;
-				}
-				populateGrid(font);
-			});
+			//this seems to be causing race conditions, so wait a second to be sure the font is loaded
+			setTimeout(function() {
+				var url = '/fonts/' + font + '.woff';
+				window.opentype.load(url, function (err, font) {
+					if (err) {
+						alert(err);
+						return;
+					}
+					populateGrid(font);
+				});
+			}, 500);
 		}
 	});
 });

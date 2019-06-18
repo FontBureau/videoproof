@@ -52,7 +52,7 @@
 		var foreground = $('#foreground').length && $('#foreground').spectrum('get').toString();
 		var background = $('#background').length && $('#background').spectrum('get').toString();
 
-		rules.push('font-family: "' + fontInfo[$('#select-font').val()].name + ' Demo"');
+		rules.push('font-family: "' + $('#select-font').val() + '-VP"');
 		
 		if (size) {
 			rules.push("font-size: " + size + 'pt');
@@ -255,7 +255,7 @@
 		
 		window.font = font;
 
-		$('head').append('<style>@font-face { font-family:"' + info.name + ' Demo"; src: url("' + url + '") format("' + format + '"); font-weight: 100 900; }</style>');
+		$('head').append('<style>@font-face { font-family:"' + fonttag + '-VP"; src: url("' + url + '") format("' + format + '"); font-weight: 100 900; }</style>');
 
 		window.fontInfo[fonttag] = info;
 		var optgroup = $('#custom-optgroup');

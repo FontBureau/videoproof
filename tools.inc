@@ -136,7 +136,7 @@ class TypeTools {
 		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/fonts-momentum-sans.css">
 		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/style.css">
 		<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script src="/opentype.js/dist/opentype.min.js"></script>
 		<script src="/spectrum/spectrum.js"></script>
 		<link rel="stylesheet" href="/spectrum/spectrum.css">
@@ -146,25 +146,25 @@ class TypeTools {
 		<style>
 <?php foreach ($this->fontinfo as $filebase => $info): ?>
 			@font-face {
-				font-family: "<?= $info->name ?> Demo";
-				src: url("/fonts/<?= $filebase ?>.woff2") format("woff2");
+				font-family: "<?= $filebase ?>-VP";
+				src: url("/fonts/<?= $filebase ?>.woff") format("woff");
 				font-weight: 100 900;
 			}
 <?php endforeach; ?>
-			<?php readfile("tools.css"); ?>
-			<?php readfile("form-controls.css"); ?>
-<?php foreach ($this->tools as $tool => $name): ?>
-			<?php readfile("$tool/$tool.css"); ?>
-<?php endforeach; ?>
 		</style>
+		<link rel="stylesheet" href="tools.css">
+		<link rel="stylesheet" href="form-controls.css">
+<?php foreach ($this->tools as $tool => $name): ?>
+		<link rel="stylesheet" href="<?= $tool ?>/<?= $tool ?>.css">
+<?php endforeach; ?>
 		<script>
 			var fontInfo = <?= json_encode($this->fontinfo) ?>;
 			var registeredAxes = <?= json_encode($this->registeredAxes) ?>;
 		</script>
 		<script src="https://www.typenetwork.com/assets_content/js/functions.js"></script>
-		<script><?php readfile('tools.js'); ?></script>
+		<script src="tools.js"></script>
 <?php foreach ($this->tools as $tool => $name): ?>
-		<script><?php readfile("$tool/$tool.js"); ?></script>
+		<script src="<?= $tool ?>/<?= $tool ?>.js"></script>
 <?php endforeach; ?>
 	</head>
 	<body>
