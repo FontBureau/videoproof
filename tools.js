@@ -106,7 +106,7 @@
 		var permutations = [];
 		var i, maxperms, j, l;
 		var raxisCount = raxisPresent.length;
-		var perm, filler;
+		var perm, filler, prev;
 		for (i=0, maxperms = Math.pow(3, raxisCount); i < maxperms; i++) {
 			current = i.toString(3);
 			filler = raxisCount - current.length;
@@ -120,14 +120,20 @@
 			permutations.push(perm);
 		}
 
+		var fvsPerms = [];
 		$.each(permutations, function(i, perm) {
+			var fvs = [];
 			$.each(raxisPresent, function(j, axis) {
-				perm[j] = '"' + axis + '" ' + perm[j];
+				fvs.push('"' + axis + '" ' + perm[j]);
 			});
-			permutations[i] = perm.join(', ');
+			fvs = fvs.join(', ');
+			if (fvs !== prev) {
+				fvsPerms.push(fvs);
+			}
+			prev = fvs;
 		});
 		
-		return permutations;
+		return fvsPerms;
 	}
 
 	var videoproofOutputInterval, videoproofActiveTarget;
@@ -178,6 +184,8 @@
 		stopAnimation();
 		
 		var keyframes = calculateKeyframes(fontInfo[$('#select-font').val()]);
+		
+		$('#keyframes-display').empty().html("<li>" + keyframes.join("</li><li>").replace(/"/g, "") + "</li>");
 		
 		//close the loop
 		var perstep = 100 / keyframes.length;
@@ -247,7 +255,7 @@
 		
 		window.font = font;
 
-		$('head').append('<style>@font-face { font-family:"' + info.name + ' Demo"; src: url("' + url + '") format("' + format + '"); }</style>');
+		$('head').append('<style>@font-face { font-family:"' + info.name + ' Demo"; src: url("' + url + '") format("' + format + '"); font-weight: 100 900; }</style>');
 
 		window.fontInfo[fonttag] = info;
 		var optgroup = $('#custom-optgroup');

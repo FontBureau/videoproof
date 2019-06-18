@@ -148,6 +148,7 @@ class TypeTools {
 			@font-face {
 				font-family: "<?= $info->name ?> Demo";
 				src: url("/fonts/<?= $filebase ?>.woff") format("woff");
+				font-weight: 100 900;
 			}
 <?php endforeach; ?>
 			<?php readfile("tools.css"); ?>

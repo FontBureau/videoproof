@@ -370,7 +370,15 @@ output#aniparams {
 	display: block;
 }
 
+#keyframes-display {
+	white-space: nowrap;
+	overflow: auto;
+}
 
+#keyframes-display li {
+	font-family: Verdana;
+	font-size: 10px;
+}
 
 /* CONTENT */
 
