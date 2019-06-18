@@ -10,92 +10,10 @@ class TypeTools {
 		'proof' => "Array",
 		'waterfall' => "Waterfall",
 //		'grid' => "Grid",
-		'logopogo' => "Logo Pogo", 
+		'logopogo' => "Input", 
 	);
 	
 	private $registeredAxes = array('opsz', 'wght', 'wdth', 'ital', 'slnt', 'grad', 'GRAD');
-	private $excludeFonts = array('Escrow', 'Segoe', /* 'Roboto(?!.*Delta)', */ 'Benton', 'Agency.*with-slant');
-	
-	private $customSettings = array(
-		'Amstelvar Alpha' => array(
-			'composites' => array(
-				'opsz' => array(
-					'10' => array(
-						'XOPQ' => 110,
-						'YOPQ' => 75,
-						'YTLC' => 525,
-					),
-					'14' => array(),
-					'72' => array(
-						'XTRA' => 300,
-						'YOPQ' => 12,
-						'YTLC' => 475,
-					),
-				),
-				'wdth' => array(
-					'35' => array(
-						'XTRA' => 42,
-						'XOPQ' => 70,
-						'YOPQ' => 45,
-						'PWDT' => 60,
-					),
-					'100' => array(),
-				),
-				'wght' => array(
-					'100' => array(
-						'XOPQ' => 38,
-						'YOPQ' => 25,
-						'XTRA' => 375,
-						'YTSE' => 8,
-						'PWGT' => 38,
-					),
-					'400' => array(),
-					'900' => array(
-						'XOPQ' => 250,
-						'XTRA' => 250,
-						'YTLC' => 525,
-						'PWGT' => 250,
-					),
-				),
-				'GRAD' => array(
-					'88' => array(
-						'YOPQ' => 25,
-						'XOPQ' => 25,
-						'XTRA' => 490,
-					),
-					'150' => array(
-						'YOPQ' => 62,
-						'XOPQ' => 250,
-						'XTRA' => 460,
-					),
-				),
-			),
-		),
-		'Amstelvar Alpha Blended' => array(
-			'composites' => array(
-				'wght' => array(
-					'100' => array('PWGT' => 38),
-					'900' => array('PWGT' => 250),
-				),
-				'wdth' => array(
-					'35' => array('PWDT' => 60),
-					'100' => array('PWDT' => 402),
-				),
-			),
-		),
-		'Momentum Sans Blended' => array(
-			'composites' => array(
-				'wght' => array(
-					'100' => array('PWHT' => 10),
-					'900' => array('PWHT' => 220),
-				),
-				'wdth' => array(
-					'70' => array('PWTH' => 310),
-					'100' => array('PWTH' => 468),
-				),
-			),
-		),
-	);
 	
 	public static function requireLogin($user, $password) {
 		if (!isset($_SERVER['PHP_AUTH_USER']) || $_SERVER['PHP_AUTH_USER'] !== $user || $_SERVER['PHP_AUTH_PW'] !== $password) {
@@ -149,14 +67,19 @@ class TypeTools {
 			//figure out axis order
 			$order = array();
 			
-			if (isset($this->customSettings[$fontname]['order'])) {
-				$order = $this->customSettings[$fontname]['order'];
-			}
 			if (isset($axes->order)) {
 				if (!$order) {
 					$order = $axes->order;
 				}
 				unset($axes->order);
+			}
+			
+			if (isset($axes->instances)) {
+				unset($axes->instances);
+			}
+			
+			if (in_array('instances', $order)) {
+				$order = array_diff($order, array('instances'));
 			}
 			
 			//sanity check on axis order
@@ -169,20 +92,6 @@ class TypeTools {
 					if (!in_array($k, $order)) {
 						$order = array();
 						break;
-					}
-				}
-			}
-
-			//reality check on composite axes
-			if (isset($this->customSettings[$fontname]['composites'])) {
-				foreach ($this->customSettings[$fontname]['composites'] as $composite => $numbers) {
-					foreach ($numbers as $pivot => $paxes) {
-						foreach ($paxes as $paxis => $number) {
-							if (!isset($axes->$paxis)) {
-								unset($this->customSettings[$fontname]['composites']);
-								break 3;
-							}
-						}
 					}
 				}
 			}
@@ -210,7 +119,6 @@ class TypeTools {
 				'name' => $fontname,
 				'axes' => $axes,
 				'axisOrder' => $order,
-				'composites' => isset($this->customSettings[$fontname]['composites']) ? $this->customSettings[$fontname]['composites'] : array(),
 			);
 		}
 	}
@@ -233,9 +141,7 @@ class TypeTools {
 		<script src="/spectrum/spectrum.js"></script>
 		<link rel="stylesheet" href="/spectrum/spectrum.css">
 
-		<link rel="stylesheet" href="videoproof.css">
 		<style id='videoproof-keyframes'></style>
-		<script src="videoproof.js"></script>
 		
 		<style>
 <?php foreach ($this->fontinfo as $filebase => $info): ?>
@@ -252,6 +158,7 @@ class TypeTools {
 		</style>
 		<script>
 			var fontInfo = <?= json_encode($this->fontinfo) ?>;
+			var registeredAxes = <?= json_encode($this->registeredAxes) ?>;
 		</script>
 		<script src="https://www.typenetwork.com/assets_content/js/functions.js"></script>
 		<script><?php readfile('tools.js'); ?></script>
@@ -389,7 +296,7 @@ class TypeTools {
 			<h3 class="inline"><label for="select-font">Family:</label></h3>
 			<select name="font" id='select-font'>
 <?php foreach ($this->fontinfo as $filebase => $info): ?>
-				<option value="<?= $filebase ?>"<?php if ($info->name === 'Amstelvar Alpha') print " selected"; ?>><?= $info->name ?></option>
+				<option value="<?= $filebase ?>"<?php if ($info->name === 'Amstelvar Roman') print " selected"; ?>><?= $info->name ?></option>
 <?php endforeach ?>
 			</select>
 			<input type='file' name='custom-fonts' id='custom-fonts'>
@@ -469,6 +376,10 @@ class TypeTools {
 			<label for='animation-scrub'>0</label>
 		</div>
 		
+		<label>Keyframes</label>
+		<ul id='keyframes-display'>
+		</ul>
+		
 		<label for='animation-duration'>Full cycle</label>
 		<input id='animation-duration' type='number' min="1" step="1" value="60">sec
 <?php
@@ -499,6 +410,7 @@ class TypeTools {
 	}
 	
 	public function metaLinks() {
+		return;
 	?>
 		<h3>Meta</h3>
 		<ul>

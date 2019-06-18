@@ -1,5 +1,5 @@
 [submodule "Amstelvar"]
-	path = Amstelvar
+	path = fonts/repos/Amstelvar
 	url = git@github.com:TypeNetwork/Amstelvar
 [submodule "opentype.js"]
 	path = opentype.js
@@ -10,3 +10,6 @@
 [submodule "knuth"]
 	path = knuth
 	url = https://github.com/bramstein/typeset.git
+[submodule "fonts/repos/Roboto"]
+	path = fonts/repos/Roboto
+	url = git@github.com:TypeNetwork/Roboto

@@ -396,8 +396,9 @@ output#aniparams {
 	text-rendering: optimizeLegibility;
 	animation-name: videoproof;
     animation-timing-function: linear;
-    animation-iteration-count: infinite;
+    animation-iteration-count: 1;
     animation-duration: 60s;
+    outline-offset: 100px; /* this is a standin for percent of animation cycle */
 }
 
 .paused .variable-demo-target {

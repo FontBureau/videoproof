@@ -86,6 +86,117 @@
 		});
 	}
 	
+	function calculateKeyframes(font) {
+		//O(3^n)? this might get ugly
+		var keyframes = [];
+		
+		//represent each frame as a trinary number: 000, 001, 002, 010, 011, 012…
+		// 0 is axis min, 1 is axis default, 2 is axis max
+		// some combinations might be skipped if the min/max is the default
+		var current = 0;
+		var axesMDM = [];
+		var raxisPresent = [];
+		$.each(registeredAxes, function(index, axis) {
+			if (axis in font.axes) {
+				raxisPresent.push(axis);
+				axesMDM.push([font.axes[axis].min, font.axes[axis].default, font.axes[axis].max]);
+			}
+		});
+
+		var permutations = [];
+		var i, maxperms, j, l;
+		var raxisCount = raxisPresent.length;
+		var perm, filler;
+		for (i=0, maxperms = Math.pow(3, raxisCount); i < maxperms; i++) {
+			current = i.toString(3);
+			filler = raxisCount - current.length;
+			perm = [];
+			for (j=0; j<filler; j++) {
+				perm.push(axesMDM[j][0]);
+			}
+			for (j=0, l=current.length; j<l; j++) {
+				perm.push(axesMDM[filler+j][current[j]]);
+			}
+			permutations.push(perm);
+		}
+
+		$.each(permutations, function(i, perm) {
+			$.each(raxisPresent, function(j, axis) {
+				perm[j] = '"' + axis + '" ' + perm[j];
+			});
+			permutations[i] = perm.join(', ');
+		});
+		
+		return permutations;
+	}
+
+	var videoproofOutputInterval, videoproofActiveTarget;
+	function startAnimation() {
+		var output = document.getElementById('aniparams');
+		var timestamp = $('label[for=animation-scrub]');
+		var scrub = $('#animation-scrub')[0];
+		var mode = $('#select-mode')[0];
+
+		$('html').removeClass('paused');
+		videoproofOutputInterval = setInterval(function() {
+			var css = videoproofActiveTarget ? getComputedStyle(videoproofActiveTarget) : {};
+			var percent = parseFloat(css.outlineOffset);
+			var bits = [
+				mode.options[mode.selectedIndex].textContent,
+				css ? css.fontVariationSettings.replace(/"|(\.\d+)/g, '') : ""
+			];
+			output.textContent = bits.join(": ");
+			scrub.value = percent;
+			timestamp.text(Math.round(percent));
+			if (percent == 100) {
+				resetAnimation();
+			}
+		}, 100);
+	}
+	
+	function stopAnimation() {
+		$('html').addClass('paused');
+		if (videoproofOutputInterval) {
+			clearInterval(videoproofOutputInterval);
+			videoproofOutputInterval = null;
+		}
+	};
+
+	function setupAnimation() {
+		$('#animation-controls button.play-pause').on('click', function() {
+			videoproofOutputInterval ? stopAnimation() : startAnimation();
+		});
+		
+		$('#animation-duration').on('change input', function() {
+			$('.variable-demo-target').css('animation-duration', this.value + 's');
+		}).trigger('change');
+
+		$('#first-play').css('cursor', 'pointer').on('click', startAnimation);
+	}
+
+	function resetAnimation() {
+		stopAnimation();
+		
+		var keyframes = calculateKeyframes(fontInfo[$('#select-font').val()]);
+		
+		//close the loop
+		var perstep = 100 / keyframes.length;
+		$('#animation-duration').val(keyframes.length * 2).trigger('change');
+		keyframes.push(keyframes[0]);
+		$.each(keyframes, function(i, axes) {
+			var percent = Math.round(10*(perstep * i))/10;
+			keyframes[i] = percent + '% { font-variation-settings: ' + axes + '; outline-offset: ' + percent + 'px; }';
+		});
+		document.getElementById('videoproof-keyframes').textContent = "@keyframes videoproof {\n" + keyframes.join("\n") + "}";
+		
+		$('.variable-demo-target').css('animation-name', 'none');
+		setTimeout(function() {
+			$('.variable-demo-target').css('animation-name', '');
+			stop();
+		}, 100);
+	}
+
+	
 	function handleFontChange(font) {
 		var spectropts = {
 			'showInput': true,
@@ -111,6 +222,8 @@
 			$(this).trigger('change');
 		});
 		$('#align-left').prop('checked',true);
+		
+		resetAnimation();
 	}
 
 	function addCustomFont(fonttag, url, format, font) {
@@ -191,7 +304,8 @@
 			'fvsToAxes': fvsToAxes,
 			'axesToFVS': axesToFVS,
 			'addCustomFonts': addCustomFonts,
-			'addCustomFont': addCustomFont
+			'addCustomFont': addCustomFont,
+			'resetAnimation': resetAnimation
 		};
 	}
 	
@@ -280,88 +394,6 @@
 	
 	window.TNTools = tnTypeTools();
 
-	var videoproofOutputInterval, videoproofActiveTarget;
-	function setupAnimation() {
-		if (videoproofOutputInterval) {
-			return;
-		}
-		var RAP = [
-			{"wght": 400, "wdth": 100 },
-			{"wght": 900, "wdth": 100 },
-			{"wght": 100, "wdth": 100 },
-			{"wght": 400, "wdth": 50 },
-			{"wght": 400, "wdth": 125 },
-			{"wght": 900, "wdth": 50 },
-			{"wght": 900, "wdth": 125 },
-			{"wght": 100, "wdth": 50 },
-			{"wght": 100, "wdth": 125 },
-			{"wght": 100, "wdth": 100 },
-			{"wght": 400, "wdth": 100 }
-		];
-		
-		var keyframes = [];
-		$.each([144, 14.1, 8], function(i, opsz) {
-			$.each(RAP, function(i, axes) {
-				keyframes.push($.extend({"opsz":opsz}, axes));
-			});
-		});
-		//close the loop
-		var perstep = 100 / keyframes.length;
-		keyframes.push(keyframes[0]);
-		$.each(keyframes, function(i, axes) {
-			var percent = Math.round(10*(perstep * i))/10;
-			keyframes[i] = percent + '% { font-variation-settings: ' + axesToFVS(axes) + '; outline-offset: ' + percent + 'px; }';
-		});
-		document.getElementById('videoproof-keyframes').textContent = "@keyframes videoproof {\n" + keyframes.join("\n") + "}";
-		
-		var output = document.getElementById('aniparams');
-		var timestamp = $('label[for=animation-scrub]');
-		var scrub = $('#animation-scrub')[0];
-		var mode = $('#select-mode')[0];
-		
-		var start = function() {
-			$('html').removeClass('paused');
-			videoproofOutputInterval = setInterval(function() {
-				var css = videoproofActiveTarget ? getComputedStyle(videoproofActiveTarget) : {};
-				var percent = parseFloat(css.outlineOffset);
-				var bits = [
-					mode.options[mode.selectedIndex].textContent,
-					css ? css.fontVariationSettings.replace(/"|(\.\d+)/g, '') : ""
-				];
-				output.textContent = bits.join(": ");
-				scrub.value = percent;
-				timestamp.text(Math.round(percent));
-			}, 100);
-		};
-		
-		var stop = function() {
-			$('html').addClass('paused');
-			if (videoproofOutputInterval) {
-				clearInterval(videoproofOutputInterval);
-				videoproofOutputInterval = null;
-			}
-		};
-		
-		$('#animation-controls button.play-pause').on('click', function() {
-			videoproofOutputInterval ? stop() : start();
-		});
-		
-		$('#animation-duration').on('change input', function() {
-			$('.variable-demo-target').css('animation-duration', this.value + 's');
-		}).trigger('change');
-
-		//the animation doesn't take without this, and I don't know why
-		$('.variable-demo-target').css('animation-name', 'none');
-		setTimeout(function() {
-			$('.variable-demo-target').css('animation-name', '');
-			stop();
-		}, 100);
-
-		$('#first-play').css('cursor', 'pointer').on('click', start);
-		
-// 		start();
-	}
-
 	$(window).on('load', function() {
 		setTimeout(function() {
 			var showSidebar = $('a.content-options-show-filters');
@@ -370,7 +402,7 @@
 			}
 			
 			setupAnimation();
-
+			
 			$('#select-mode').trigger('change');
 			$('#select-font').trigger('change');
 		},100);
