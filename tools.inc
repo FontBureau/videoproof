@@ -8,7 +8,7 @@ class TypeTools {
 	private $tools = array(
 // 		'typespec' => "Ramp", 
 		'proof' => "Array",
-		'waterfall' => "Waterfall",
+// 		'waterfall' => "Waterfall",
 //		'grid' => "Grid",
 		'logopogo' => "Input", 
 	);
@@ -210,31 +210,14 @@ class TypeTools {
 				<form id='controls'>
 					<?= $this->selectMode() ?>
 					<?= $this->selectFont() ?>
-<!--
-					<?= $this->slider([
-						'id' => 'column-width', 'name' => 'column-width', 'unit' => 'em', 'label' => 'Column width',
-						'min' => 10, 'max' => 80, 'default' => 40, 'step' => 0.1,
-					]) ?>
--->
-					<?= $this->sizeLeading(36, 40, 8, 288); ?>
+
 					<div id='alignment-color'>
-						<label>Alignment</label>
-						<input id='align-left' type='radio' checked name='alignment' value='left'>
-						<label for='align-left'>L</label>
-						<input id='align-center' type='radio' name='alignment' value='center'>
-						<label for='align-center'>C</label>
-						<input id='align-right' type='radio' name='alignment' value='right'>
-						<label for='align-right'>R</label>
-						<input id='align-justify' type='radio' name='alignment' value='justify'>
-						<label for='align-justify'>J</label>
-						<label for='foreground'>FG</label>
+						<label for='foreground'>Foreground</label>
 						<div class='color'><input type='color' id='foreground' name='foreground' value='black'></div>
-						<label for='background'>BG</label>
+						<label for='background'>Background</label>
 						<div class='color'><input type='color' id='background' name='background' value='white'></div>
 					</div>
 					
-<!-- 					<div><input id="everybox" type="checkbox" name="show" value="everything"> <h3 class='inline'><label for="everybox">View all axes</label></h3></div> -->
-
 					<?= $this->animationControls(); ?>
 
 					<ul id='axis-inputs'>
