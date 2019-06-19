@@ -86,27 +86,30 @@
 		});
 	}
 	
+	function doGridSize() {
+		
+	}
+	
 	function calculateKeyframes(font) {
 		//O(3^n)? this might get ugly
 		var keyframes = [];
-		
+
 		//represent each frame as a trinary number: 000, 001, 002, 010, 011, 012…
-		// 0 is axis min, 1 is axis default, 2 is axis max
+		// 0 is axis default, 1 is axis min, 2 is axis max
 		// some combinations might be skipped if the min/max is the default
-		var current = 0;
 		var axesMDM = [];
 		var raxisPresent = [];
 		$.each(registeredAxes, function(index, axis) {
 			if (axis in font.axes) {
 				raxisPresent.push(axis);
-				axesMDM.push([font.axes[axis].min, font.axes[axis].default, font.axes[axis].max]);
+				axesMDM.push([font.axes[axis].default, font.axes[axis].min, font.axes[axis].max]);
 			}
 		});
 
 		var permutations = [];
 		var i, maxperms, j, l;
 		var raxisCount = raxisPresent.length;
-		var perm, filler, prev;
+		var perm, filler, prev, current;
 		for (i=0, maxperms = Math.pow(3, raxisCount); i < maxperms; i++) {
 			current = i.toString(3);
 			filler = raxisCount - current.length;
@@ -118,6 +121,12 @@
 				perm.push(axesMDM[filler+j][current[j]]);
 			}
 			permutations.push(perm);
+			// and go back to default at the end of each cycle
+			if (current[j-1] == 2) {
+				perm = perm.slice(0, -1);
+				perm.push(axesMDM[filler+j-1][0]);
+				permutations.push(perm);
+			}
 		}
 
 		var fvsPerms = [];
@@ -137,27 +146,33 @@
 	}
 
 	var videoproofOutputInterval, videoproofActiveTarget;
-	function startAnimation() {
+	function animationUpdateOutput() {
 		var output = document.getElementById('aniparams');
 		var timestamp = $('label[for=animation-scrub]');
 		var scrub = $('#animation-scrub')[0];
 		var mode = $('#select-mode')[0];
 
+		var css = videoproofActiveTarget ? getComputedStyle(videoproofActiveTarget) : {};
+		var percent = parseFloat(css.outlineOffset);
+		var bits = [
+			mode.options[mode.selectedIndex].textContent,
+			css ? css.fontVariationSettings.replace(/"|(\.\d+)/g, '') : ""
+			//css ? parseFloat(css.outlineOffset) + '%' : ""
+		];
+		output.textContent = bits.join(": ");
+		scrub.value = percent;
+		timestamp.text(Math.round(percent));
+		if (percent == 100) {
+			resetAnimation();
+		}
+	}
+
+	function startAnimation() {
+		//just in case it had been removed
+		updateAnimationParam('animation-name', null);
 		$('html').removeClass('paused');
-		videoproofOutputInterval = setInterval(function() {
-			var css = videoproofActiveTarget ? getComputedStyle(videoproofActiveTarget) : {};
-			var percent = parseFloat(css.outlineOffset);
-			var bits = [
-				mode.options[mode.selectedIndex].textContent,
-				css ? css.fontVariationSettings.replace(/"|(\.\d+)/g, '') : ""
-			];
-			output.textContent = bits.join(": ");
-			scrub.value = percent;
-			timestamp.text(Math.round(percent));
-			if (percent == 100) {
-				resetAnimation();
-			}
-		}, 100);
+		$('#keyframes-display li').removeClass('current');
+		videoproofOutputInterval = setInterval(animationUpdateOutput, 100);
 	}
 	
 	function stopAnimation() {
@@ -173,35 +188,104 @@
 			videoproofOutputInterval ? stopAnimation() : startAnimation();
 		});
 		
+		var currentFakeFrame;
+		function fakeFrame(index) {
+			currentFakeFrame = index;
+			var duration = parseFloat($('#animation-duration').val());
+			var kfTime = index / currentKeyframes.length * duration;
+			$('#keyframes-display li').removeClass('current').eq(index).addClass('current');
+			
+			//set "timestamp" in animation, for resuming
+			updateAnimationParam('animation-delay', -kfTime + 's');
+			
+			//but the timing is imprecise, so also set the explicit FVS for the keyframe
+			updateAnimationParam('animation-name', 'none');
+			if (/font-variation-settings\s*:\s*([^;\}]+)/.test(currentKeyframes[index])) {
+				updateAnimationParam('font-variation-settings', RegExp.$1);
+			}
+		}
+		
+		$('#animation-controls').find('button.back, button.forward').on('click', function() {
+			if (!videoproofActiveTarget || !currentKeyframes) {
+				return;
+			}
+			stopAnimation();
+			
+			var toIndex;
+			if (typeof currentFakeFrame === 'number') {
+				toIndex = $(this).hasClass('back') ? currentFakeFrame - 1 : currentFakeFrame + 1;
+			} else {
+				var css = getComputedStyle(videoproofActiveTarget);
+				var percent = parseFloat(css.outlineOffset);
+				var exactIndex = percent / 100 * currentKeyframes.length;
+				//if we're already on an index, go to the next int
+				if (Math.abs(exactIndex - Math.round(exactIndex)) > 0.01) {
+					toIndex = Math[$(this).hasClass('back') ? 'floor' : 'ceil'](exactIndex);
+				} else {
+					toIndex = $(this).hasClass('back') ? Math.round(exactIndex) - 1 : Math.round(exactIndex) + 1;
+				}
+			}
+			if (toIndex < 0 || toIndex >= currentKeyframes.length) {
+				toIndex = 0;
+			}
+			fakeFrame(toIndex);
+		});
+		
+		$('#animation-controls button.beginning').on('click', resetAnimation);
+		$('#animation-controls button.end').on('click', function() {
+			if (!videoproofActiveTarget || !currentKeyframes) {
+				return;
+			}
+			fakeFrame(currentKeyframes.length - 1);
+		});
+		
 		$('#animation-duration').on('change input', function() {
-			$('.variable-demo-target').css('animation-duration', this.value + 's');
+			updateAnimationParam('animation-duration', this.value + 's');
 		}).trigger('change');
 
 		$('#first-play').css('cursor', 'pointer').on('click', startAnimation);
 	}
 
+	var currentKeyframes;
+	function animationNameOnOff(callback) {
+		updateAnimationParam('animation-name', 'none');
+		setTimeout(function() {
+			updateAnimationParam('animation-name', null);
+			stop();
+			setTimeout(animationUpdateOutput);
+		}, 100);
+	}
+
+	function updateAnimationParam(k, v) {
+		var style = $('style.' + k);
+		if (!style.length) {
+			$('head').append("<style class='" + k + "'></style>");
+			style = $('style.' + k);
+		}
+		if (v === null) {
+			style.empty();
+		} else {
+			style.text('.variable-demo-target { ' + k + ': ' + v + '; }');
+		}
+	}
+
 	function resetAnimation() {
 		stopAnimation();
 		
-		var keyframes = calculateKeyframes(fontInfo[$('#select-font').val()]);
+		var keyframes = currentKeyframes = calculateKeyframes(fontInfo[$('#select-font').val()]);
 		
 		$('#keyframes-display').empty().html("<li>" + keyframes.join("</li><li>").replace(/"/g, "") + "</li>");
 		
 		//close the loop
 		var perstep = 100 / keyframes.length;
 		$('#animation-duration').val(keyframes.length * 2).trigger('change');
-		keyframes.push(keyframes[0]);
+		updateAnimationParam('animation-delay', '0');
 		$.each(keyframes, function(i, axes) {
 			var percent = Math.round(10*(perstep * i))/10;
-			keyframes[i] = percent + '% { font-variation-settings: ' + axes + '; outline-offset: ' + percent + 'px; }';
+			keyframes[i] = (percent == 0 ? percent + '%, 100' : percent) + '% { font-variation-settings: ' + axes + '; outline-offset: ' + percent + 'px; }';
 		});
 		document.getElementById('videoproof-keyframes').textContent = "@keyframes videoproof {\n" + keyframes.join("\n") + "}";
-		
-		$('.variable-demo-target').css('animation-name', 'none');
-		setTimeout(function() {
-			$('.variable-demo-target').css('animation-name', '');
-			stop();
-		}, 100);
+		animationNameOnOff();
 	}
 
 	
@@ -313,7 +397,8 @@
 			'axesToFVS': axesToFVS,
 			'addCustomFonts': addCustomFonts,
 			'addCustomFont': addCustomFont,
-			'resetAnimation': resetAnimation
+			'resetAnimation': resetAnimation,
+			'doGridSize': doGridSize
 		};
 	}
 	

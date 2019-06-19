@@ -13,7 +13,7 @@ class TypeTools {
 		'logopogo' => "Input", 
 	);
 	
-	private $registeredAxes = array('opsz', 'wght', 'wdth', 'ital', 'slnt', 'grad', 'GRAD');
+	private $registeredAxes = array('opsz', 'wdth', 'wght', 'ital', 'slnt', 'grad', 'GRAD');
 	
 	public static function requireLogin($user, $password) {
 		if (!isset($_SERVER['PHP_AUTH_USER']) || $_SERVER['PHP_AUTH_USER'] !== $user || $_SERVER['PHP_AUTH_PW'] !== $password) {
@@ -353,9 +353,11 @@ class TypeTools {
 	public function animationControls() {
 ?>
 		<div id='animation-controls'>
-			<button type='button' class='back'>⏪</button>
-			<button type='button' class='play-pause'>⏯</button>
-			<button type='button' class='forward'>⏩</button>
+			<button type='button' class='beginning' title="Go to start">⏮</button>
+			<button type='button' class='back' title="Previous keyframe">⏪</button>
+			<button type='button' class='play-pause' title="Play/Pause">⏯</button>
+			<button type='button' class='forward' title="Next keyframe">⏩</button>
+			<button type='button' class='end' title="Go to end">⏭</button>
 			<input type='range' min="0" max="100" step="0.1" id='animation-scrub' value='0'>
 			<label for='animation-scrub'>0</label>
 		</div>
