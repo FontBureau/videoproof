@@ -34,10 +34,6 @@ class TypeTools {
 			$specific_font = strtolower($matches[1]);
 		}
 		
-		if (preg_match('/^([^=]+)(&|$)/', $_SERVER['QUERY_STRING'], $m)) {
-			$specific_font = strtolower($m[1]);
-		}
-	
 		foreach ($this->fontinfo as $filebase => $axes) {
 			if ($specific_font) {
 				if (strpos(strtolower($filebase), $specific_font) !== 0) {
@@ -264,7 +260,7 @@ class TypeTools {
 	?>
 		<div>
 			<h3 class="inline"><label for="select-mode">Layout:</label></h3>
-			<select name="font" id='select-mode'>
+			<select name="mode" id='select-mode'>
 <?php foreach ($this->tools as $tool => $name): ?>
 				<option value="<?= $tool ?>"><?= $name ?></option>
 <?php endforeach ?>

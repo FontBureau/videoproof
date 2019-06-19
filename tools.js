@@ -40,27 +40,15 @@
 	}
 
 	function slidersToElement() {
-		roundInputs();
-
 		var styleEl = $('#style-general');
 		var selector = '.variable-demo-target';
 		
 		var rules = [];
 		
-		var size = Math.round($('#edit-size').val());
-		var leading = Math.round($('#edit-leading').val());
 		var foreground = $('#foreground').length && $('#foreground').spectrum('get').toString();
 		var background = $('#background').length && $('#background').spectrum('get').toString();
 
 		rules.push('font-family: "' + $('#select-font').val() + '-VP"');
-		
-		if (size) {
-			rules.push("font-size: " + size + 'pt');
-		}
-		
-		if (leading) {
-			rules.push("line-height: " + leading + 'pt');
-		}
 		
 		if (background) {
 			rules.push('background-color: ' + background);
@@ -70,24 +58,69 @@
 			rules.push('color: ' + foreground);
 		}
 		
-		if ((temp=$('input[name=alignment]')).length) {
-			rules.push("text-align: " + (temp.filter(':checked').val() || 'left'));
-		}
-		
 		// update the actual CSS
 		styleEl.text('\n' 
 			+ selector + ' {\n\t' + rules.join(';\n\t') + ';\n}\n'
 		);
 	}
 	
-	function roundInputs() {
-		controls.find('#edit-size, #edit-to-size, #edit-leading').each(function() {
-			this.value = Math.round(parseFloat(this.value) * 1000) / 1000;
-		});
-	}
-	
 	function doGridSize() {
-		
+		var grid = document.getElementById('proof-grid');
+		var axes = fontInfo[$('#select-font').val()].axes;
+
+		//disable the animation for a minute
+		grid.style.animationName = 'none';
+
+		//reset to individual chars
+		grid.innerHTML = grid.innerHTML.replace(/<\/?div[^>]*>/g, '');
+		console.log(grid.innerHTML);
+
+		//get the stuff as wide as possible
+		var fvs = {};
+		if ('wdth' in axes) {
+			fvs.wdth = axes.wdth.max;
+		}
+		if ('wght' in axes) {
+			fvs.wght = axes.wght.max;
+		}
+		if ('opsz' in axes) {
+			fvs.opsz = axes.opsz.min;
+		}
+		grid.style.fontVariationSettings = axesToFVS(fvs);
+		var lines = [], line, lastX = Infinity;
+		$.each(grid.childNodes, function(i, span) {
+			if (!span.tagName || span.tagName !== 'SPAN') {
+				console.log(span);
+				return;
+			}
+			var box = span.getBoundingClientRect();
+			if (!span.style.width) {
+				//hard-code the max width so it doesn't move around
+				span.style.width = box.width + 'px';
+			}
+			if (box.left < lastX) {
+				if (line) {
+					lines.push(line);
+				}
+				line = [];
+			}
+			line.push(span);
+			lastX = box.left;
+		});
+		if (line && line.length) {
+			lines.push(line);
+		}
+
+		lines.forEach(function(line) {
+			var div = document.createElement('div');
+			line.forEach(function(span) {
+				div.appendChild(span);
+			});
+			grid.appendChild(div);
+		});
+
+		//re-enable the animation
+		grid.style.animationName = '';
 	}
 	
 	function calculateKeyframes(font) {
@@ -487,6 +520,7 @@
 	
 	window.TNTools = tnTypeTools();
 
+	var resizeTimeout;
 	$(window).on('load', function() {
 		setTimeout(function() {
 			var showSidebar = $('a.content-options-show-filters');
@@ -499,5 +533,10 @@
 			$('#select-mode').trigger('change');
 			$('#select-font').trigger('change');
 		},100);
-	});
+	}).on('resize', function() {
+		if (resizeTimeout) {
+			clearTimeout(resizeTimeout);
+		}
+		resizeTimeout = setTimeout(TNTools.doGridSize, 500);
+	}).trigger('resize');
 })();

@@ -15,6 +15,7 @@ $(function() {
 			proof.append('<span>' + String.fromCodePoint(gid) + '</span>');
 		}
 		TNTools.slidersToElement();
+		TNTools.doGridSize();
 	}
 	
 	$('#select-font')	.on('change', function() {
