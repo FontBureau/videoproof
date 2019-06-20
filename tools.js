@@ -141,7 +141,8 @@
 			grid.appendChild(div);
 		});
 
-		//re-enable the animation
+		//re-enable the animation and remove the wide settings
+		grid.style.removeProperty('font-variation-settings');
 		grid.style.removeProperty('animation-name');
 	}
 	
@@ -306,7 +307,7 @@
 		updateAnimationParam('animation-name', 'none');
 		setTimeout(function() {
 			updateAnimationParam('animation-name', null);
-			stop();
+			stopAnimation();
 			setTimeout(animationUpdateOutput);
 		}, 100);
 	}
@@ -550,17 +551,13 @@
 		setupAnimation();
 		$('#select-mode').trigger('change');
 
-		//and this one is to avoid weird font loading issues
-		setTimeout(function() {
-			$('#select-font').trigger('change');
-			var resizeTimeout;
-			$(window).on('resize', function() {
-				if (resizeTimeout) {
-					clearTimeout(resizeTimeout);
-				}
-				resizeTimeout = setTimeout(TNTools.doGridSize, 500);
-			}).trigger('resize')
-		}, 500);
-		
+		$('#select-font').trigger('change');
+		var resizeTimeout;
+		$(window).on('resize', function() {
+			if (resizeTimeout) {
+				clearTimeout(resizeTimeout);
+			}
+			resizeTimeout = setTimeout(TNTools.doGridSize, 500);
+		}).trigger('resize')
 	});
 })();

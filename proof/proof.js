@@ -51,17 +51,15 @@ $(function() {
 		if (window.fontInfo[fonturl] && window.fontInfo[fonturl].fontobj) {
 			populateGrid(window.fontInfo[fonturl].fontobj);
 		} else {
-			setTimeout(function() {
-				var url = '/fonts/' + fonturl + '.woff';
-				window.opentype.load(url, function (err, font) {
-					if (err) {
-						alert(err);
-						return;
-					}
-					window.fontInfo[fonturl].fontobj = font;
-					populateGrid(font);
-				});
-			}, 500);
+			var url = '/fonts/' + fonturl + '.woff';
+			window.opentype.load(url, function (err, font) {
+				if (err) {
+					alert(err);
+					return;
+				}
+				window.fontInfo[fonturl].fontobj = font;
+				populateGrid(font);
+			});
 		}
 	});
 	
