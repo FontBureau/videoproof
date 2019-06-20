@@ -301,7 +301,6 @@ output#aniparams {
 }
 
 .variable-demo-target {
-	text-rendering: optimizeLegibility;
 	animation-name: videoproof;
     animation-timing-function: linear;
     animation-iteration-count: 1;

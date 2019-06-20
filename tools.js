@@ -3,8 +3,6 @@
 
 	var temp;
 	
-	var controls
-	
 	function fvsToAxes(fvs) {
 		if (!fvs) {
 			return {};
@@ -71,9 +69,9 @@
 		//disable the animation for a minute
 		grid.style.animationName = 'none';
 
-		//reset to individual chars
+		//reset
+		grid.style.removeProperty('font-size');
 		grid.innerHTML = grid.innerHTML.replace(/<\/?div[^>]*>/g, '');
-		console.log(grid.innerHTML);
 
 		//get the stuff as wide as possible
 		var fvs = {};
@@ -87,25 +85,49 @@
 			fvs.opsz = axes.opsz.min;
 		}
 		grid.style.fontVariationSettings = axesToFVS(fvs);
-		var lines = [], line, lastX = Infinity;
+		
+		//shrink the font so it fits on the page
+		var winHeight = window.innerHeight - 96;
+		var gridHeight = grid.getBoundingClientRect().height, fontsize = parseFloat(getComputedStyle(grid).fontSize);
+
+		while (gridHeight < winHeight) {
+			fontsize *= 1.5;
+			grid.style.fontSize = Math.floor(fontsize) + 'px';
+			gridHeight = grid.getBoundingClientRect().height;
+			if (fontsize > 144) {
+				break;
+			}
+		}
+
+		while (gridHeight > winHeight) {
+			fontsize *= 0.9;
+			grid.style.fontSize = Math.floor(fontsize) + 'px';
+			gridHeight = grid.getBoundingClientRect().height;
+			if (fontsize < 24) {
+				break;
+			}
+		}
+		
+		var lines = [], line = [], lastX = Infinity;
 		$.each(grid.childNodes, function(i, span) {
 			if (!span.tagName || span.tagName !== 'SPAN') {
-				console.log(span);
 				return;
 			}
 			var box = span.getBoundingClientRect();
-			if (!span.style.width) {
-				//hard-code the max width so it doesn't move around
-				span.style.width = box.width + 'px';
-			}
-			if (box.left < lastX) {
-				if (line) {
-					lines.push(line);
+			if (box.width > 0) {
+				if (!span.style.width) {
+					//hard-code the max width so it doesn't move around
+					span.style.width = (box.width / fontsize) + 'em';
 				}
-				line = [];
+				if (box.left < lastX) {
+					if (line && line.length) {
+						lines.push(line);
+					}
+					line = [];
+				}
+				lastX = box.left;
 			}
 			line.push(span);
-			lastX = box.left;
 		});
 		if (line && line.length) {
 			lines.push(line);
@@ -120,7 +142,7 @@
 		});
 
 		//re-enable the animation
-		grid.style.animationName = '';
+		grid.style.removeProperty('animation-name');
 	}
 	
 	function calculateKeyframes(font) {
@@ -420,23 +442,21 @@
 	}
 	
 
-	function tnTypeTools() {
-		return {
-			'customFonts': {},
-			'clone': function(obj) { return JSON.parse(JSON.stringify(obj)); },
-			'slidersToElement': slidersToElement,
-			'handleFontChange': handleFontChange,
-			'fvsToAxes': fvsToAxes,
-			'axesToFVS': axesToFVS,
-			'addCustomFonts': addCustomFonts,
-			'addCustomFont': addCustomFont,
-			'resetAnimation': resetAnimation,
-			'doGridSize': doGridSize
-		};
-	}
+	window.TNTools = {
+		'customFonts': {},
+		'clone': function(obj) { return JSON.parse(JSON.stringify(obj)); },
+		'slidersToElement': slidersToElement,
+		'handleFontChange': handleFontChange,
+		'fvsToAxes': fvsToAxes,
+		'axesToFVS': axesToFVS,
+		'addCustomFonts': addCustomFonts,
+		'addCustomFont': addCustomFont,
+		'resetAnimation': resetAnimation,
+		'doGridSize': doGridSize
+	};
 	
 	$(function() {
-		controls = $('#controls');
+		var controls = $('#controls');
 		$('head').append("<style id='style-general'></style>");
 		$('#mode-sections > sections').each(function() {
 			var styleid = 'style-' + this.id;
@@ -518,25 +538,29 @@
 		});
 	});
 	
-	window.TNTools = tnTypeTools();
-
-	var resizeTimeout;
 	$(window).on('load', function() {
+		//this timeout is for the sidebar load
 		setTimeout(function() {
 			var showSidebar = $('a.content-options-show-filters');
 			if (showSidebar.is(':visible')) {
 				showSidebar.click();
 			}
+		}, 100);
 			
-			setupAnimation();
-			
-			$('#select-mode').trigger('change');
+		setupAnimation();
+		$('#select-mode').trigger('change');
+
+		//and this one is to avoid weird font loading issues
+		setTimeout(function() {
 			$('#select-font').trigger('change');
-		},100);
-	}).on('resize', function() {
-		if (resizeTimeout) {
-			clearTimeout(resizeTimeout);
-		}
-		resizeTimeout = setTimeout(TNTools.doGridSize, 500);
-	}).trigger('resize');
+			var resizeTimeout;
+			$(window).on('resize', function() {
+				if (resizeTimeout) {
+					clearTimeout(resizeTimeout);
+				}
+				resizeTimeout = setTimeout(TNTools.doGridSize, 500);
+			}).trigger('resize')
+		}, 500);
+		
+	});
 })();

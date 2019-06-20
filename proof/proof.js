@@ -8,34 +8,62 @@ $(function() {
 	
 	var controls = $('#controls');
 	var proof = $('#proof-grid');
+	var glyphset = $('#select-glyphs');
+	
+	var glyphsets = {
+		'alphanum': 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+	}
+
+	function filterGlyphs() {
+		var glyphstring = glyphsets[glyphset.val()];
+		var showall = !glyphstring;
+		var showglyphs = {};
+		if (glyphstring) {
+			Array.from(glyphstring).forEach(function(c) {
+				showglyphs[c] = true;
+			});
+		}
+		proof.find('span').each(function() {
+			var c = this.textContent;
+			if (showall || showglyphs[c]) {
+				this.style.display = '';
+			} else {
+				this.style.display = 'none';
+			}
+		});
+		TNTools.doGridSize();
+	}
 	
 	function populateGrid(font) {
 		var gid;
+		proof.empty();
 		for (gid in font.tables.cmap.glyphIndexMap) {
 			proof.append('<span>' + String.fromCodePoint(gid) + '</span>');
 		}
 		TNTools.slidersToElement();
-		TNTools.doGridSize();
+		filterGlyphs();
 	}
 	
 	$('#select-font')	.on('change', function() {
-		var font = $(this).val();
-		proof.empty();
+		var fonturl = $(this).val();
+		proof.html('<span style="font-size:1rem">Loading…</span>');
 
-		if (font.match(/^custom-/) && window.fontInfo[font] && window.fontInfo[font].fontobj) {
-			populateGrid(window.fontInfo[font].fontobj);
+		if (window.fontInfo[fonturl] && window.fontInfo[fonturl].fontobj) {
+			populateGrid(window.fontInfo[fonturl].fontobj);
 		} else {
-			//this seems to be causing race conditions, so wait a second to be sure the font is loaded
 			setTimeout(function() {
-				var url = '/fonts/' + font + '.woff';
+				var url = '/fonts/' + fonturl + '.woff';
 				window.opentype.load(url, function (err, font) {
 					if (err) {
 						alert(err);
 						return;
 					}
+					window.fontInfo[fonturl].fontobj = font;
 					populateGrid(font);
 				});
 			}, 500);
 		}
 	});
+	
+	$('#select-glyphs').on('change', filterGlyphs);
 });

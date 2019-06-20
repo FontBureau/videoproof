@@ -348,6 +348,19 @@ class TypeTools {
 	
 	public function animationControls() {
 ?>
+		<div>
+			<h3 class="inline"><label for="select-glyphs">Glyphs:</label></h3>
+			<select name="glyphs" id='select-glyphs'>
+				<option value='alphanum'>ABCabc123</option>
+				<option value='all'>All</option>
+<!--
+<?php foreach ($this->tools as $tool => $name): ?>
+				<option value="<?= $tool ?>"><?= $name ?></option>
+<?php endforeach ?>
+-->
+			</select>
+		</div>
+
 		<div id='animation-controls'>
 			<button type='button' class='beginning' title="Go to start">⏮</button>
 			<button type='button' class='back' title="Previous keyframe">⏪</button>
