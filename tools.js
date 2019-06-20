@@ -24,6 +24,14 @@
 	
 	function axesToFVS(axes) {
 		var clauses = [];
+		
+		//workaround Safari default-opsz bug
+		try {
+			if ('opsz' in axes && axes.opsz == fontInfo[$('#select-font').val()].axes.opsz.default) {
+				axes.opsz = fontInfo[$('#select-font').val()].axes.opsz.default + 0.1;
+			}
+		} catch (e) {}
+		
 		$.each(axes, function(k, v) {
 			if (k.length !== 4) {
 				return;
@@ -187,11 +195,11 @@
 
 		var fvsPerms = [];
 		$.each(permutations, function(i, perm) {
-			var fvs = [];
+			var fvs = {};
 			$.each(raxisPresent, function(j, axis) {
-				fvs.push('"' + axis + '" ' + perm[j]);
+				fvs[axis] = perm[j];
 			});
-			fvs = fvs.join(', ');
+			fvs = axesToFVS(fvs);
 			if (fvs !== prev) {
 				fvsPerms.push(fvs);
 			}
