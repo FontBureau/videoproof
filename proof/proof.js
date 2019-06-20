@@ -8,18 +8,14 @@ $(function() {
 	
 	var controls = $('#controls');
 	var proof = $('#proof-grid');
-	var glyphset = $('#select-glyphs');
+	var glyphselect = $('#select-glyphs');
 	
-	var glyphsets = {
-		'alphanum': 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-	}
-
 	function filterGlyphs() {
-		var glyphstring = glyphsets[glyphset.val()];
-		var showall = !glyphstring;
+		var glyphset = window.glyphsets[glyphselect.val()];
+		var showall = !glyphset;
 		var showglyphs = {};
-		if (glyphstring) {
-			Array.from(glyphstring).forEach(function(c) {
+		if (glyphset && glyphset.chars) {
+			Array.from(glyphset.chars).forEach(function(c) {
 				showglyphs[c] = true;
 			});
 		}

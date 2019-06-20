@@ -15,6 +15,14 @@ class TypeTools {
 	
 	private $registeredAxes = array('opsz', 'wdth', 'wght', 'ital', 'slnt', 'grad', 'GRAD');
 	
+	private $glyphsets = array(
+		'ABC' => ['name' => 'Latin Uppercase', 'chars' => 'ABCDEFGHIJKLMNNOPQRSTUVWXYZ'],
+		'ÁÇÉ' => ['name' => 'LatinExt Uppercase', 'chars' => 'ÀÁÂÃÄÅĀĂǺȀȂẠẢẤẦẨẪẬẮẰẲẴẶÆǼÇĆĈĊČĎÐĐǄÈÉÊËĒĔĖĘĚȄȆẸẺẼẾỀỂỄỆƏÞĜĞĠĢǦĤĦÌÍÎÏĨĪĬĮİȈȊỈỊĲĴĶĹĻĽĿŁǇÑŃŅŇŊǊÒÓÔÕÖŌŎŐƠǪȌȎȪȬȰỌỎỐỒỔỖỘỚỜỞỠỢØǾŒÙÚÛÜŔŖŘȐȒŚŜŞŠȘẞŢŤȚŦŨŪŬŮŰŲƯȔȖỤỦỨỪỬỮỰŴẀẂẄÝŶŸȲỲỴỶỸŹŻŽ'],
+		'abc' => ['name' => 'Latin Lowercase', 'chars' => 'abcdefghijklmnopqrstuvwxyz'],
+		'áçé' => ['name' => 'LatinExt Lowercase', 'chars' => 'àáâãäåāăąǻȁȃạảấầẩẫậắằẳẵặæǽçćĉċčďđǆèéêëēĕėęěȅȇẹẻẽếềểễệəþﬀﬁﬂﬃﬄĝğġģǧĥħıĩīĭįȉȋỉịìíîïĳȷĵķĸĺļľŀłðñńņňŉŋǌòóôõöōŏőơǫȍȏȫȭȱọỏốồổỗộớờởỡợøǿœŕŗřȑȓśŝşšșßţťțŧùúûüũūŭůűųưȕȗụủứừửữựŵẁẃẅýÿŷȳỳỵỷỹźżž'],
+		'123' => ['name' => 'Default figures', 'chars' => '0123456789'],
+	);
+	
 	public static function requireLogin($user, $password) {
 		if (!isset($_SERVER['PHP_AUTH_USER']) || $_SERVER['PHP_AUTH_USER'] !== $user || $_SERVER['PHP_AUTH_PW'] !== $password) {
 			header('HTTP/1.1 401 Unauthorized');
@@ -156,6 +164,7 @@ class TypeTools {
 		<script>
 			var fontInfo = <?= json_encode($this->fontinfo) ?>;
 			var registeredAxes = <?= json_encode($this->registeredAxes) ?>;
+			var glyphsets = <?= json_encode($this->glyphsets) ?>;
 		</script>
 		<script src="https://www.typenetwork.com/assets_content/js/functions.js"></script>
 		<script src="tools.js"></script>
@@ -351,13 +360,10 @@ class TypeTools {
 		<div>
 			<h3 class="inline"><label for="select-glyphs">Glyphs:</label></h3>
 			<select name="glyphs" id='select-glyphs'>
-				<option value='alphanum'>ABCabc123</option>
-				<option value='all'>All</option>
-<!--
-<?php foreach ($this->tools as $tool => $name): ?>
-				<option value="<?= $tool ?>"><?= $name ?></option>
+<?php foreach ($this->glyphsets as $k => $glyphset): ?>
+				<option value="<?= $k ?>"><?= $glyphset['name'] ?></option>
 <?php endforeach ?>
--->
+				<option value='all'>All</option>
 			</select>
 		</div>
 
