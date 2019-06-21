@@ -464,7 +464,8 @@
 		'doGridSize': doGridSize
 	};
 	
-	$(function() {
+	//jquery overhead is sometimes causing window.load to fire before this! So use native events.
+	document.addEventListener('DOMContentLoaded', function() {
 		var controls = $('#controls');
 		$('head').append("<style id='style-general'></style>");
 		$('#mode-sections > sections').each(function() {
@@ -547,7 +548,7 @@
 		});
 	});
 	
-	$(window).on('load', function() {
+	window.addEventListener('load', function() {
 		//this timeout is for the sidebar load
 		setTimeout(function() {
 			var showSidebar = $('a.content-options-show-filters');
@@ -558,7 +559,6 @@
 			
 		setupAnimation();
 		$('#select-mode').trigger('change');
-
 		$('#select-font').trigger('change');
 		var resizeTimeout;
 		$(window).on('resize', function() {
@@ -566,6 +566,6 @@
 				clearTimeout(resizeTimeout);
 			}
 			resizeTimeout = setTimeout(TNTools.doGridSize, 500);
-		}).trigger('resize')
+		}).trigger('resize');
 	});
 })();

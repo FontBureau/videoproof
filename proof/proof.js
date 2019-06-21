@@ -1,6 +1,6 @@
-$(function() {
+document.addEventListener('DOMContentLoaded', function() {
 	"use strict";
-
+	
 	var head = document.getElementsByTagName('head')[0];
 	var script;
 
