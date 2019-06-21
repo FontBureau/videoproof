@@ -16,11 +16,83 @@ class TypeTools {
 	private $registeredAxes = array('opsz', 'wdth', 'wght', 'ital', 'slnt', 'grad', 'GRAD');
 	
 	private $glyphsets = array(
-		'ABC' => ['name' => 'Latin Uppercase', 'chars' => 'ABCDEFGHIJKLMNNOPQRSTUVWXYZ'],
-		'ÁÇÉ' => ['name' => 'LatinExt Uppercase', 'chars' => 'ÀÁÂÃÄÅĀĂǺȀȂẠẢẤẦẨẪẬẮẰẲẴẶÆǼÇĆĈĊČĎÐĐǄÈÉÊËĒĔĖĘĚȄȆẸẺẼẾỀỂỄỆƏÞĜĞĠĢǦĤĦÌÍÎÏĨĪĬĮİȈȊỈỊĲĴĶĹĻĽĿŁǇÑŃŅŇŊǊÒÓÔÕÖŌŎŐƠǪȌȎȪȬȰỌỎỐỒỔỖỘỚỜỞỠỢØǾŒÙÚÛÜŔŖŘȐȒŚŜŞŠȘẞŢŤȚŦŨŪŬŮŰŲƯȔȖỤỦỨỪỬỮỰŴẀẂẄÝŶŸȲỲỴỶỸŹŻŽ'],
-		'abc' => ['name' => 'Latin Lowercase', 'chars' => 'abcdefghijklmnopqrstuvwxyz'],
-		'áçé' => ['name' => 'LatinExt Lowercase', 'chars' => 'àáâãäåāăąǻȁȃạảấầẩẫậắằẳẵặæǽçćĉċčďđǆèéêëēĕėęěȅȇẹẻẽếềểễệəþﬀﬁﬂﬃﬄĝğġģǧĥħıĩīĭįȉȋỉịìíîïĳȷĵķĸĺļľŀłðñńņňŉŋǌòóôõöōŏőơǫȍȏȫȭȱọỏốồổỗộớờởỡợøǿœŕŗřȑȓśŝşšșßţťțŧùúûüũūŭůűųưȕȗụủứừửữựŵẁẃẅýÿŷȳỳỵỷỹźżž'],
-		'123' => ['name' => 'Default figures', 'chars' => '0123456789'],
+		'Latin Uppercase' => [
+			'A-Z' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+			'Extended' => 'ÀÁÂÃÄÅĀĂǺȀȂẠẢẤẦẨẪẬẮẰẲẴẶÆǼÇĆĈĊČĎÐĐǄÈÉÊËĒĔĖĘĚȄȆẸẺẼẾỀỂỄỆƏÞĜĞĠĢǦĤĦÌÍÎÏĨĪĬĮİȈȊỈỊĲĴĶĹĻĽĿŁǇÑŃŅŇŊǊÒÓÔÕÖŌŎŐƠǪȌȎȪȬȰỌỎỐỒỔỖỘỚỜỞỠỢØǾŒÙÚÛÜŔŖŘȐȒŚŜŞŠȘẞŢŤȚŦŨŪŬŮŰŲƯȔȖỤỦỨỪỬỮỰŴẀẂẄÝŶŸȲỲỴỶỸŹŻŽ', // /IJacute
+			'Mixed case' => 'ǅǈǋǉ',
+
+/*
+			'A' => 'ÀÁÂÃÄÅĀĂǺȀȂẠẢẤẦẨẪẬẮẰẲẴẶÆǼ',
+			'C' => 'ÇĆĈĊČ',
+			'D' => 'ĎÐĐǄǅ',
+			'E' => 'ÈÉÊËĒĔĖĘĚȄȆẸẺẼẾỀỂỄỆÆǼŒ',
+			'G' => 'ĜĞĠĢǦ',
+			'H' => 'ĤĦ',
+			'I' => ' ÌÍÎÏĨĪĬĮİȈȊỈỊĲǉǇǊ', // /IJacute 
+			'J' => 'ĴĲ', // /IJacute
+			'K' => 'Ķ',
+			'L' => 'ĹĻĽĿŁǇǈ',
+			'N' => 'ÑŃŅŇŊǊǋ',
+			'O' => 'ÒÓÔÕÖŌŎŐƠǪȌȎȪȬȰỌỎỐỒỔỖỘỚỜỞỠỢØǾŒ',
+			'P' => 'Þ',
+			'R' => 'ŔŖŘȐȒ',
+			'S' => 'ŚŜŞŠȘẞ',
+			'T' => 'ŢŤȚŦ',
+			'U' => 'ÙÚÛÜŨŪŬŮŰŲƯȔȖỤỦỨỪỬỮỰ',
+			'W' => 'ŴẀẂẄ',
+			'Y' => 'ÝŶŸȲỲỴỶỸ',
+			'Z' => 'ŹŻŽǄ',
+*/
+		],
+		'Latin Lowercase' => [
+			'a–z' => 'abcdefghijklmnopqrstuvwxyz',
+			'extended' => 'àáâãäåāăąǻȁȃạảấầẩẫậắằẳẵặæǽçćĉċčďđǆèéêëēĕėęěȅȇẹẻẽếềểễệəþﬀﬁﬂﬃﬄĝğġģǧĥħıĩīĭįȉȋỉịìíîïĳȷĵķĸĺļľŀłðñńņňŉŋǌòóôõöōŏőơǫȍȏȫȭȱọỏốồổỗộớờởỡợøǿœŕŗřȑȓśŝşšșßţťțŧùúûüũūŭůűųưȕȗụủứừửữựŵẁẃẅýÿŷȳỳỵỷỹźżž', // /f_f_ij /f_ij /idotaccent /ijacute
+			'superiors' => 'ªº',
+			
+/*
+			'a' => 'àáâãäåāăąǻȁȃạảấầẩẫậắằẳẵặæǽ',
+			'c' => 'çćĉċč',
+			'd' => 'ďđǆð',
+			'e' => 'èéêëēĕėęěȅȇẹẻẽếềểễệəæǽœ',
+			'f' => 'ﬀﬁﬂﬃﬄ', // /f_f_ij /f_ij ',
+			'g' => 'ĝğġģǧ',
+			'h' => 'ĥħ',
+			'i' => 'ıĩīĭįȉȋỉịìíîïĳﬁﬃ', // /idotaccent /ijacute /f_ij /f_f_ij',
+			'j' => 'ȷĵǉĳǌǈ', ///f_ij  /f_f_ij
+			'k' => 'ķĸ',
+			'l' => 'ĺļľŀłﬂﬄ',
+			'n' => 'ñńņňŉŋǌ',
+			'o' => 'òóôõöōŏőơǫȍȏȫȭȱọỏốồổỗộớờởỡợøǿœ',
+			'p' => 'þ',
+			'r' => 'ŕŗřȑȓ',
+			's' => 'śŝşšșß',
+			't' => 'ţťțŧ',
+			'u' => 'ùúûüũūŭůűųưȕȗụủứừửữự',
+			'w' => 'ŵẁẃẅ',
+			'y' => 'ýÿŷȳỳỵỷỹ',
+			'z' => 'źżžǅ',
+*/
+		],
+		'Figures' => [
+			'default' => '0123456789',
+			'extended' => '⁰¹²³⁴⁵⁶⁷⁸⁹⅛⅙⅕¼⅓⅜⅖½⅗⅔⅝¾⅘⅚⅞%‰',
+		],
+		'Monetary' => [
+			'Latin' => '$¢£¥',
+			'World' => '₡₣₤₦₧₩₫€ƒ₭₱₲₵₹₺₼₽¤',
+		],
+		'Symbols' => [
+			'Latin punctuation' => ',-.:;…∙·!¡?¿–—―‐',
+			'Latin reference' => '*§¶†‡•',
+			'Latin quotation' => '"\'“”‚„‹›«»′″',
+			'Latin parenthetical' => '()[]{}',
+			'Latin math' => '+÷×−±<>≤≥≈≠=^~¬∕­/',
+			'Latin commercial' => '®©™#@⁒ʹʺ/\¦|_№⟨⟩µ⁄',
+		],
+		'Accents' => [
+			'Latin encoded' => '`¨¯°´ˆˇ˘˙˚˛˜˝‘’¸ʼ',
+			'Latin combining' => 'ˉ̧̨̛̣̤̦̮̱̀́̂̃̄̆̇̈̉̊̋̌̏̑',
+		],
 	);
 	
 	public static function requireLogin($user, $password) {
@@ -360,10 +432,21 @@ class TypeTools {
 		<div>
 			<h3 class="inline"><label for="select-glyphs">Glyphs:</label></h3>
 			<select name="glyphs" id='select-glyphs'>
-<?php foreach ($this->glyphsets as $k => $glyphset): ?>
-				<option value="<?= $k ?>"><?= $glyphset['name'] ?></option>
-<?php endforeach ?>
 				<option value='all'>All</option>
+<?php foreach ($this->glyphsets as $group => $sets): ?>
+	<?php if (is_array($sets)): ?>
+				<optgroup label="<?= $group ?>">
+	<?php foreach ($sets as $k => $glyphset): ?>
+					<option value="<?= "$group::$k" ?>"><?= $k ?></option>
+	<?php endforeach; ?>
+	<?php if (count($sets) > 1): ?>
+					<option value="<?= "$group::concat" ?>">all</option>
+	<?php endif; ?>
+				</optgroup>
+	<?php else: ?>
+		<option value="<?= "$group" ?>"><?= $group ?></option>
+	<? endif; ?>
+<?php endforeach ?>
 			</select>
 		</div>
 

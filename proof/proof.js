@@ -10,12 +10,35 @@ document.addEventListener('DOMContentLoaded', function() {
 	var proof = $('#proof-grid');
 	var glyphselect = $('#select-glyphs');
 	
+	function getGlyphString() {
+		var groupSet = glyphselect.val().split('::');
+		var glyphset;
+
+		if (groupSet.length > 1) {
+			if (groupSet[1] in window.glyphsets[groupSet[0]]) {
+				glyphset = window.glyphsets[groupSet[0]][groupSet[1]];
+			} else if (groupSet[1] === 'concat') {
+				glyphset = [];
+				$.each(window.glyphsets[groupSet[0]], function(label, glyphs) {
+					glyphset.push(glyphs);
+				});
+				glyphset = glyphset.join('').trim();
+			}
+		} else {
+			glyphset = window.glyphsets[groupSet[0]];
+		}
+
+		return glyphset;
+	}
+	
 	function filterGlyphs() {
-		var glyphset = window.glyphsets[glyphselect.val()];
+		var glyphset = getGlyphString();
+		
 		var showall = !glyphset;
 		var showglyphs = {};
-		if (glyphset && glyphset.chars) {
-			Array.from(glyphset.chars).forEach(function(c) {
+		
+		if (glyphset) {
+			Array.from(glyphset).forEach(function(c) {
 				showglyphs[c] = true;
 			});
 		}
@@ -59,5 +82,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 	
-	$('#select-glyphs').on('change', filterGlyphs);
+	$('#select-glyphs').on('change', function() {
+		//do some clever hiding and showing
+		
+		filterGlyphs();
+	});
 });
