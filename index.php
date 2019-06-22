@@ -1,9 +1,9 @@
 <?php
-namespace TypeNetwork\TypeTools;
-require_once("{$_SERVER['DOCUMENT_ROOT']}/tools.inc");
+namespace TypeNetwork\VideoProof;
+require_once("{$_SERVER['DOCUMENT_ROOT']}/videoproof.inc");
 
-$tools = new TypeTools();
+$videoproof = new VideoProof();
 
-print $tools->pageHead('Video Proof');
-print $tools->pageSections();
-print $tools->pageFoot();
+print $videoproof->pageHead('Video Proof');
+print $videoproof->pageSections();
+print $videoproof->pageFoot();

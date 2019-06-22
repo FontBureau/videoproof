@@ -19,13 +19,13 @@ body.dropzone::after {
 	color: red;
 }
 
-#typetools *:focus {
+#videoproof *:focus {
 	outline: none;
 }
 
 /* CONTROLS */
 
-#typetools aside.content-filters {
+#videoproof aside.content-filters {
 	padding-top: 2.625rem;
 }
 

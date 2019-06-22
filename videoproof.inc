@@ -1,7 +1,7 @@
 <?php
-namespace TypeNetwork\TypeTools;
+namespace TypeNetwork\VideoProof;
 
-class TypeTools {
+class VideoProof {
 	public $fontinfo;
 	private $slidercount = 0;
 	
@@ -102,7 +102,7 @@ class TypeTools {
 	public static function requireLogin($user, $password) {
 		if (!isset($_SERVER['PHP_AUTH_USER']) || $_SERVER['PHP_AUTH_USER'] !== $user || $_SERVER['PHP_AUTH_PW'] !== $password) {
 			header('HTTP/1.1 401 Unauthorized');
-			header('WWW-Authenticate: Basic realm="TN Type Tools"');
+			header('WWW-Authenticate: Basic realm="TN Video Proof"');
 			echo 'Varfontnügen';
 			exit;
 		}	
@@ -206,7 +206,7 @@ class TypeTools {
 	public function pageHead($title) {
 	?>
 <!DOCTYPE html>
-<html lang="en" id="typetools">
+<html lang="en" id="videoproof">
 	<head>
 		<meta charset="utf-8">
 		<title><?= $title ?></title>
@@ -232,7 +232,7 @@ class TypeTools {
 			}
 <?php endforeach; ?>
 		</style>
-		<link rel="stylesheet" href="tools.css">
+		<link rel="stylesheet" href="videoproof.css">
 		<link rel="stylesheet" href="form-controls.css">
 <?php foreach ($this->tools as $tool => $name): ?>
 		<link rel="stylesheet" href="<?= $tool ?>/<?= $tool ?>.css">
@@ -243,7 +243,7 @@ class TypeTools {
 			var glyphsets = <?= json_encode($this->glyphsets) ?>;
 		</script>
 		<script src="https://www.typenetwork.com/assets_content/js/functions.js"></script>
-		<script src="tools.js"></script>
+		<script src="videoproof.js"></script>
 <?php foreach ($this->tools as $tool => $name): ?>
 		<script src="<?= $tool ?>/<?= $tool ?>.js"></script>
 <?php endforeach; ?>
