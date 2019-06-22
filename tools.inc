@@ -17,8 +17,8 @@ class TypeTools {
 	
 	private $glyphsets = array(
 		'Latin Uppercase' => [
-			'A-Z' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-			'Extended' => 'ÀÁÂÃÄÅĀĂǺȀȂẠẢẤẦẨẪẬẮẰẲẴẶÆǼÇĆĈĊČĎÐĐǄÈÉÊËĒĔĖĘĚȄȆẸẺẼẾỀỂỄỆƏÞĜĞĠĢǦĤĦÌÍÎÏĨĪĬĮİȈȊỈỊĲĴĶĹĻĽĿŁǇÑŃŅŇŊǊÒÓÔÕÖŌŎŐƠǪȌȎȪȬȰỌỎỐỒỔỖỘỚỜỞỠỢØǾŒÙÚÛÜŔŖŘȐȒŚŜŞŠȘẞŢŤȚŦŨŪŬŮŰŲƯȔȖỤỦỨỪỬỮỰŴẀẂẄÝŶŸȲỲỴỶỸŹŻŽ', // /IJacute
+			'A-Z' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ&',
+			'Extended' => 'ÀÁÂÃÄÅĀĂǺȀȂẠẢẤẦẨẪẬẮẰẲẴẶĄÆǼÇĆĈĊČĎÐĐǄÈÉÊËĒĔĖĘĚȄȆẸẺẼẾỀỂỄỆƏÞĜĞĠĢǦĤĦÌÍÎÏĨĪĬĮİȈȊỈỊĲĴĶĹĻĽĿŁǇÑŃŅŇŊǊÒÓÔÕÖŌŎŐƠǪȌȎȪȬȰỌỎỐỒỔỖỘỚỜỞỠỢØǾŒÙÚÛÜŔŖŘȐȒŚŜŞŠȘẞŢŤȚŦŨŪŬŮŰŲƯȔȖỤỦỨỪỬỮỰŴẀẂẄÝŶŸȲỲỴỶỸŹŻŽ', // /IJacute
 			'Mixed case' => 'ǅǈǋǉ',
 
 /*
@@ -74,12 +74,16 @@ class TypeTools {
 */
 		],
 		'Figures' => [
-			'default' => '0123456789',
-			'extended' => '⁰¹²³⁴⁵⁶⁷⁸⁹⅛⅙⅕¼⅓⅜⅖½⅗⅔⅝¾⅘⅚⅞%‰',
+			'default figures' => '0123456789',
+			'proportional' => ['chars' => '0123456789', 'feature' => 'pnum'],
+			'tabular' => ['chars' => '0123456789', 'feature' => 'tnum'],
+			'lining' => ['chars' => '0123456789', 'feature' => 'lnum'],
+			'oldstyle' => ['chars' => '0123456789', 'feature' => 'onum'],
+			'extended figures' => '⁰¹²³⁴⁵⁶⁷⁸⁹⅛⅙⅕¼⅓⅜⅖½⅗⅔⅝¾⅘⅚⅞%‰',
 		],
 		'Monetary' => [
-			'Latin' => '$¢£¥',
-			'World' => '₡₣₤₦₧₩₫€ƒ₭₱₲₵₹₺₼₽¤',
+			'Latin $' => '$¢£¥',
+			'World ¤' => '₡₣₤₦₧₩₫€ƒ₭₱₲₵₹₺₼₽¤',
 		],
 		'Symbols' => [
 			'Latin punctuation' => ',-.:;…∙·!¡?¿–—―‐',
@@ -440,13 +444,16 @@ class TypeTools {
 					<option value="<?= "$group::$k" ?>"><?= $k ?></option>
 	<?php endforeach; ?>
 	<?php if (count($sets) > 1): ?>
-					<option value="<?= "$group::concat" ?>">all</option>
+					<option value="<?= "$group::concat" ?>">All <?=$group?></option>
 	<?php endif; ?>
 				</optgroup>
 	<?php else: ?>
 		<option value="<?= "$group" ?>"><?= $group ?></option>
 	<? endif; ?>
 <?php endforeach ?>
+				<optgroup label="Orphans">
+					<option value="orphans">None of the above</option>
+				</optgroup>
 			</select>
 		</div>
 
