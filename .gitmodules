@@ -7,12 +7,6 @@
 [submodule "spectrum"]
 	path = spectrum
 	url = https://github.com/bgrins/spectrum.git
-[submodule "knuth"]
-	path = knuth
-	url = https://github.com/bramstein/typeset.git
-[submodule "fonts/repos/Roboto"]
-	path = fonts/repos/Roboto
-	url = git@github.com:TypeNetwork/Roboto
 [submodule "fonts/repos/Roboto-Extremo"]
 	path = fonts/repos/Roboto-Extremo
 	url = git@github.com:TypeNetwork/Roboto-Extremo
