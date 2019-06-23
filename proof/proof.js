@@ -10,10 +10,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	var proof = $('#proof-grid');
 	var glyphselect = $('#select-glyphs');
 	var glyphsort = "glyphset";
+	var showExtended = document.getElementById('show-extended-glyphs');
 	var currentFont;
 	
 	//find characters in the font that aren't in any of the defined glyph groups
-	function getOrphanChars() {
+	function getMiscChars() {
 		var definedGlyphs = {};
 		Array.from(getKnownGlyphs()).forEach(function(c) {
 			definedGlyphs[c] = true;
@@ -55,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 	
 	function getAllGlyphs() {
-		return getKnownGlyphs() + getOrphanChars();
+		return getKnownGlyphs() + getMiscChars();
 	}
 	
 	function getGlyphString() {
@@ -74,10 +75,22 @@ document.addEventListener('DOMContentLoaded', function() {
 				});
 				glyphset = glyphset.join('').trim();
 			}
-		} else if (groupSet[0] === 'orphans') {
-			glyphset = getOrphanChars();
+		} else if (groupSet[0] === 'misc') {
+			glyphset = getMiscChars();
 		} else {
 			glyphset = window.glyphsets[groupSet[0]];
+		}
+
+		if (groupSet.length === 1 && typeof glyphset === 'object' && 'default' in glyphset) {
+			if (!showExtended.checked) {
+				return glyphset['default'];
+			} else {
+				var result = "";
+				$.each(glyphset, function(k, v) {
+					result += typeof v === 'string' ? v : v.chars;
+				});
+				return result;
+			}
 		}
 
 		return glyphset ? glyphset : getAllGlyphs();
@@ -143,4 +156,5 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 	
 	$('#select-glyphs').on('change', populateGrid);
+	$('#show-extended-glyphs').on('change', populateGrid);
 });

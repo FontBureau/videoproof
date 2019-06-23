@@ -17,9 +17,9 @@ class VideoProof {
 	
 	private $glyphsets = array(
 		'Latin Uppercase' => [
-			'A-Z' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ&',
-			'Extended' => 'ÀÁÂÃÄÅĀĂǺȀȂẠẢẤẦẨẪẬẮẰẲẴẶĄÆǼÇĆĈĊČĎÐĐǄÈÉÊËĒĔĖĘĚȄȆẸẺẼẾỀỂỄỆƏÞĜĞĠĢǦĤĦÌÍÎÏĨĪĬĮİȈȊỈỊĲĴĶĹĻĽĿŁǇÑŃŅŇŊǊÒÓÔÕÖŌŎŐƠǪȌȎȪȬȰỌỎỐỒỔỖỘỚỜỞỠỢØǾŒÙÚÛÜŔŖŘȐȒŚŜŞŠȘẞŢŤȚŦŨŪŬŮŰŲƯȔȖỤỦỨỪỬỮỰŴẀẂẄÝŶŸȲỲỴỶỸŹŻŽ', // /IJacute
-			'Mixed case' => 'ǅǈǋǉ',
+			'default' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ&',
+			'extended' => 'ÀÁÂÃÄÅĀĂǺȀȂẠẢẤẦẨẪẬẮẰẲẴẶĄÆǼÇĆĈĊČĎÐĐǄÈÉÊËĒĔĖĘĚȄȆẸẺẼẾỀỂỄỆƏÞĜĞĠĢǦĤĦÌÍÎÏĨĪĬĮİȈȊỈỊĲĴĶĹĻĽĿŁǇÑŃŅŇŊǊÒÓÔÕÖŌŎŐƠǪȌȎȪȬȰỌỎỐỒỔỖỘỚỜỞỠỢØǾŒÙÚÛÜŔŖŘȐȒŚŜŞŠȘẞŢŤȚŦŨŪŬŮŰŲƯȔȖỤỦỨỪỬỮỰŴẀẂẄÝŶŸȲỲỴỶỸŹŻŽ', // /IJacute
+			'mixed case' => 'ǅǈǋǉ',
 
 /*
 			'A' => 'ÀÁÂÃÄÅĀĂǺȀȂẠẢẤẦẨẪẬẮẰẲẴẶÆǼ',
@@ -45,7 +45,7 @@ class VideoProof {
 */
 		],
 		'Latin Lowercase' => [
-			'a–z' => 'abcdefghijklmnopqrstuvwxyz',
+			'default' => 'abcdefghijklmnopqrstuvwxyz',
 			'extended' => 'àáâãäåāăąǻȁȃạảấầẩẫậắằẳẵặæǽçćĉċčďđǆèéêëēĕėęěȅȇẹẻẽếềểễệəþﬀﬁﬂﬃﬄĝğġģǧĥħıĩīĭįȉȋỉịìíîïĳȷĵķĸĺļľŀłðñńņňŉŋǌòóôõöōŏőơǫȍȏȫȭȱọỏốồổỗộớờởỡợøǿœŕŗřȑȓśŝşšșßţťțŧùúûüũūŭůűųưȕȗụủứừửữựŵẁẃẅýÿŷȳỳỵỷỹźżž', // /f_f_ij /f_ij /idotaccent /ijacute
 			'superiors' => 'ªº',
 			
@@ -74,16 +74,13 @@ class VideoProof {
 */
 		],
 		'Figures' => [
-			'default figures' => '0123456789',
-			'proportional' => ['chars' => '0123456789', 'feature' => 'pnum'],
-			'tabular' => ['chars' => '0123456789', 'feature' => 'tnum'],
-			'lining' => ['chars' => '0123456789', 'feature' => 'lnum'],
-			'oldstyle' => ['chars' => '0123456789', 'feature' => 'onum'],
-			'extended figures' => '⁰¹²³⁴⁵⁶⁷⁸⁹⅛⅙⅕¼⅓⅜⅖½⅗⅔⅝¾⅘⅚⅞%‰',
+			'default' => '0123456789',
+
+			'extended' => '⁰¹²³⁴⁵⁶⁷⁸⁹⅛⅙⅕¼⅓⅜⅖½⅗⅔⅝¾⅘⅚⅞%‰',
 		],
 		'Monetary' => [
-			'Latin $' => '$¢£¥',
-			'World ¤' => '₡₣₤₦₧₩₫€ƒ₭₱₲₵₹₺₼₽¤',
+			'default' => '$¢£¥',
+			'extended' => '₡₣₤₦₧₩₫€ƒ₭₱₲₵₹₺₼₽¤',
 		],
 		'Symbols' => [
 			'Latin punctuation' => ',-.:;…∙·!¡?¿–—―‐',
@@ -299,6 +296,7 @@ class VideoProof {
 						<div class='color'><input type='color' id='background' name='background' value='white'></div>
 					</div>
 					
+					<?= $this->selectGlyphGroup(); ?>
 					<?= $this->animationControls(); ?>
 
 					<ul id='axis-inputs'>
@@ -431,32 +429,46 @@ class VideoProof {
 		return "";
 	}
 	
-	public function animationControls() {
-?>
+	public function selectGlyphGroup() {
+		print <<<EOD
 		<div>
 			<h3 class="inline"><label for="select-glyphs">Glyphs:</label></h3>
 			<select name="glyphs" id='select-glyphs'>
 				<option value='all'>All</option>
-<?php foreach ($this->glyphsets as $group => $sets): ?>
-	<?php if (is_array($sets)): ?>
-				<optgroup label="<?= $group ?>">
-	<?php foreach ($sets as $k => $glyphset): ?>
-					<option value="<?= "$group::$k" ?>"><?= $k ?></option>
-	<?php endforeach; ?>
-	<?php if (count($sets) > 1): ?>
-					<option value="<?= "$group::concat" ?>">All <?=$group?></option>
-	<?php endif; ?>
-				</optgroup>
-	<?php else: ?>
-		<option value="<?= "$group" ?>"><?= $group ?></option>
-	<? endif; ?>
-<?php endforeach ?>
-				<optgroup label="Orphans">
-					<option value="orphans">None of the above</option>
+EOD;
+
+		foreach ($this->glyphsets as $group => $sets) {
+			if (is_array($sets)) {
+				if (isset($sets['default'])) {
+					print "<option value=\"$group\">$group</option>";
+				} else {
+					print "<optgroup label=\"$group\">";
+					foreach ($sets as $k => $glyphset) {
+						print "<option value=\"$group::$k\">$k</option>";
+					}
+					if (count($sets) > 1) {
+						print "<option value=\"$group::concat\">All $group</option>";
+					}
+					print "</optgroup>";
+				}
+			} else {
+				print "<option value=\"$group\">$group</option>";
+			}
+		}
+		
+		print <<<EOD
+				<optgroup label="Miscellaneous">
+					<option value="misc">None of the above</option>
 				</optgroup>
 			</select>
+			<label for='show-extended-glyphs'><input id='show-extended-glyphs' type='checkbox' name='extended'> Show Extended</label>
 		</div>
-
+EOD;
+		return "";
+	}
+	
+	public function animationControls() {
+?>
 		<div id='animation-controls'>
 			<button type='button' class='beginning' title="Go to start">⏮</button>
 			<button type='button' class='back' title="Previous keyframe">⏪</button>

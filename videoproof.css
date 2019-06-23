@@ -186,6 +186,11 @@ input[type=range][disabled] {
 	display: none;
 }
 
+/* GLYPH GROUPS */
+#controls label[for="show-extended-glyphs"] {
+	display: block;
+}
+
 
 /* ANIMATIION */
 

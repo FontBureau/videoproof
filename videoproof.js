@@ -373,10 +373,12 @@
 		$('#background').spectrum(spectropts);
 		
 		$('head style[id^="style-"]').empty().removeData();
+/*
 		$('input[type=checkbox]').each(function() {
 			this.checked = this.hasAttribute('checked');
 			$(this).trigger('change');
 		});
+*/
 		$('#align-left').prop('checked',true);
 		
 		resetAnimation();
