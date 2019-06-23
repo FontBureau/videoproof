@@ -1,9 +1,0 @@
-[submodule "opentype.js"]
-	path = opentype.js
-	url = https://github.com/nodebox/opentype.js.git
-[submodule "spectrum"]
-	path = spectrum
-	url = https://github.com/bgrins/spectrum.git
-[submodule "knuth"]
-	path = knuth
-	url = https://github.com/bramstein/typeset.git

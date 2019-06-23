@@ -373,13 +373,6 @@
 		$('#background').spectrum(spectropts);
 		
 		$('head style[id^="style-"]').empty().removeData();
-/*
-		$('input[type=checkbox]').each(function() {
-			this.checked = this.hasAttribute('checked');
-			$(this).trigger('change');
-		});
-*/
-		$('#align-left').prop('checked',true);
 		
 		resetAnimation();
 	}
@@ -482,34 +475,11 @@
 			$('#mode-sections > section').hide();
 			newActiveSection.show();
 			videoproofActiveTarget = newActiveSection.find('.variable-demo-target').get(0);
-			$('label[for="edit-to-size"], #edit-to-size')[this.value === 'waterfall' ? 'show' : 'hide']();
-			$('input[name=size]').val(this.value==='waterfall' ? 18 : 36).trigger('change');
-			$('input[name="to-size"]').val(72).trigger('change');
 		});
 
-		$('#select-font').on('change', function(evt) {
-			if (TNTools.handleFontChange($(this).val()) === false) {
-				return;
-			}
-		});
-
-		controls.on('change input', 'input[type=range], input[type=number]', function(evt) {
-			var constrained = Math.max(this.min || -Infinity, Math.min(this.max || Infinity, this.value));
-			if (this.type === 'range' && this.name === 'size') {
-				var leading = parseFloat($('#edit-leading').val());
-				var oldval = parseFloat($(this).data('oldval'));
-			}
-			TNTools.slidersToElement();
-		});
-
-		$("input[type=radio]").on('change', function() { TNTools.slidersToElement(); });
+		$('#select-font').on('change', TNTools.handleFontChange);
 		$('#foreground, #background').on('move.spectrum change.spectrum hide.spectrum', function() { TNTools.slidersToElement(); });
 
-		$('#reset').on('click', function() {
-			$('#select-font').trigger('change');
-			return false;
-		});
-		
 		$('#add-your-own-button').on('click', function(evt) {
 			$('#custom-fonts')[0].click();
 			return false;

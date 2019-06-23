@@ -3,7 +3,6 @@ namespace TypeNetwork\VideoProof;
 
 class VideoProof {
 	public $fontinfo;
-	private $slidercount = 0;
 	
 	private $tools = array(
 // 		'typespec' => "Ramp", 
@@ -111,7 +110,7 @@ class VideoProof {
 		ksort($this->fontinfo);
 			
 		$specific_font = false;
-		if (preg_match('/^(.+)-var\./', $_SERVER['HTTP_HOST'], $matches)) {
+		if (preg_match('/^(.+)-videoproof\./', $_SERVER['HTTP_HOST'], $matches)) {
 			$specific_font = strtolower($matches[1]);
 		}
 		
@@ -121,9 +120,6 @@ class VideoProof {
 					unset($this->fontinfo[$filebase]);
 					continue;
 				}
-			} else if ($this->excludeFonts and preg_match('/^(' . implode('|', $this->excludeFonts) . ')/', $filebase)) {
-				unset($this->fontinfo[$filebase]);
-				continue;
 			}
 			
 /*
@@ -213,7 +209,7 @@ class VideoProof {
 		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/fonts-momentum-sans.css">
 		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/style.css">
 		<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 		<script src="/opentype.js/dist/opentype.min.js"></script>
 		<script src="/spectrum/spectrum.js"></script>
 		<link rel="stylesheet" href="/spectrum/spectrum.css">
@@ -286,8 +282,9 @@ class VideoProof {
 				<a class="content-filters-close" href="#">Close</a>
 
 				<form id='controls'>
-					<?= $this->selectMode() ?>
 					<?= $this->selectFont() ?>
+					<?= $this->selectGlyphGroup(); ?>
+					<?= $this->selectMode() ?>
 
 					<div id='alignment-color'>
 						<label for='foreground'>Foreground</label>
@@ -296,7 +293,6 @@ class VideoProof {
 						<div class='color'><input type='color' id='background' name='background' value='white'></div>
 					</div>
 					
-					<?= $this->selectGlyphGroup(); ?>
 					<?= $this->animationControls(); ?>
 
 					<ul id='axis-inputs'>
@@ -316,7 +312,6 @@ class VideoProof {
 			include("$tool/$tool.php");
 			print "</section>";
 		}
-// 		print "<div id='css-output'></div>";
 		print "</div>";
 		return "";
 	}
@@ -388,47 +383,6 @@ class VideoProof {
 		return "";
 	}
 	
-	public function sizeLeading($size, $leading, $min=8, $max=96) {
-	?>
-		<div id='size-leading'>
-			<label for='edit-size'>Size:</label>
-			<input type="number" name='size' id='edit-size' min='<?= $min ?>' max='<?= $max ?>' value='<?= $size ?>'>
-			<label for='edit-to-size' style='display:none'>to</label>
-			<input type="number" name='to-size' style='display:none' id='edit-to-size' min='<?= $min ?>' max='<?= $max ?>' value='<?= $size ?>'>
-			<label for='edit-leading'>Leading:</label>
-			<input type="number" name='leading' id='edit-leading' min='<?= $min ?>' max='<?= ($max*2) ?>' value='<?= $leading ?>'>
-		</div>
-	<?php
-		return "";
-	}
-	
-	public function slider($options=array()) {
-		if (!is_array($options)) {
-			$options = array(
-				'id' => $options,
-				'name' => $options,
-			);
-		}
-		++$this->slidercount;
-		if (empty($options['id'])) {
-			$options['id'] = "slider-{$this->slidercount}";
-		}
-		if (empty($options['name'])) {
-			$options['name'] = "slider-{$this->slidercount}";
-		}
-		if (empty($options['label'])) {
-			$options['label'] = ucfirst($options['name']);
-		}
-	?>
-		<div class='slider'>
-			<label for="input-<?= $options['id'] ?>"><?= $options['label'] ?></label>
-			<input type='number' id="edit-<?= $options['id'] ?>" name='<?= $options['name'] ?>' min='<?= isset($options['min']) ? $options['min'] : 1 ?>' max='<?= isset($options['max']) ? $options['max'] : 1000 ?>' value='<?= isset($options['default']) ? $options['default'] : 500 ?>'>
-			<input type='range' id="input-<?= $options['id'] ?>" name='<?= $options['name'] ?>' min='<?= isset($options['min']) ? $options['min'] : 1 ?>' max='<?= isset($options['max']) ? $options['max'] : 1000 ?>' value='<?= isset($options['default']) ? $options['default'] : 500 ?>' step='<?= isset($options['step']) ? $options['step'] : 1 ?>'>
-		</div>
-	<?php
-		return "";
-	}
-	
 	public function selectGlyphGroup() {
 		print <<<EOD
 		<div>
@@ -487,29 +441,6 @@ EOD;
 		<input id='animation-duration' type='number' min="1" step="1" value="60">sec
 <?php
 		return "";
-	}
-	
-	public function lastFontUpdate() {
-		$now = time();
-		$then = filemtime("{$_SERVER['DOCUMENT_ROOT']}/fonts/axes.json");
-		$date = date("j M", $then);
-		$time = date("H:i", $then);
-		$diff = $now - $then;
-		if ($diff < 60) {
-			return $diff == 1 ? "just now" : "$diff seconds ago";
-		}
-		$diff = floor($diff/60);
-		if ($diff < 60) {
-			return $diff == 1 ? "1 minute ago" : "$diff minutes ago";
-		}
-		$diff = floor($diff/24);
-		if ($diff < 24) {
-			return $diff == 1 ? "1 hour ago" : "$diff hours ago";
-		}
-		if ($diff < 48) {
-			return "yesterday $time";
-		}
-		return "$date $time";
 	}
 	
 	public function metaLinks() {
