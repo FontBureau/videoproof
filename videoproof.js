@@ -209,7 +209,7 @@
 		return fvsPerms;
 	}
 
-	var videoproofOutputInterval, videoproofActiveTarget;
+	var videoproofOutputInterval, videoproofActiveTarget, animationRunning = false;
 	function animationUpdateOutput() {
 		var output = document.getElementById('aniparams');
 		var timestamp = $('label[for=animation-scrub]');
@@ -217,16 +217,24 @@
 		var mode = $('#select-mode')[0];
 
 		var css = videoproofActiveTarget ? getComputedStyle(videoproofActiveTarget) : {};
-		var percent = parseFloat(css.outlineOffset);
+		var percent = animationRunning ? parseFloat(css.outlineOffset) : -parseFloat(css.animationDelay) / parseFloat(css.animationDuration) * 100;
+		var axes = fvsToAxes(css.fontVariationSettings);
+		var outputAxes = [];
+		$.each(registeredAxes, function(i, axis) {
+			if (axis in axes) {
+				outputAxes.push(axis + ' ' + Math.floor(axes[axis]));
+			}
+		});
 		var bits = [
+			window.fontInfo[$('#select-font').val()].name,
 			mode.options[mode.selectedIndex].textContent,
-			css ? css.fontVariationSettings.replace(/"|(\.\d+)/g, '') : ""
+			outputAxes.join(' ')
 			//css ? parseFloat(css.outlineOffset) + '%' : ""
 		];
 		output.textContent = bits.join(": ");
 		scrub.value = percent;
 		timestamp.text(Math.round(percent));
-		if (percent == 100) {
+		if (animationRunning && percent == 100) {
 			resetAnimation();
 		}
 	}
@@ -237,9 +245,11 @@
 		$('html').removeClass('paused');
 		$('#keyframes-display li').removeClass('current');
 		videoproofOutputInterval = setInterval(animationUpdateOutput, 100);
+		animationRunning = true;
 	}
 	
 	function stopAnimation() {
+		animationRunning = false;
 		$('html').addClass('paused');
 		if (videoproofOutputInterval) {
 			clearInterval(videoproofOutputInterval);
@@ -256,17 +266,20 @@
 		function fakeFrame(index) {
 			currentFakeFrame = index;
 			var duration = parseFloat($('#animation-duration').val());
-			var kfTime = index / currentKeyframes.length * duration;
+			var ratio = index / currentKeyframes.length;
+			var kfTime = ratio * duration;
 			$('#keyframes-display li').removeClass('current').eq(index).addClass('current');
-			
+
 			//set "timestamp" in animation, for resuming
 			updateAnimationParam('animation-delay', -kfTime + 's');
-			
+			$('#animation-scrub').val(Math.round(ratio * 100));
+
 			//but the timing is imprecise, so also set the explicit FVS for the keyframe
 			updateAnimationParam('animation-name', 'none');
 			if (/font-variation-settings\s*:\s*([^;\}]+)/.test(currentKeyframes[index])) {
 				updateAnimationParam('font-variation-settings', RegExp.$1);
 			}
+			setTimeout(animationUpdateOutput);
 		}
 		
 		$('#animation-controls').find('button.back, button.forward').on('click', function() {
@@ -337,8 +350,8 @@
 		stopAnimation();
 		
 		var keyframes = currentKeyframes = calculateKeyframes(fontInfo[$('#select-font').val()]);
-		
-		$('#keyframes-display').empty().html("<li>" + keyframes.join("</li><li>").replace(/"/g, "") + "</li>");
+
+		$('#keyframes-display').empty().html("<li>" + keyframes.join("</li><li>").replace(/"|(\.\d+)/g, "") + "</li>");
 		
 		//close the loop
 		var perstep = 100 / keyframes.length;
