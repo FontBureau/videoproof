@@ -257,40 +257,39 @@
 		}
 	};
 
+	var currentKeyframe;
+	function jumpToKeyframe(index) {
+		stopAnimation();
+		currentKeyframe = index;
+		var duration = parseFloat($('#animation-duration').val());
+		var ratio = index / currentKeyframes.length;
+		var kfTime = ratio * duration;
+		$('#keyframes-display li').removeClass('current').eq(index).addClass('current');
+
+		//set "timestamp" in animation, for resuming
+		updateAnimationParam('animation-delay', -kfTime + 's');
+		$('#animation-scrub').val(Math.round(ratio * 100));
+
+		//but the timing is imprecise, so also set the explicit FVS for the keyframe
+		updateAnimationParam('animation-name', 'none');
+		if (/font-variation-settings\s*:\s*([^;\}]+)/.test(currentKeyframes[index])) {
+			updateAnimationParam('font-variation-settings', RegExp.$1);
+		}
+		setTimeout(animationUpdateOutput);
+	}
+
 	function setupAnimation() {
 		$('#animation-controls button.play-pause').on('click', function() {
 			videoproofOutputInterval ? stopAnimation() : startAnimation();
 		});
 		
-		var currentFakeFrame;
-		function fakeFrame(index) {
-			currentFakeFrame = index;
-			var duration = parseFloat($('#animation-duration').val());
-			var ratio = index / currentKeyframes.length;
-			var kfTime = ratio * duration;
-			$('#keyframes-display li').removeClass('current').eq(index).addClass('current');
-
-			//set "timestamp" in animation, for resuming
-			updateAnimationParam('animation-delay', -kfTime + 's');
-			$('#animation-scrub').val(Math.round(ratio * 100));
-
-			//but the timing is imprecise, so also set the explicit FVS for the keyframe
-			updateAnimationParam('animation-name', 'none');
-			if (/font-variation-settings\s*:\s*([^;\}]+)/.test(currentKeyframes[index])) {
-				updateAnimationParam('font-variation-settings', RegExp.$1);
-			}
-			setTimeout(animationUpdateOutput);
-		}
-		
 		$('#animation-controls').find('button.back, button.forward').on('click', function() {
 			if (!videoproofActiveTarget || !currentKeyframes) {
 				return;
-			}
-			stopAnimation();
-			
+			}			
 			var toIndex;
-			if (typeof currentFakeFrame === 'number') {
-				toIndex = $(this).hasClass('back') ? currentFakeFrame - 1 : currentFakeFrame + 1;
+			if (typeof currentKeyframe === 'number') {
+				toIndex = $(this).hasClass('back') ? currentKeyframe - 1 : currentKeyframe + 1;
 			} else {
 				var css = getComputedStyle(videoproofActiveTarget);
 				var percent = parseFloat(css.outlineOffset);
@@ -305,7 +304,7 @@
 			if (toIndex < 0 || toIndex >= currentKeyframes.length) {
 				toIndex = 0;
 			}
-			fakeFrame(toIndex);
+			jumpToKeyframe(toIndex);
 		});
 		
 		$('#animation-controls button.beginning').on('click', resetAnimation);
@@ -351,7 +350,20 @@
 		
 		var keyframes = currentKeyframes = calculateKeyframes(fontInfo[$('#select-font').val()]);
 
-		$('#keyframes-display').empty().html("<li>" + keyframes.join("</li><li>").replace(/"|(\.\d+)/g, "") + "</li>");
+		var ul = document.getElementById('keyframes-display');
+		ul.textContent = "";
+		keyframes.forEach(function(fvs, i) {
+			var li = document.createElement('li');
+			var a = document.createElement('a');
+			a.setAttribute('data-index', i);
+			a.textContent = fvs.replace(/"|(\.\d+)/g, '');
+			a.addEventListener('click', function(evt) {
+				evt.preventDefault();
+				jumpToKeyframe(this.getAttribute('data-index'));
+			});
+			li.appendChild(a);
+			ul.appendChild(li);
+		});
 		
 		//close the loop
 		var perstep = 100 / keyframes.length;

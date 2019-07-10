@@ -285,6 +285,15 @@ output#aniparams {
 	font-weight: bold;
 }
 
+#keyframes-display a {
+	color: inherit;
+	cursor: pointer;
+}
+
+#keyframes-display a:hover {
+	color: red;
+}
+
 /* CONTENT */
 
 #mode-sections {
