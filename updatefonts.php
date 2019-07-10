@@ -3,8 +3,7 @@ set_time_limit(60);
 
 $start = microtime(true);
 
-exec("git pull");
-exec("/usr/local/bin/python3.6 /home/typenetwork/ttf3web/ttf3web.py --no-munge --axes --formats=woff,woff2 fonts/repos/*/fonts/*.?tf fonts", $output, $err);
+exec("./updatefonts.sh", $output, $err);
 
 if ($err > 0) {
 	header("HTTP/1.1 500 Internal Server Error");

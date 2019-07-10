@@ -447,14 +447,36 @@ EOD;
 		return "";
 	}
 	
+	public function lastFontUpdate() {
+		$now = time();
+		$then = filemtime("{$_SERVER['DOCUMENT_ROOT']}/fonts/axes.json");
+		$date = date("M j", $then);
+		$time = date("H:i", $then);
+		$diff = $now - $then;
+		if ($diff < 60) {
+			return $diff == 1 ? "just now" : "$diff seconds ago";
+		}
+		$diff = floor($diff/60);
+		if ($diff < 60) {
+			return $diff == 1 ? "1 minute ago" : "$diff minutes ago";
+		}
+		$diff = floor($diff/24);
+		if ($diff < 24) {
+			return $diff == 1 ? "1 hour ago" : "$diff hours ago";
+		}
+		if ($diff < 48) {
+			return "yesterday $time";
+		}
+		return $date;
+	}
+
 	public function metaLinks() {
-		return;
 	?>
 		<h3>Meta</h3>
 		<ul>
 			<!-- <p><a id="bookmark" href="?">Bookmark these settings</a></p> -->
-			<li><a href="/" id='reset'>Reset to font defaults</a></li>
-<!-- 			<li><a href="/updatefonts.php" id='grab-new-fonts' title="Last updated <?= $this->lastFontUpdate() ?>">Grab latest font files</a></li> -->
+<!-- 			<li><a href="/" id='reset'>Reset to font defaults</a></li> -->
+			<li><a href="/updatefonts.php" id='grab-new-fonts' title="Last updated <?= $this->lastFontUpdate() ?>">Grab latest font files</a></li>
 		</ul>
 	<?php
 		return "";
