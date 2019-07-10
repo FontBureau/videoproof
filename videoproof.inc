@@ -392,7 +392,8 @@ class VideoProof {
 		<div>
 			<h3 class="inline"><label for="select-glyphs">Glyphs:</label></h3>
 			<select name="glyphs" id='select-glyphs'>
-				<option value='all'>All</option>
+				<option value='all-gid'>All by GlyphID</option>
+				<option value='all-groups'>All by group</option>
 EOD;
 
 		foreach ($this->glyphsets as $group => $sets) {

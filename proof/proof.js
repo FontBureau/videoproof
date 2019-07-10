@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	var controls = $('#controls');
 	var proof = $('#proof-grid');
 	var glyphselect = $('#select-glyphs');
-	var glyphsort = "glyphset";
 	var showExtended = document.getElementById('show-extended-glyphs');
 	var currentFont;
 	
@@ -77,10 +76,13 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		} else if (groupSet[0] === 'misc') {
 			glyphset = getMiscChars();
+		} else if (groupSet[0] === 'all-gid') {
+			glyphset = [];
+			
 		} else {
 			glyphset = window.glyphsets[groupSet[0]];
 		}
-
+		
 		if (groupSet.length === 1 && typeof glyphset === 'object' && 'default' in glyphset) {
 			if (!showExtended.checked) {
 				return glyphset['default'];
@@ -99,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	function populateGrid() {
 		var cmap = currentFont.tables.cmap.glyphIndexMap;
 		var glyphset = getGlyphString();
+		var glyphsort = $('#select-glyphs').val() === 'all-gid' ? 'glyph' : 'glyphset';
 
 		if (typeof glyphset === 'object' && glyphset.chars && glyphset.feature) {
 			proof.css('font-feature-settings', '"' + glyphset.feature + '" 1');
@@ -113,6 +116,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			case 'glyph':
 				unicodes = Object.keys(cmap);
 				unicodes.sort(function(a, b) { return cmap[a] - cmap[b]; });
+				unicodes.forEach(function(u, i) {
+					unicodes[i] = String.fromCodePoint(u);
+				});
 				break;
 			case 'glyphset':
 				unicodes = Array.from(glyphset);
@@ -121,6 +127,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			default:
 				unicodes = Object.keys(cmap);
 				unicodes.sort(function(a, b) { return a-b; });
+				unicodes.forEach(function(u, i) {
+					unicodes[i] = String.fromCodePoint(u);
+				});
 				break;
 		}
 
