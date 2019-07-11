@@ -321,6 +321,9 @@ output#aniparams {
     animation-iteration-count: 1;
     animation-duration: 60s;
     outline-offset: 100px; /* this is a standin for percent of animation cycle */
+    outline-style: solid;
+    outline-color: transparent;
+    outline-width: 1px;
 }
 
 .paused .variable-demo-target, .paused #keyframes-display a {
