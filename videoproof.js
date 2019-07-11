@@ -245,6 +245,7 @@
 		$('html').removeClass('paused');
 		videoproofOutputInterval = setInterval(animationUpdateOutput, 100);
 		animationRunning = true;
+		currentKeyframe = null;
 	}
 	
 	function stopAnimation() {
@@ -274,6 +275,12 @@
 			updateAnimationParam('font-variation-settings', RegExp.$1);
 		}
 		setTimeout(animationUpdateOutput);
+		
+		//need to do a bit of extra hoop jumping for the keyframe display
+		$('#keyframes-display a').css('animation-name', 'none');
+		setTimeout(function() {
+			$('#keyframes-display a').css('animation-name', '');
+		}, 100);
 	}
 
 	function setupAnimation() {
