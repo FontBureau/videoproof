@@ -229,7 +229,7 @@
 			window.fontInfo[$('#select-font').val()].name,
 			mode.options[mode.selectedIndex].textContent,
 			outputAxes.join(' ')
-			//css ? parseFloat(css.outlineOffset) + '%' : ""
+// 			css ? parseFloat(css.outlineOffset) + '%' : ""
 		];
 		output.textContent = bits.join(": ");
 		scrub.value = percent;
@@ -243,7 +243,6 @@
 		//just in case it had been removed
 		updateAnimationParam('animation-name', null);
 		$('html').removeClass('paused');
-		$('#keyframes-display li').removeClass('current');
 		videoproofOutputInterval = setInterval(animationUpdateOutput, 100);
 		animationRunning = true;
 	}
@@ -264,7 +263,6 @@
 		var duration = parseFloat($('#animation-duration').val());
 		var ratio = index / currentKeyframes.length;
 		var kfTime = ratio * duration;
-		$('#keyframes-display li').removeClass('current').eq(index).addClass('current');
 
 		//set "timestamp" in animation, for resuming
 		updateAnimationParam('animation-delay', -kfTime + 's');
@@ -324,7 +322,7 @@
 
 	var currentKeyframes;
 	function animationNameOnOff(callback) {
-		updateAnimationParam('animation-name', 'none');
+		updateAnimationParam('animation-name', 'none !important');
 		setTimeout(function() {
 			updateAnimationParam('animation-name', null);
 			stopAnimation();
@@ -341,7 +339,7 @@
 		if (v === null) {
 			style.empty();
 		} else {
-			style.text('.variable-demo-target { ' + k + ': ' + v + '; }');
+			style.text('.variable-demo-target, #keyframes-display a { ' + k + ': ' + v + '; }');
 		}
 	}
 
@@ -349,31 +347,40 @@
 		stopAnimation();
 		
 		var keyframes = currentKeyframes = calculateKeyframes(fontInfo[$('#select-font').val()]);
+		var perstep = 100 / keyframes.length;
+		$('#animation-duration').val(keyframes.length * 2).trigger('change');
+		updateAnimationParam('animation-delay', '0');
+		var stepwise = [];
 
 		var ul = document.getElementById('keyframes-display');
 		ul.textContent = "";
 		keyframes.forEach(function(fvs, i) {
+			var prevPercent = Math.max(0, Math.round(10*(perstep * (i-1)))/10);
+			var percent = Math.round(10*(perstep * i))/10;
+			var nextPercent = Math.min(100, Math.round(10*(perstep * (i+1)))/10);
+
+			//add display listing
 			var li = document.createElement('li');
 			var a = document.createElement('a');
-			a.setAttribute('data-index', i);
 			a.textContent = fvs.replace(/"|(\.\d+)/g, '');
 			a.addEventListener('click', function(evt) {
 				evt.preventDefault();
-				jumpToKeyframe(this.getAttribute('data-index'));
+				jumpToKeyframe(i);
 			});
 			li.appendChild(a);
 			ul.appendChild(li);
+
+			//add timeline hints
+			var stepwiseName = "videoproof-hint-" + i;
+			stepwise.push("@keyframes " + stepwiseName + " { 0%, " + prevPercent + '%, ' + nextPercent + '%, 100% { color:black; font-weight:400; } ' + percent + '% { color: red; font-weight: 700; } } #keyframes-display li:nth-child(' + (i+1) + ') a { animation-name: ' + stepwiseName + '; }');
+
+			//add CSS step
+			var percentOutput = (percent == 0 ? percent + '%, 100' : percent) + '%';
+			keyframes[i] =  percentOutput + ' { font-variation-settings: ' + fvs + '; outline-offset: ' + percent + 'px; }';
 		});
+				
+		document.getElementById('videoproof-keyframes').textContent = "@keyframes videoproof {\n" + keyframes.join("\n") + "}\n" + stepwise.join("\n");
 		
-		//close the loop
-		var perstep = 100 / keyframes.length;
-		$('#animation-duration').val(keyframes.length * 2).trigger('change');
-		updateAnimationParam('animation-delay', '0');
-		$.each(keyframes, function(i, axes) {
-			var percent = Math.round(10*(perstep * i))/10;
-			keyframes[i] = (percent == 0 ? percent + '%, 100' : percent) + '% { font-variation-settings: ' + axes + '; outline-offset: ' + percent + 'px; }';
-		});
-		document.getElementById('videoproof-keyframes').textContent = "@keyframes videoproof {\n" + keyframes.join("\n") + "}";
 		animationNameOnOff();
 	}
 

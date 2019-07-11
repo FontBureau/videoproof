@@ -276,7 +276,7 @@ output#aniparams {
 }
 
 #keyframes-display li {
-	font-family: Verdana;
+	font-family: MomentumSansVariable !important;
 	font-size: 10px;
 }
 
@@ -288,6 +288,7 @@ output#aniparams {
 #keyframes-display a {
 	color: inherit;
 	cursor: pointer;
+	font-variation-settings: normal !important;
 }
 
 #keyframes-display a:hover {
@@ -314,7 +315,7 @@ output#aniparams {
 	margin: 0;
 }
 
-.variable-demo-target {
+.variable-demo-target, #keyframes-display a {
 	animation-name: videoproof;
     animation-timing-function: linear;
     animation-iteration-count: 1;
@@ -322,6 +323,6 @@ output#aniparams {
     outline-offset: 100px; /* this is a standin for percent of animation cycle */
 }
 
-.paused .variable-demo-target {
+.paused .variable-demo-target, .paused #keyframes-display a {
 	animation-play-state: paused !important;
 }
