@@ -461,9 +461,9 @@ EOD;
 		<ul>
 			<!-- <p><a id="bookmark" href="?">Bookmark these settings</a></p> -->
 <!-- 			<li><a href="/" id='reset'>Reset to font defaults</a></li> -->
-			<?php /* don't print this if not PHP */
-				print "<li><a href='updatefonts.php' id='grab-new-fonts' title='Last updated " . $this->lastFontUpdate() . "'>Grab latest font files</a></li>";
-			?>
+			<?php if (!empty($_SERVER['DOCUMENT_ROOT'])): ?>
+			<li><a href='updatefonts.php' id='grab-new-fonts' title='Last updated <?= $this->lastFontUpdate() ?>'>Grab latest font files</a></li>
+			<?php endif; ?>
 		</ul>
 	<?php
 		return "";
