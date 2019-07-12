@@ -95,15 +95,6 @@ class VideoProof {
 		],
 	);
 	
-	public static function requireLogin($user, $password) {
-		if (!isset($_SERVER['PHP_AUTH_USER']) || $_SERVER['PHP_AUTH_USER'] !== $user || $_SERVER['PHP_AUTH_PW'] !== $password) {
-			header('HTTP/1.1 401 Unauthorized');
-			header('WWW-Authenticate: Basic realm="TN Video Proof"');
-			echo 'Varfontnügen';
-			exit;
-		}	
-	}
-
 	function __construct() {
 		$this->axesFile = __DIR__ . "/fonts/axes.json";
 		if (!file_exists($this->axesFile)) {
@@ -114,19 +105,7 @@ class VideoProof {
 		$this->fontinfo = get_object_vars($this->fontinfo);
 		ksort($this->fontinfo);
 			
-		$specific_font = false;
-		if (preg_match('/^(.+)-videoproof\./', $_SERVER['HTTP_HOST'], $matches)) {
-			$specific_font = strtolower($matches[1]);
-		}
-		
 		foreach ($this->fontinfo as $filebase => $axes) {
-			if ($specific_font) {
-				if (strpos(strtolower($filebase), $specific_font) !== 0) {
-					unset($this->fontinfo[$filebase]);
-					continue;
-				}
-			}
-			
 /*
 			if (!isset($axes->wght) || !isset($axes->wdth)) {
 				unset($this->fontinfo[$filebase]);
