@@ -105,9 +105,9 @@ class VideoProof {
 	}
 
 	function __construct() {
-		$this->axesFile = "{$_SERVER['DOCUMENT_ROOT']}/fonts/axes.json";
+		$this->axesFile = __DIR__ . "/fonts/axes.json";
 		if (!file_exists($this->axesFile)) {
-    		$this->axesFile = "{$_SERVER['DOCUMENT_ROOT']}/fonts/example-axes.json";
+    		$this->axesFile = __DIR__ . "/fonts/example-axes.json";
 		}
 		
 		$this->fontinfo = json_decode(file_get_contents($this->axesFile));
@@ -213,11 +213,11 @@ class VideoProof {
 		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/adobe-blank.css">
 		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/fonts-momentum-sans.css">
 		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/style.css">
-		<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+		<link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-		<script src="/opentype.js/dist/opentype.min.js"></script>
-		<script src="/spectrum/spectrum.js"></script>
-		<link rel="stylesheet" href="/spectrum/spectrum.css">
+		<script src="./opentype.js/dist/opentype.min.js"></script>
+		<script src="./spectrum/spectrum.js"></script>
+		<link rel="stylesheet" href="./spectrum/spectrum.css">
 
 		<style id='videoproof-keyframes'></style>
 		
@@ -225,7 +225,7 @@ class VideoProof {
 <?php foreach ($this->fontinfo as $filebase => $info): ?>
 			@font-face {
 				font-family: "<?= $filebase ?>-VP";
-				src: url("/fonts/<?= $filebase ?>.woff") format("woff");
+				src: url("./fonts/<?= $filebase ?>.woff") format("woff");
 				font-weight: 100 900;
 			}
 <?php endforeach; ?>
@@ -482,7 +482,9 @@ EOD;
 		<ul>
 			<!-- <p><a id="bookmark" href="?">Bookmark these settings</a></p> -->
 <!-- 			<li><a href="/" id='reset'>Reset to font defaults</a></li> -->
-			<li><a href="/updatefonts.php" id='grab-new-fonts' title="Last updated <?= $this->lastFontUpdate() ?>">Grab latest font files</a></li>
+			<?php /* don't print this if not PHP */
+				print "<li><a href='updatefonts.php' id='grab-new-fonts' title='Last updated " . $this->lastFontUpdate() . "'>Grab latest font files</a></li>";
+			?>
 		</ul>
 	<?php
 		return "";

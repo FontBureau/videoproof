@@ -1,6 +1,6 @@
 <?php
 namespace TypeNetwork\VideoProof;
-require_once("{$_SERVER['DOCUMENT_ROOT']}/videoproof.inc");
+require_once(__DIR__ . "/videoproof.inc");
 
 $videoproof = new VideoProof();
 
