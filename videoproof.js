@@ -170,6 +170,10 @@
 			}
 		});
 
+		if (!raxisPresent.length) {
+			return [];
+		}
+
 		var permutations = [];
 		var i, maxperms, j, l;
 		var raxisCount = raxisPresent.length;
