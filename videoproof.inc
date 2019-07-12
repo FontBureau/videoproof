@@ -105,7 +105,12 @@ class VideoProof {
 	}
 
 	function __construct() {
-		$this->fontinfo = json_decode(file_get_contents("{$_SERVER['DOCUMENT_ROOT']}/fonts/axes.json"));
+		$this->axesFile = "{$_SERVER['DOCUMENT_ROOT']}/fonts/axes.json";
+		if (!file_exists($this->axesFile)) {
+    		$this->axesFile = "{$_SERVER['DOCUMENT_ROOT']}/fonts/example-axes.json";
+		}
+		
+		$this->fontinfo = json_decode(file_get_contents($this->axesFile));
 		$this->fontinfo = get_object_vars($this->fontinfo);
 		ksort($this->fontinfo);
 			
@@ -450,7 +455,7 @@ EOD;
 	
 	public function lastFontUpdate() {
 		$now = time();
-		$then = filemtime("{$_SERVER['DOCUMENT_ROOT']}/fonts/axes.json");
+		$then = filemtime($this->axesFile);
 		$date = date("M j", $then);
 		$time = date("H:i", $then);
 		$diff = $now - $then;
