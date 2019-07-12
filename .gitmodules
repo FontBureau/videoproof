@@ -1,6 +1,6 @@
 [submodule "Amstelvar"]
 	path = fonts/repos/Amstelvar
-	url = git@github.com:TypeNetwork/Amstelvar
+	url = https://github.com/TypeNetwork/Amstelvar.git
 [submodule "opentype.js"]
 	path = opentype.js
 	url = https://github.com/nodebox/opentype.js.git
@@ -9,4 +9,4 @@
 	url = https://github.com/bgrins/spectrum.git
 [submodule "fonts/repos/Roboto-Extremo"]
 	path = fonts/repos/Roboto-Extremo
-	url = git@github.com:TypeNetwork/Roboto-Extremo
+	url = https://github.com/TypeNetwork/Roboto-Extremo.git
