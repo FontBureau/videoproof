@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			window.font = currentFont = window.fontInfo[fonturl].fontobj;
 			populateGrid();
 		} else {
-			var url = '/fonts/' + fonturl + '.woff';
+			var url = 'fonts/' + fonturl + '.woff';
 			window.opentype.load(url, function (err, font) {
 				if (err) {
 					alert(err);
