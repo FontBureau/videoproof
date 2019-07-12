@@ -216,8 +216,8 @@
 	var videoproofOutputInterval, videoproofActiveTarget, animationRunning = false;
 	function animationUpdateOutput() {
 		var output = document.getElementById('aniparams');
-		var timestamp = $('label[for=animation-scrub]');
-		var scrub = $('#animation-scrub')[0];
+// 		var timestamp = $('label[for=animation-scrub]');
+// 		var scrub = $('#animation-scrub')[0];
 		var mode = $('#select-mode')[0];
 
 		var css = videoproofActiveTarget ? getComputedStyle(videoproofActiveTarget) : {};
@@ -236,8 +236,8 @@
 // 			css ? parseFloat(css.outlineOffset) + '%' : ""
 		];
 		output.textContent = bits.join(": ");
-		scrub.value = percent;
-		timestamp.text(Math.round(percent));
+// 		scrub.value = percent;
+// 		timestamp.text(Math.round(percent));
 		if (animationRunning && percent == 100) {
 			resetAnimation();
 		}
@@ -271,7 +271,7 @@
 
 		//set "timestamp" in animation, for resuming
 		updateAnimationParam('animation-delay', -kfTime + 's');
-		$('#animation-scrub').val(Math.round(ratio * 100));
+// 		$('#animation-scrub').val(Math.round(ratio * 100));
 
 		//but the timing is imprecise, so also set the explicit FVS for the keyframe
 		updateAnimationParam('animation-name', 'none');
