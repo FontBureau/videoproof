@@ -1,1 +1,1 @@
-<figure id='proof-grid' class="variable-demo-target"></figure>
+<figure id='proof-grid' class="videoproof-animation-target"></figure>

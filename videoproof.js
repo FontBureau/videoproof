@@ -47,7 +47,7 @@
 
 	function slidersToElement() {
 		var styleEl = $('#style-general');
-		var selector = '.variable-demo-target';
+		var selector = '.videoproof-animation-target';
 		
 		var rules = [];
 		
@@ -365,7 +365,7 @@
 		if (v === '' || v === null) {
 			style.empty();
 		} else {
-			style.text('.variable-demo-target, #keyframes-display a { ' + k + ': ' + v + '; }');
+			style.text('.videoproof-animation-target, #keyframes-display a { ' + k + ': ' + v + '; }');
 		}
 	}
 
@@ -590,7 +590,7 @@
 			var newActiveSection = $('#mode-sections > #' + this.value);
 			$('#mode-sections > section').hide();
 			newActiveSection.show();
-			videoproofActiveTarget = newActiveSection.find('.variable-demo-target').get(0);
+			videoproofActiveTarget = newActiveSection.find('.videoproof-animation-target').get(0);
 		});
 
 		$('#select-font').on('change', TNTools.handleFontChange);
