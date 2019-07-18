@@ -221,7 +221,7 @@
 		var mode = $('#select-mode')[0];
 
 		var css = videoproofActiveTarget ? getComputedStyle(videoproofActiveTarget) : {};
-		var percent = animationRunning ? parseFloat(css.outlineOffset) : -parseFloat(css.animationDelay) / parseFloat(css.animationDuration) * 100;
+		//var percent = animationRunning ? parseFloat(css.outlineOffset) : -parseFloat(css.animationDelay) / parseFloat(css.animationDuration) * 100;
 		var axes = fvsToAxes(css.fontVariationSettings);
 		var outputAxes = [];
 		$.each(registeredAxes, function(i, axis) {
@@ -229,6 +229,9 @@
 				outputAxes.push(axis + ' ' + Math.floor(axes[axis]));
 			}
 		});
+		if (moarAxis) {
+			outputAxes.push(moarAxis + ' ' + Math.floor(axes[moarAxis]));
+		}
 		var bits = [
 			window.fontInfo[$('#select-font').val()].name,
 			mode.options[mode.selectedIndex].textContent,
@@ -238,21 +241,27 @@
 		output.textContent = bits.join(": ");
 // 		scrub.value = percent;
 // 		timestamp.text(Math.round(percent));
-		if (animationRunning && percent == 100) {
-			resetAnimation();
-		}
+		//if (animationRunning && percent == 100) {
+		//	resetAnimation();
+		//}
 	}
 
-	function startAnimation() {
-		//just in case it had been removed
-		updateAnimationParam('animation-name', null);
+	function startAnimation(anim) {
+		console.log('start', anim, Date.now());
+		if (anim !== 'moar') {
+			updateAnimationParam('animation-name', typeof anim === 'string' ? anim : null);
+			resetMoarAxes();
+		}
 		$('html').removeClass('paused');
-		videoproofOutputInterval = setInterval(animationUpdateOutput, 100);
+		if (!videoproofOutputInterval) {
+			videoproofOutputInterval = setInterval(animationUpdateOutput, 100);
+		}
 		animationRunning = true;
 		currentKeyframe = null;
 	}
 	
 	function stopAnimation() {
+		console.log('stop', Date.now());
 		animationRunning = false;
 		$('html').addClass('paused');
 		if (videoproofOutputInterval) {
@@ -263,7 +272,9 @@
 
 	var currentKeyframe;
 	function jumpToKeyframe(index) {
+		console.log('jump');
 		stopAnimation();
+		resetMoarAxes();
 		currentKeyframe = index;
 		var duration = parseFloat($('#animation-duration').val());
 		var ratio = index / currentKeyframes.length;
@@ -321,7 +332,7 @@
 			if (!videoproofActiveTarget || !currentKeyframes) {
 				return;
 			}
-			fakeFrame(currentKeyframes.length - 1);
+			jumpToKeyframe(currentKeyframes.length - 1);
 		});
 		
 		$('#animation-duration').on('change input', function() {
@@ -332,7 +343,8 @@
 	}
 
 	var currentKeyframes;
-	function animationNameOnOff(callback) {
+	function animationNameOnOff() {
+		console.log('onoff');
 		updateAnimationParam('animation-name', 'none !important');
 		setTimeout(function() {
 			updateAnimationParam('animation-name', null);
@@ -347,7 +359,7 @@
 			$('head').append("<style class='" + k + "'></style>");
 			style = $('style.' + k);
 		}
-		if (v === null) {
+		if (v === '' || v === null) {
 			style.empty();
 		} else {
 			style.text('.variable-demo-target, #keyframes-display a { ' + k + ': ' + v + '; }');
@@ -355,6 +367,7 @@
 	}
 
 	function resetAnimation() {
+		console.log('reset');
 		stopAnimation();
 		
 		var keyframes = currentKeyframes = calculateKeyframes(fontInfo[$('#select-font').val()]);
@@ -395,8 +408,61 @@
 		animationNameOnOff();
 	}
 
+	var moarAxis = null;
+	var moarFresh = false;
+	function resetMoarAxes() {
+		if (moarFresh) { return; }
+
+		var style = document.getElementById('videoproof-moar-animation');
+		style.textContent = "";
+
+		moarAxis = null;
+		moarFresh = true;
+		var moar = document.getElementById('moar-axes-display');
+		var fontname = $('#select-font').val();
+		fontInfo[fontname].axisOrder.forEach(function(axis) {
+			if (registeredAxes.indexOf(axis) >= 0) {
+				return;
+			}
+			var info = fontInfo[fontname].axes[axis];
+			var li = document.createElement('li');
+			var a = document.createElement('a');
+			a.textContent = axis + " " + info.min + " " + info['default'] + " " + info.max;
+			li.appendChild(a);
+			moar.appendChild(li);
+			a.addEventListener('click', function(evt) {
+				moarFresh = false;
+				evt.preventDefault();
+				
+				var fvs = fvsToAxes(getComputedStyle(videoproofActiveTarget).fontVariationSettings);
+				var fvsBase = {};
+				registeredAxes.forEach(function(k) {
+					if (k in fvs) {
+						fvsBase[k] = fvs[k];
+					}
+				});
+				fvsBase = axesToFVS(fvsBase);
+
+				if (animationRunning && evt.target.parentNode.className === 'current') {
+					console.log('moarpause');
+					stopAnimation();
+				} else {
+					console.log('moarstart');
+					moarAxis = axis;
+					$(moar).find('.current').removeClass('current');
+					li.className = 'current';
+					var kf = {};
+					kf['default'] = 'font-variation-settings: ' + fvsBase + ', "' + axis + '" ' + info['default'];
+					kf['min'] = 'font-variation-settings: ' + fvsBase + ', "' + axis + '" ' + info['min'];
+					kf['max'] = 'font-variation-settings: ' + fvsBase + ', "' + axis + '" ' + info['max'];
+					style.textContent = "#videoproof .variable-demo-target { animation: moar 6s infinite; } @keyframes moar { 0%, 100% { " + kf['default'] + "; } 33.333% { " + kf.min + "; } 66.666% { " + kf.max + "; } }";
+					startAnimation('moar');
+				}
+			});
+		});
+	}
 	
-	function handleFontChange(font) {
+	function handleFontChange() {
 		var spectropts = {
 			'showInput': true,
 			'showAlpha': true,
@@ -418,6 +484,7 @@
 		$('head style[id^="style-"]').empty().removeData();
 		
 		resetAnimation();
+		resetMoarAxes();
 	}
 
 	function addCustomFont(fonttag, url, format, font) {

@@ -270,28 +270,31 @@ output#aniparams {
 }
 
 
-#keyframes-display {
+ul.sidebar-list {
 	white-space: nowrap;
 	overflow: auto;
 }
 
-#keyframes-display li {
+ul.sidebar-list li {
 	font-family: MomentumSansVariable !important;
 	font-size: 10px;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
-#keyframes-display li.current {
+
+ul.sidebar-list li.current {
 	color: red;
 	font-weight: bold;
 }
 
-#keyframes-display a {
+ul.sidebar-list a {
 	color: inherit;
 	cursor: pointer;
 	font-variation-settings: normal !important;
 }
 
-#keyframes-display a:hover {
+ul.sidebar-list a:hover {
 	color: red;
 }
 

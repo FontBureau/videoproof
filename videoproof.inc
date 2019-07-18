@@ -12,7 +12,7 @@ class VideoProof {
 		'logopogo' => "Input", 
 	);
 	
-	private $registeredAxes = array('opsz', 'wdth', 'wght', 'ital', 'slnt', 'grad', 'GRAD');
+	private $registeredAxes = array('opsz', 'wdth', 'wght'); //, 'ital', 'slnt', 'grad', 'GRAD');
 	
 	private $glyphsets = array(
 		'Latin Uppercase' => [
@@ -95,6 +95,15 @@ class VideoProof {
 		],
 	);
 	
+	public static function requireLogin($user, $password) {
+		if (!isset($_SERVER['PHP_AUTH_USER']) || $_SERVER['PHP_AUTH_USER'] !== $user || $_SERVER['PHP_AUTH_PW'] !== $password) {
+			header('HTTP/1.1 401 Unauthorized');
+			header('WWW-Authenticate: Basic realm="TN Video Proof"');
+			echo 'Varfontnügen';
+			exit;
+		}	
+	}
+
 	function __construct() {
 		$this->axesFile = __DIR__ . "/fonts/axes.json";
 		if (!file_exists($this->axesFile)) {
@@ -105,7 +114,19 @@ class VideoProof {
 		$this->fontinfo = get_object_vars($this->fontinfo);
 		ksort($this->fontinfo);
 			
+		$specific_font = false;
+		if (preg_match('/^(.+)-videoproof\./', $_SERVER['HTTP_HOST'], $matches)) {
+			$specific_font = strtolower($matches[1]);
+		}
+		
 		foreach ($this->fontinfo as $filebase => $axes) {
+			if ($specific_font) {
+				if (strpos(strtolower($filebase), $specific_font) !== 0) {
+					unset($this->fontinfo[$filebase]);
+					continue;
+				}
+			}
+			
 /*
 			if (!isset($axes->wght) || !isset($axes->wdth)) {
 				unset($this->fontinfo[$filebase]);
@@ -199,6 +220,7 @@ class VideoProof {
 		<link rel="stylesheet" href="./spectrum/spectrum.css">
 
 		<style id='videoproof-keyframes'></style>
+		<style id='videoproof-moar-animation'></style>
 		
 		<style>
 <?php foreach ($this->fontinfo as $filebase => $info): ?>
@@ -423,7 +445,11 @@ EOD;
 		</div>
 		
 		<label>Keyframes</label>
-		<ul id='keyframes-display'>
+		<ul id='keyframes-display' class='sidebar-list'>
+		</ul>
+		
+		<label>But wait, there’s more</label>
+		<ul id='moar-axes-display' class='sidebar-list'>
 		</ul>
 		
 		<label for='animation-duration'>Full cycle</label>
@@ -461,9 +487,9 @@ EOD;
 		<ul>
 			<!-- <p><a id="bookmark" href="?">Bookmark these settings</a></p> -->
 <!-- 			<li><a href="/" id='reset'>Reset to font defaults</a></li> -->
-			<?php if (!empty($_SERVER['DOCUMENT_ROOT'])): ?>
-			<li><a href='updatefonts.php' id='grab-new-fonts' title='Last updated <?= $this->lastFontUpdate() ?>'>Grab latest font files</a></li>
-			<?php endif; ?>
+			<?php /* don't print this if not PHP */
+				print "<li><a href='updatefonts.php' id='grab-new-fonts' title='Last updated " . $this->lastFontUpdate() . "'>Grab latest font files</a></li>";
+			?>
 		</ul>
 	<?php
 		return "";
