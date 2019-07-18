@@ -330,5 +330,15 @@ ul.sidebar-list a:hover {
 }
 
 .paused .variable-demo-target, .paused #keyframes-display a {
-	animation-play-state: paused !important;
+	animation-play-state: paused;
+}
+
+.moar .variable-demo-target {
+	animation-name: moar;
+	animation-duration: 6s;
+	animation-iteration-count: infinite;
+}
+
+.moar #keyframes-display a {
+	animation-play-state: paused;
 }

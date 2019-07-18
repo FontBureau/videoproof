@@ -248,7 +248,10 @@
 
 	function startAnimation(anim) {
 		console.log('start', anim, Date.now());
-		if (anim !== 'moar') {
+		if (anim === 'moar') {
+			$('html').addClass('moar');
+		} else {
+			$('html').removeClass('moar');
 			updateAnimationParam('animation-name', typeof anim === 'string' ? anim : null);
 			resetMoarAxes();
 		}
@@ -413,12 +416,15 @@
 	function resetMoarAxes() {
 		if (moarFresh) { return; }
 
+		moarAxis = null;
+		moarFresh = true;
+
 		var style = document.getElementById('videoproof-moar-animation');
 		style.textContent = "";
 
-		moarAxis = null;
-		moarFresh = true;
 		var moar = document.getElementById('moar-axes-display');
+		moar.innerHTML = "";
+		
 		var fontname = $('#select-font').val();
 		fontInfo[fontname].axisOrder.forEach(function(axis) {
 			if (registeredAxes.indexOf(axis) >= 0) {
@@ -455,7 +461,7 @@
 					kf['default'] = 'font-variation-settings: ' + fvsBase + ', "' + axis + '" ' + info['default'];
 					kf['min'] = 'font-variation-settings: ' + fvsBase + ', "' + axis + '" ' + info['min'];
 					kf['max'] = 'font-variation-settings: ' + fvsBase + ', "' + axis + '" ' + info['max'];
-					style.textContent = "#videoproof .variable-demo-target { animation: moar 6s infinite; } @keyframes moar { 0%, 100% { " + kf['default'] + "; } 33.333% { " + kf.min + "; } 66.666% { " + kf.max + "; } }";
+					style.textContent = "@keyframes moar { 0%, 100% { " + kf['default'] + "; } 33.333% { " + kf.min + "; } 66.666% { " + kf.max + "; } }";
 					startAnimation('moar');
 				}
 			});
