@@ -6,10 +6,11 @@ class VideoProof {
 	
 	private $tools = array(
 // 		'typespec' => "Ramp", 
-		'proof' => "Array",
+		'grid' => "Array",
 // 		'waterfall' => "Waterfall",
 //		'grid' => "Grid",
-		'logopogo' => "Input", 
+		'type-your-own' => "Input", 
+		//'context' => "Contextual",
 	);
 	
 	private $registeredAxes = array('opsz', 'wdth', 'wght'); //, 'ital', 'slnt', 'grad', 'GRAD');
@@ -234,7 +235,7 @@ class VideoProof {
 		<link rel="stylesheet" href="videoproof.css">
 		<link rel="stylesheet" href="form-controls.css">
 <?php foreach ($this->tools as $tool => $name): ?>
-		<link rel="stylesheet" href="<?= $tool ?>/<?= $tool ?>.css">
+		<link rel="stylesheet" href="layouts/<?= $tool ?>.css">
 <?php endforeach; ?>
 		<script>
 			var fontInfo = <?= json_encode($this->fontinfo) ?>;
@@ -244,7 +245,7 @@ class VideoProof {
 		<script src="https://www.typenetwork.com/assets_content/js/functions.js"></script>
 		<script src="videoproof.js"></script>
 <?php foreach ($this->tools as $tool => $name): ?>
-		<script src="<?= $tool ?>/<?= $tool ?>.js"></script>
+		<script src="layouts/<?= $tool ?>.js"></script>
 <?php endforeach; ?>
 	</head>
 	<body>
@@ -319,7 +320,7 @@ class VideoProof {
 		print "<div id='mode-sections'>";
 		foreach ($this->tools as $tool => $name) {
 			print "<section id='$tool'>";
-			include("$tool/$tool.php");
+			include("layouts/$tool.php");
 			print "</section>";
 		}
 		print "</div>";
@@ -440,8 +441,10 @@ EOD;
 			<button type='button' class='play-pause' title="Play/Pause">⏯</button>
 			<button type='button' class='forward' title="Next keyframe">⏩</button>
 			<button type='button' class='end' title="Go to end">⏭</button>
+<!--
 			<input type='range' min="0" max="100" step="0.1" id='animation-scrub' value='0'>
 			<label for='animation-scrub'>0</label>
+-->
 		</div>
 		
 		<label>Keyframes</label>
