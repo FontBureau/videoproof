@@ -1,6 +1,7 @@
 (function() {
 "use strict";
 VideoProof.registerLayout('contextual', {
+	'fixedLineBreaks': true,
 	'init': function(proof) {
 		function populateGrid() {
 			var glyphset = VideoProof.getGlyphString();
@@ -15,28 +16,18 @@ VideoProof.registerLayout('contextual', {
 	*/
 	
 			proof.innerHTML = "<span>H" + Array.from(glyphset).join("H</span><span>H") + "H</span>";
-	
-			VideoProof.doGridSize();
+			VideoProof.fixLineBreaks();
 		}
 
-		proof.className = 'grid';
 		setTimeout(populateGrid);
 		$(document).on('videoproof:fontLoaded.grid', populateGrid);
 		$('#select-glyphs').on('change.grid', populateGrid);
 		$('#show-extended-glyphs').on('change.grid', populateGrid);
-		var resizeTimeout;
-		$(window).on('resize.grid', function() {
-			if (resizeTimeout) {
-				clearTimeout(resizeTimeout);
-			}
-			resizeTimeout = setTimeout(VideoProof.doGridSize, 500);
-		});
 	},
 	'deinit': function(proof) {
 		$(document).off('.grid');
 		$('#select-glyphs').off('.grid');
 		$('#show-extended-glyphs').off('.grid');
-		$(window).off('.grid');
 	}
 });
 })();

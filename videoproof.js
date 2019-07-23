@@ -212,9 +212,11 @@
 		return unicodes.join('');
 	}
 	
-	function doGridSize() {
-		if (!theProof) return;
-		var grid = theProof;
+	function fixLineBreaks() {
+		var grid = document.querySelector('#the-proof.fixed-line-breaks');
+		if (!grid) {
+			return;
+		}
 		var axes = fontInfo[$('#select-font').val()].axes;
 
 		//disable the animation for a minute
@@ -741,7 +743,7 @@
 		'getKnownGlyphs': getKnownGlyphs,
 		'getAllGlyphs': getAllGlyphs,
 		'getGlyphString': getGlyphString,
-		'doGridSize': doGridSize,
+		'fixLineBreaks': fixLineBreaks,
 		'registerLayout': registerLayout
 	};
 	
@@ -759,7 +761,8 @@
 
 		$('#select-layout').on('change', function() {
 			var layout = this.value;
-			var previousLayout = theProof.className;
+			var options = layouts[layout] || {};
+			var previousLayout = (theProof.className || '').replace(/ fixed-line-breaks/g, '');
 			
 			if (previousLayout && previousLayout in layouts && 'deinit' in layouts[previousLayout]) {
 				layouts[previousLayout].deinit(theProof);
@@ -767,9 +770,13 @@
 			
 			theProof.className = layout;
 			theProof.removeAttribute('style');
+			
+			if (options.fixedLineBreaks) {
+				theProof.className += ' fixed-line-breaks';
+			}
 
-			if (layout in layouts && 'init' in layouts[layout]) {
-				layouts[layout].init(theProof);
+			if (options.init) {
+				options.init(theProof);
 			}
 		});
 
@@ -851,5 +858,13 @@
 		setupAnimation();
 		$('#select-layout').trigger('change');
 		$('#select-font').trigger('change');
+
+		var resizeTimeout;
+		$(window).on('resize', function() {
+			if (resizeTimeout) {
+				clearTimeout(resizeTimeout);
+			}
+			resizeTimeout = setTimeout(VideoProof.fixLineBreaks, 500);
+		});
 	});
 })();

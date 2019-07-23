@@ -300,23 +300,38 @@ ul.sidebar-list a:hover {
 
 /* CONTENT */
 
-#mode-sections {
-	padding: 1rem;
-}
-
-#mode-sections > section {
-	display: none;
-}
-
-#mode-sections > section:first-child {
-	display: block;
-}
-
-#mode-sections figure {
+#the-proof {
 	width: 100%;
 	max-width: none;
-	margin: 0;
+	margin: 1rem;
 }
+
+#the-proof.fixed-line-breaks {
+	word-break: break-all;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	font-size: 36pt;
+	line-height: 1.5;
+	text-align: left;
+}
+
+#the-proof.fixed-line-breaks div, #the-proof.fixed-line-breaks span {
+	display: block;
+	white-space: nowrap;
+	word-break: normal;
+	word-wrap: normal;
+	overflow-wrap: normal;
+}
+
+#the-proof.fixed-line-breaks span {
+	display: inline-block;
+	min-width: 1em;
+/* 	font: inherit; */
+	text-align: left;
+}
+
+
+/* ANIMATION */
 
 #the-proof, #keyframes-display a {
 	animation-name: videoproof;
