@@ -17,30 +17,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		proof.empty();
 		Array.from(glyphset).forEach(function(c) {
-			proof.append('<span>' + c + '</span>');
+			proof.append('<span>H' + c + 'H</span>');
 		});
 
 		TNTools.doGridSize();
 	}
 	
 	$('#select-mode').on('change', function() {
-		if (this.value === 'grid') {
+		if (this.value === 'contextual') {
 			setTimeout(populateGrid);
-			$(document).on('videoproof:fontLoaded.grid', populateGrid);
-			$('#select-glyphs').on('change.grid', populateGrid);
-			$('#show-extended-glyphs').on('change.grid', populateGrid);
+			$(document).on('videoproof:fontLoaded.contextual', populateGrid);
+			$('#select-glyphs').on('change.contextual', populateGrid);
+			$('#show-extended-glyphs').on('change.contextual', populateGrid);
 			var resizeTimeout;
-			$(window).on('resize.grid', function() {
+			$(window).on('resize.contextual', function() {
 				if (resizeTimeout) {
 					clearTimeout(resizeTimeout);
 				}
 				resizeTimeout = setTimeout(TNTools.doGridSize, 500);
 			}).trigger('resize');
 		} else {
-			$(document).off('.grid');
-			$('#select-glyphs').off('.grid');
-			$('#show-extended-glyphs').off('.grid');
-			$(window).off('.grid');
+			$(document).off('.contextual');
+			$('#select-glyphs').off('.contextual');
+			$('#show-extended-glyphs').off('.contextual');
+			$(window).off('.contextual');
 		}
 	});
 

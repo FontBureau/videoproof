@@ -318,7 +318,7 @@ ul.sidebar-list a:hover {
 	margin: 0;
 }
 
-.videoproof-animation-target, #keyframes-display a {
+#the-proof, #keyframes-display a {
 	animation-name: videoproof;
     animation-timing-function: linear;
     animation-iteration-count: 1;
@@ -329,11 +329,11 @@ ul.sidebar-list a:hover {
     outline-width: 1px;
 }
 
-.paused .videoproof-animation-target, .paused #keyframes-display a {
+.paused #the-proof, .paused #keyframes-display a {
 	animation-play-state: paused;
 }
 
-.moar .videoproof-animation-target {
+.moar #the-proof {
 	animation-name: moar;
 	animation-duration: 6s;
 	animation-iteration-count: infinite;

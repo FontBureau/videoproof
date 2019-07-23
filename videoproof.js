@@ -48,7 +48,7 @@
 
 	function slidersToElement() {
 		var styleEl = $('#style-general');
-		var selector = '.videoproof-animation-target';
+		var selector = '#the-proof';
 		
 		var rules = [];
 		
@@ -78,6 +78,9 @@
 			definedGlyphs[c] = true;
 		});
 		var result = "";
+		if (!currentFont) {
+			return result;
+		}
 		Object.keys(currentFont.tables.cmap.glyphIndexMap).forEach(function(u) {
 			var c = String.fromCodePoint(u);
 			if (!(c in definedGlyphs)) {
@@ -159,7 +162,6 @@
 		}
 
 		//and now sort them by the selected method
-		var cmap = currentFont.tables.cmap.glyphIndexMap;
 		var glyphsort = $('#select-glyphs').val() === 'all-gid' ? 'glyph' : 'glyphset';
 
 		if (typeof glyphset === 'object' && glyphset.chars && glyphset.feature) {
@@ -169,6 +171,11 @@
 //			proof.css('font-feature-settings', '');
 		}
 
+		if (!currentFont) {
+			return glyphset;
+		}
+
+		var cmap = currentFont.tables.cmap.glyphIndexMap;
 		var unicodes = [];
 		var checkCmap = false;
 		switch (glyphsort) {
@@ -206,92 +213,89 @@
 	}
 	
 	function doGridSize() {
-		//size any visible grid
-		$('.proof-grid').each(function() {
-			var grid = this;
-			if ($(grid).is(':visible')) {
-				var axes = fontInfo[$('#select-font').val()].axes;
+		console.log('GS');
+		if (!theProof) return;
+		var grid = theProof;
+		var axes = fontInfo[$('#select-font').val()].axes;
+
+		//disable the animation for a minute
+		grid.style.animationName = 'none';
+
+		//reset
+		grid.style.removeProperty('font-size');
+		grid.innerHTML = grid.innerHTML.replace(/<\/?div[^>]*>/g, '');
+
+		//get the stuff as wide as possible
+		var fvs = {};
+		if ('wdth' in axes) {
+			fvs.wdth = axes.wdth.max;
+		}
+		if ('wght' in axes) {
+			fvs.wght = axes.wght.max;
+		}
+		if ('opsz' in axes) {
+			fvs.opsz = axes.opsz.min;
+		}
+		grid.style.fontVariationSettings = axesToFVS(fvs);
 		
-				//disable the animation for a minute
-				grid.style.animationName = 'none';
+		//shrink the font so it fits on the page
+		var winHeight = window.innerHeight - 96;
+		var gridHeight = grid.getBoundingClientRect().height, fontsize = parseFloat(getComputedStyle(grid).fontSize);
+
+		while (gridHeight < winHeight) {
+			fontsize *= 1.5;
+			grid.style.fontSize = Math.floor(fontsize) + 'px';
+			gridHeight = grid.getBoundingClientRect().height;
+			if (fontsize > 144) {
+				break;
+			}
+		}
+
+		while (gridHeight > winHeight) {
+			fontsize *= 0.9;
+			grid.style.fontSize = Math.floor(fontsize) + 'px';
+			gridHeight = grid.getBoundingClientRect().height;
+			if (fontsize < 24) {
+				break;
+			}
+		}
 		
-				//reset
-				grid.style.removeProperty('font-size');
-				grid.innerHTML = grid.innerHTML.replace(/<\/?div[^>]*>/g, '');
-		
-				//get the stuff as wide as possible
-				var fvs = {};
-				if ('wdth' in axes) {
-					fvs.wdth = axes.wdth.max;
+		var lines = [], line = [], lastX = Infinity;
+		$.each(grid.childNodes, function(i, span) {
+			if (!span.tagName || span.tagName !== 'SPAN') {
+				return;
+			}
+			var box = span.getBoundingClientRect();
+			if (box.width > 0) {
+				if (!span.style.width) {
+					//hard-code the max width so it doesn't move around
+					span.style.width = (box.width / fontsize) + 'em';
 				}
-				if ('wght' in axes) {
-					fvs.wght = axes.wght.max;
-				}
-				if ('opsz' in axes) {
-					fvs.opsz = axes.opsz.min;
-				}
-				grid.style.fontVariationSettings = axesToFVS(fvs);
-				
-				//shrink the font so it fits on the page
-				var winHeight = window.innerHeight - 96;
-				var gridHeight = grid.getBoundingClientRect().height, fontsize = parseFloat(getComputedStyle(grid).fontSize);
-		
-				while (gridHeight < winHeight) {
-					fontsize *= 1.5;
-					grid.style.fontSize = Math.floor(fontsize) + 'px';
-					gridHeight = grid.getBoundingClientRect().height;
-					if (fontsize > 144) {
-						break;
+				if (box.left < lastX) {
+					if (line && line.length) {
+						lines.push(line);
 					}
+					line = [];
 				}
-		
-				while (gridHeight > winHeight) {
-					fontsize *= 0.9;
-					grid.style.fontSize = Math.floor(fontsize) + 'px';
-					gridHeight = grid.getBoundingClientRect().height;
-					if (fontsize < 24) {
-						break;
-					}
-				}
-				
-				var lines = [], line = [], lastX = Infinity;
-				$.each(grid.childNodes, function(i, span) {
-					if (!span.tagName || span.tagName !== 'SPAN') {
-						return;
-					}
-					var box = span.getBoundingClientRect();
-					if (box.width > 0) {
-						if (!span.style.width) {
-							//hard-code the max width so it doesn't move around
-							span.style.width = (box.width / fontsize) + 'em';
-						}
-						if (box.left < lastX) {
-							if (line && line.length) {
-								lines.push(line);
-							}
-							line = [];
-						}
-						lastX = box.left;
-					}
-					line.push(span);
-				});
-				if (line && line.length) {
-					lines.push(line);
-				}
-		
-				lines.forEach(function(line) {
-					var div = document.createElement('div');
-					line.forEach(function(span) {
-						div.appendChild(span);
-					});
-					grid.appendChild(div);
-				});
-		
-				//re-enable the animation and remove the wide settings
-				grid.style.removeProperty('font-variation-settings');
-				grid.style.removeProperty('animation-name');
-			} //if grid is visible
-		}); //loop through grids
+				lastX = box.left;
+			}
+			line.push(span);
+		});
+		if (line && line.length) {
+			lines.push(line);
+		}
+
+		lines.forEach(function(line) {
+			var div = document.createElement('div');
+			line.forEach(function(span) {
+				div.appendChild(span);
+			});
+			grid.appendChild(div);
+		});
+
+		//re-enable the animation and remove the wide settings
+		grid.style.removeProperty('font-variation-settings');
+		grid.style.removeProperty('animation-name');
 	}
 	
 	function calculateKeyframes(font) {
@@ -353,14 +357,14 @@
 		return fvsPerms;
 	}
 
-	var videoproofOutputInterval, videoproofActiveTarget, animationRunning = false;
+	var videoproofOutputInterval, theProof, animationRunning = false;
 	function animationUpdateOutput() {
 		var output = document.getElementById('aniparams');
 // 		var timestamp = $('label[for=animation-scrub]');
 // 		var scrub = $('#animation-scrub')[0];
 		var mode = $('#select-mode')[0];
 
-		var css = videoproofActiveTarget ? getComputedStyle(videoproofActiveTarget) : {};
+		var css = theProof ? getComputedStyle(theProof) : {};
 		//var percent = animationRunning ? parseFloat(css.outlineOffset) : -parseFloat(css.animationDelay) / parseFloat(css.animationDuration) * 100;
 		var axes = fvsToAxes(css.fontVariationSettings);
 		var outputAxes = [];
@@ -442,19 +446,20 @@
 	}
 
 	function setupAnimation() {
+		theProof = document.getElementById('the-proof');
 		$('#animation-controls button.play-pause').on('click', function() {
 			videoproofOutputInterval ? stopAnimation() : startAnimation();
 		});
 		
 		$('#animation-controls').find('button.back, button.forward').on('click', function() {
-			if (!videoproofActiveTarget || !currentKeyframes) {
+			if (!theProof || !currentKeyframes) {
 				return;
 			}			
 			var toIndex;
 			if (typeof currentKeyframe === 'number') {
 				toIndex = $(this).hasClass('back') ? currentKeyframe - 1 : currentKeyframe + 1;
 			} else {
-				var css = getComputedStyle(videoproofActiveTarget);
+				var css = getComputedStyle(theProof);
 				var percent = parseFloat(css.outlineOffset);
 				var exactIndex = percent / 100 * currentKeyframes.length;
 				//if we're already on an index, go to the next int
@@ -472,7 +477,7 @@
 		
 		$('#animation-controls button.beginning').on('click', resetAnimation);
 		$('#animation-controls button.end').on('click', function() {
-			if (!videoproofActiveTarget || !currentKeyframes) {
+			if (!theProof || !currentKeyframes) {
 				return;
 			}
 			jumpToKeyframe(currentKeyframes.length - 1);
@@ -505,7 +510,7 @@
 		if (v === '' || v === null) {
 			style.empty();
 		} else {
-			style.text('.videoproof-animation-target, #keyframes-display a { ' + k + ': ' + v + '; }');
+			style.text('#the-proof, #keyframes-display a { ' + k + ': ' + v + '; }');
 		}
 	}
 
@@ -580,7 +585,7 @@
 				moarFresh = false;
 				evt.preventDefault();
 				
-				var fvs = fvsToAxes(getComputedStyle(videoproofActiveTarget).fontVariationSettings);
+				var fvs = fvsToAxes(getComputedStyle(theProof).fontVariationSettings);
 				var fvsBase = {};
 				registeredAxes.forEach(function(k) {
 					if (k in fvs) {
@@ -644,7 +649,8 @@
 				$(document).trigger('videoproof:fontLoaded');
 			});
 		}
-
+		
+		slidersToElement();
 		resetAnimation();
 		resetMoarAxes();
 	}
@@ -737,6 +743,7 @@
 	
 	//jquery overhead is sometimes causing window.load to fire before this! So use native events.
 	document.addEventListener('DOMContentLoaded', function() {
+		var theProof = document.getElementById('the-proof');
 		var controls = $('#controls');
 		$('head').append("<style id='style-general'></style>");
 		$('#mode-sections > sections').each(function() {
@@ -747,10 +754,7 @@
 		});
 
 		$('#select-mode').on('change', function(evt) {
-			var newActiveSection = $('#mode-sections > #' + this.value);
-			$('#mode-sections > section').hide();
-			newActiveSection.show();
-			videoproofActiveTarget = newActiveSection.find('.videoproof-animation-target').get(0);
+			theProof.className = this.value;
 		});
 
 		$('#select-font').on('change', TNTools.handleFontChange);
@@ -831,12 +835,5 @@
 		setupAnimation();
 		$('#select-mode').trigger('change');
 		$('#select-font').trigger('change');
-		var resizeTimeout;
-		$(window).on('resize', function() {
-			if (resizeTimeout) {
-				clearTimeout(resizeTimeout);
-			}
-			resizeTimeout = setTimeout(TNTools.doGridSize, 500);
-		}).trigger('resize');
 	});
 })();

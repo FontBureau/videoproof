@@ -10,7 +10,7 @@ class VideoProof {
 // 		'waterfall' => "Waterfall",
 //		'grid' => "Grid",
 		'type-your-own' => "Input", 
-		//'context' => "Contextual",
+		'contextual' => "Contextual",
 	);
 	
 	private $registeredAxes = array('opsz', 'wdth', 'wght'); //, 'ital', 'slnt', 'grad', 'GRAD');
@@ -128,12 +128,10 @@ class VideoProof {
 				}
 			}
 			
-/*
 			if (!isset($axes->wght) || !isset($axes->wdth)) {
 				unset($this->fontinfo[$filebase]);
 				continue;
 			}
-*/
 	
 			#take off dev stuff from the end of the filename
 			//$fontname = preg_replace('/(?:[Vv]\d+|[Aa]lpha|[Bb]eta)?-VF$/', '', $filebase);
@@ -202,88 +200,33 @@ class VideoProof {
 		}
 	}
 
-	public function pageHead($title) {
-	?>
-<!DOCTYPE html>
-<html lang="en" id="videoproof">
-	<head>
-		<meta charset="utf-8">
-		<title><?= $title ?></title>
-		<meta name="viewport" content="initial-scale=1,shrink-to-fit=no">
-		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/reset.css">
-		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/adobe-blank.css">
-		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/fonts-momentum-sans.css">
-		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/style.css">
-		<link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-		<script src="./opentype.js/dist/opentype.min.js"></script>
-		<script src="./spectrum/spectrum.js"></script>
-		<link rel="stylesheet" href="./spectrum/spectrum.css">
+	public function pageHead() {
+		foreach ($this->fontinfo as $filebase => $info) {
+			print <<<EOD
+			<style>
+				@font-face {
+					font-family: "$filebase-VP";
+					src: url("./fonts/$filebase.woff") format("woff");
+					font-weight: 100 900;
+				}
+			</style>
+EOD;
+		}
 
-		<style id='videoproof-keyframes'></style>
-		<style id='videoproof-moar-animation'></style>
-		
-		<style>
-<?php foreach ($this->fontinfo as $filebase => $info): ?>
-			@font-face {
-				font-family: "<?= $filebase ?>-VP";
-				src: url("./fonts/<?= $filebase ?>.woff") format("woff");
-				font-weight: 100 900;
-			}
-<?php endforeach; ?>
-		</style>
-		<link rel="stylesheet" href="videoproof.css">
-		<link rel="stylesheet" href="form-controls.css">
-<?php foreach ($this->tools as $tool => $name): ?>
-		<link rel="stylesheet" href="layouts/<?= $tool ?>.css">
-<?php endforeach; ?>
-		<script>
-			var fontInfo = <?= json_encode($this->fontinfo) ?>;
-			var registeredAxes = <?= json_encode($this->registeredAxes) ?>;
-			var glyphsets = <?= json_encode($this->glyphsets) ?>;
-		</script>
-		<script src="https://www.typenetwork.com/assets_content/js/functions.js"></script>
-		<script src="videoproof.js"></script>
-<?php foreach ($this->tools as $tool => $name): ?>
-		<script src="layouts/<?= $tool ?>.js"></script>
-<?php endforeach; ?>
-	</head>
-	<body>
-		<div class="wrapper">
-			<header class="header-global">
-				<h1><a href="https://www.typenetwork.com/">Type Network</a></h1>
-			</header>
-		
-			<nav class="nav-global">
-				<a class="nav-global-reveal" href="#">Menu</a>
-				<ul>
-<!--
-					<li><a class="nav-home-link" href="https://www.typenetwork.com/">Home</a></li>
-					<li><a href="http://store.typenetwork.com">Fonts</a></li>
-					<li><a href="https://www.typenetwork.com/news" >News</a></li>
-					<li><a href="https://www.typenetwork.com/gallery" >Gallery</a></li>
--->
-				</ul>
-			</nav>
-			
-			<nav class="nav-user">
-				<a class="nav-user-reveal" href="#">Menu</a>
-				<ul>
-<!--
-					<li><a href="http://store.typenetwork.com/account/licenses" class="nav-user-account"></a></li>
-					<li><a href="http://store.typenetwork.com/account/favorites" class="nav-user-favorites"></a></li>
-					<li><a href="http://store.typenetwork.com/cart" class="nav-user-cart"></a></li>
--->
-				</ul>
-			</nav>
-			
-			<?= $this->pageSidebar() ?>
-			
-			<div class="content-main">
-				<a class="content-options-show-filters" href="#">Sidebar</a>
-				<output id='aniparams'>This animation will eat your CPU alive (depending on browser), so it doesn’t auto-start. Ready? <span id='first-play'>▶️</span></output>
+		foreach ($this->tools as $tool => $name) {
+			print "<link rel='stylesheet' href='layouts/$tool.css'>\n";
+		}
 
-<?php
+		print "<script>\n";
+		print "var fontInfo = " . json_encode($this->fontinfo) . ";\n";
+		print "var registeredAxes = " . json_encode($this->registeredAxes) . ";\n";
+		print "var glyphsets = " . json_encode($this->glyphsets) . ";\n";
+		print "</script>\n";
+		
+		foreach ($this->tools as $tool => $name) {
+			print "<script src='layouts/$tool.js'></script>\n";
+		}
+
 		return "";
 	}
 
@@ -312,35 +255,6 @@ class VideoProof {
 				</form>
 
 			</aside>
-<?php
-		return "";
-	}
-	
-	public function pageSections() {
-		print "<div id='mode-sections'>";
-		foreach ($this->tools as $tool => $name) {
-			print "<section id='$tool'>";
-			include("layouts/$tool.php");
-			print "</section>";
-		}
-		print "</div>";
-		return "";
-	}
-	
-	public function pageFoot() {
-?>
-				<footer class="footer-global">
-					<ul>
-						<li><a href="//www.typenetwork.com/about">About Type Network</a></li>
-						<li><a href="//www.typenetwork.com/about#subscribe">Subscribe to the Newsletter</a></li>
-						<li><a href="//www.typenetwork.com/support">Help and Support</a></li>
-					</ul>
-					<p>&copy; Type Network <?= date("Y") ?>. All rights reserved.</p>
-				</footer>
-			</div> <!-- content-main -->
-		</div> <!-- wrapper -->
-	</body>
-</html>
 <?php
 		return "";
 	}

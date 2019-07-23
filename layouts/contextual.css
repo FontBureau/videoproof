@@ -1,5 +1,5 @@
 
-#the-proof.grid {
+#the-proof.contextual {
 	padding: 1rem;
 	word-break: break-all;
 	word-wrap: break-word;
@@ -9,7 +9,7 @@
 	text-align: left;
 }
 
-#the-proof.grid div {
+#the-proof.contextual div {
 	display: block;
 	white-space: nowrap;
 	word-break: normal;
@@ -17,7 +17,7 @@
 	overflow-wrap: normal;
 }
 
-#the-proof.grid span {
+#the-proof.contextual span {
 	display: inline-block;
 	margin-right: 0.3em;
 	min-width: 1em;

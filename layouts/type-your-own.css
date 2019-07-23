@@ -1,9 +1,5 @@
 
-#type-your-own *[data-axes]::after {
-	text-align: left;
-}
-
-#type-your-own figure {
+#the-proof.type-your-own {
 	padding: 1rem 0.5rem;
-	font-size: 1in;
+	font-size: 0.5in;
 }
