@@ -1,47 +1,42 @@
-document.addEventListener('DOMContentLoaded', function() {
-	"use strict";
+(function() {
+"use strict";
+VideoProof.registerLayout('contextual', {
+	'init': function(proof) {
+		function populateGrid() {
+			var glyphset = VideoProof.getGlyphString();
 	
-	var proof = $('#the-proof');
-
-	function populateGrid() {
-		var glyphset = VideoProof.getGlyphString();
-
-/*
-		if (typeof glyphset === 'object' && glyphset.chars && glyphset.feature) {
-			proof.css('font-feature-settings', '"' + glyphset.feature + '" 1');
-			glyphset = glyphset.chars;
-		} else {
-			proof.css('font-feature-settings', '');
+	/*
+			if (typeof glyphset === 'object' && glyphset.chars && glyphset.feature) {
+				proof.css('font-feature-settings', '"' + glyphset.feature + '" 1');
+				glyphset = glyphset.chars;
+			} else {
+				proof.css('font-feature-settings', '');
+			}
+	*/
+	
+			proof.innerHTML = "<span>H" + Array.from(glyphset).join("H</span><span>H") + "H</span>";
+	
+			VideoProof.doGridSize();
 		}
-*/
 
-		proof.empty();
-		Array.from(glyphset).forEach(function(c) {
-			proof.append('<span>H' + c + 'H</span>');
+		proof.className = 'grid';
+		setTimeout(populateGrid);
+		$(document).on('videoproof:fontLoaded.grid', populateGrid);
+		$('#select-glyphs').on('change.grid', populateGrid);
+		$('#show-extended-glyphs').on('change.grid', populateGrid);
+		var resizeTimeout;
+		$(window).on('resize.grid', function() {
+			if (resizeTimeout) {
+				clearTimeout(resizeTimeout);
+			}
+			resizeTimeout = setTimeout(VideoProof.doGridSize, 500);
 		});
-
-		VideoProof.doGridSize();
+	},
+	'deinit': function(proof) {
+		$(document).off('.grid');
+		$('#select-glyphs').off('.grid');
+		$('#show-extended-glyphs').off('.grid');
+		$(window).off('.grid');
 	}
-	
-	$('#select-mode').on('change', function() {
-		if (this.value === 'contextual') {
-			setTimeout(populateGrid);
-			$(document).on('videoproof:fontLoaded.contextual', populateGrid);
-			$('#select-glyphs').on('change.contextual', populateGrid);
-			$('#show-extended-glyphs').on('change.contextual', populateGrid);
-			var resizeTimeout;
-			$(window).on('resize.contextual', function() {
-				if (resizeTimeout) {
-					clearTimeout(resizeTimeout);
-				}
-				resizeTimeout = setTimeout(VideoProof.doGridSize, 500);
-			}).trigger('resize');
-		} else {
-			$(document).off('.contextual');
-			$('#select-glyphs').off('.contextual');
-			$('#show-extended-glyphs').off('.contextual');
-			$(window).off('.contextual');
-		}
-	});
-
 });
+})();

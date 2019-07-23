@@ -361,7 +361,7 @@
 		var output = document.getElementById('aniparams');
 // 		var timestamp = $('label[for=animation-scrub]');
 // 		var scrub = $('#animation-scrub')[0];
-		var mode = $('#select-mode')[0];
+		var mode = $('#select-layout')[0];
 
 		var css = theProof ? getComputedStyle(theProof) : {};
 		//var percent = animationRunning ? parseFloat(css.outlineOffset) : -parseFloat(css.animationDelay) / parseFloat(css.animationDuration) * 100;
@@ -721,7 +721,11 @@
 			reader.readAsDataURL(blob);
 		});
 	}
-	
+
+	var layouts = {};
+	function registerLayout(layout, options) {
+		layouts[layout] = options;
+	}
 
 	window.VideoProof = {
 		'customFonts': {},
@@ -737,7 +741,8 @@
 		'getKnownGlyphs': getKnownGlyphs,
 		'getAllGlyphs': getAllGlyphs,
 		'getGlyphString': getGlyphString,
-		'doGridSize': doGridSize
+		'doGridSize': doGridSize,
+		'registerLayout': registerLayout
 	};
 	
 	//jquery overhead is sometimes causing window.load to fire before this! So use native events.
@@ -752,8 +757,20 @@
 			}
 		});
 
-		$('#select-mode').on('change', function(evt) {
-			theProof.className = this.value;
+		$('#select-layout').on('change', function() {
+			var layout = this.value;
+			var previousLayout = theProof.className;
+			
+			if (previousLayout && previousLayout in layouts && 'deinit' in layouts[previousLayout]) {
+				layouts[previousLayout].deinit(theProof);
+			}
+			
+			theProof.className = layout;
+			theProof.removeAttribute('style');
+
+			if (layout in layouts && 'init' in layouts[layout]) {
+				layouts[layout].init(theProof);
+			}
 		});
 
 		$('#select-font').on('change', VideoProof.handleFontChange);
@@ -832,7 +849,7 @@
 		}, 100);
 			
 		setupAnimation();
-		$('#select-mode').trigger('change');
+		$('#select-layout').trigger('change');
 		$('#select-font').trigger('change');
 	});
 })();

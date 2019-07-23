@@ -262,8 +262,8 @@ EOD;
 	public function selectMode() {
 	?>
 		<div>
-			<h3 class="inline"><label for="select-mode">Layout:</label></h3>
-			<select name="mode" id='select-mode'>
+			<h3 class="inline"><label for="select-layout">Layout:</label></h3>
+			<select name="mode" id='select-layout'>
 <?php foreach ($this->tools as $tool => $name): ?>
 				<option value="<?= $tool ?>"><?= $name ?></option>
 <?php endforeach ?>
