@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	var proof = $('#the-proof');
 
 	function populateGrid() {
-		var glyphset = TNTools.getGlyphString();
+		var glyphset = VideoProof.getGlyphString();
 
 /*
 		if (typeof glyphset === 'object' && glyphset.chars && glyphset.feature) {
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			proof.append('<span>H' + c + 'H</span>');
 		});
 
-		TNTools.doGridSize();
+		VideoProof.doGridSize();
 	}
 	
 	$('#select-mode').on('change', function() {
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				if (resizeTimeout) {
 					clearTimeout(resizeTimeout);
 				}
-				resizeTimeout = setTimeout(TNTools.doGridSize, 500);
+				resizeTimeout = setTimeout(VideoProof.doGridSize, 500);
 			}).trigger('resize');
 		} else {
 			$(document).off('.contextual');

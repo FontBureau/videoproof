@@ -213,7 +213,6 @@
 	}
 	
 	function doGridSize() {
-		console.log('GS');
 		if (!theProof) return;
 		var grid = theProof;
 		var axes = fontInfo[$('#select-font').val()].axes;
@@ -269,7 +268,7 @@
 			if (box.width > 0) {
 				if (!span.style.width) {
 					//hard-code the max width so it doesn't move around
-					span.style.width = (box.width / fontsize) + 'em';
+					span.style.width = (box.width / fontsize + 0.3) + 'em';
 				}
 				if (box.left < lastX) {
 					if (line && line.length) {
@@ -724,7 +723,7 @@
 	}
 	
 
-	window.TNTools = {
+	window.VideoProof = {
 		'customFonts': {},
 		'clone': function(obj) { return JSON.parse(JSON.stringify(obj)); },
 		'slidersToElement': slidersToElement,
@@ -757,8 +756,8 @@
 			theProof.className = this.value;
 		});
 
-		$('#select-font').on('change', TNTools.handleFontChange);
-		$('#foreground, #background').on('move.spectrum change.spectrum hide.spectrum', function() { TNTools.slidersToElement(); });
+		$('#select-font').on('change', VideoProof.handleFontChange);
+		$('#foreground, #background').on('move.spectrum change.spectrum hide.spectrum', function() { VideoProof.slidersToElement(); });
 
 		$('#add-your-own-button').on('click', function(evt) {
 			$('#custom-fonts')[0].click();

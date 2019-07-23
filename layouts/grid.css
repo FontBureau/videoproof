@@ -9,7 +9,7 @@
 	text-align: left;
 }
 
-#the-proof.grid div {
+#the-proof.grid div, #the-proof.grid span {
 	display: block;
 	white-space: nowrap;
 	word-break: normal;
@@ -19,7 +19,6 @@
 
 #the-proof.grid span {
 	display: inline-block;
-	margin-right: 0.3em;
 	min-width: 1em;
 /* 	font: inherit; */
 	text-align: left;
