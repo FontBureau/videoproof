@@ -15,7 +15,12 @@ VideoProof.registerLayout('contextual', {
 			}
 	*/
 	
-			proof.innerHTML = "<span>H" + Array.from(glyphset).join("H</span><span>H") + "H</span>";
+			proof.innerHTML = "";
+			Array.from(glyphset).forEach(function(c) {
+				var span = document.createElement('span');
+				span.textContent = 'H' + c + 'H';
+				proof.appendChild(span);
+			});
 			VideoProof.fixLineBreaks();
 		}
 

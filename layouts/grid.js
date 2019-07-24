@@ -14,8 +14,13 @@ VideoProof.registerLayout('grid', {
 				proof.css('font-feature-settings', '');
 			}
 	*/
-	
-			proof.innerHTML = "<span>" + Array.from(glyphset).join("</span><span>") + "</span>";
+
+			proof.innerHTML = "";
+			Array.from(glyphset).forEach(function(c) {
+				var span = document.createElement('span');
+				span.textContent = c;
+				proof.appendChild(span);
+			});
 			VideoProof.fixLineBreaks();
 		}
 
