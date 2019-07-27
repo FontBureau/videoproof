@@ -212,6 +212,32 @@
 		return unicodes.join('');
 	}
 	
+	function sizeToSpace() {
+		//shrink the font so it fits on the page
+		var winHeight = window.innerHeight - 96;
+		var gridHeight = theProof.getBoundingClientRect().height, fontsize = parseFloat(getComputedStyle(theProof).fontSize);
+
+		while (gridHeight < winHeight) {
+			fontsize *= 1.5;
+			theProof.style.fontSize = Math.floor(fontsize) + 'px';
+			gridHeight = theProof.getBoundingClientRect().height;
+			if (fontsize > 144) {
+				break;
+			}
+		}
+
+		while (gridHeight > winHeight) {
+			fontsize *= 0.9;
+			theProof.style.fontSize = Math.floor(fontsize) + 'px';
+			gridHeight = theProof.getBoundingClientRect().height;
+			if (fontsize < 24) {
+				break;
+			}
+		}
+		
+		return fontsize;
+	}
+	
 	function fixLineBreaks() {
 		var grid = document.querySelector('#the-proof.fixed-line-breaks');
 		if (!grid) {
@@ -238,28 +264,8 @@
 			fvs.opsz = axes.opsz.min;
 		}
 		grid.style.fontVariationSettings = axesToFVS(fvs);
-		
-		//shrink the font so it fits on the page
-		var winHeight = window.innerHeight - 96;
-		var gridHeight = grid.getBoundingClientRect().height, fontsize = parseFloat(getComputedStyle(grid).fontSize);
 
-		while (gridHeight < winHeight) {
-			fontsize *= 1.5;
-			grid.style.fontSize = Math.floor(fontsize) + 'px';
-			gridHeight = grid.getBoundingClientRect().height;
-			if (fontsize > 144) {
-				break;
-			}
-		}
-
-		while (gridHeight > winHeight) {
-			fontsize *= 0.9;
-			grid.style.fontSize = Math.floor(fontsize) + 'px';
-			gridHeight = grid.getBoundingClientRect().height;
-			if (fontsize < 24) {
-				break;
-			}
-		}
+		var fontsize = VideoProof.sizeToSpace();
 		
 		var lines = [], line = [], lastX = Infinity;
 		$.each(grid.childNodes, function(i, span) {
@@ -729,6 +735,54 @@
 		layouts[layout] = options;
 	}
 
+	function handleLayoutChange() {
+		var layout = $('#select-layout').val();
+		var options = layouts[layout] || {};
+		var previousLayout = (theProof.className || '').replace(/ (fixed-line-breaks|size-to-space)/g, '');
+		var customControls = document.getElementById('layout-specific-controls');
+
+		if (previousLayout && previousLayout in layouts && 'deinit' in layouts[previousLayout]) {
+			layouts[previousLayout].deinit(theProof);
+		}
+		
+		theProof.className = layout;
+		theProof.removeAttribute('style');
+		customControls.innerHTML = "";
+		
+		if (options.fixedLineBreaks) {
+			theProof.className += ' fixed-line-breaks';
+		}
+		
+		if (options.sizeToSpace) {
+			theProof.className += ' size-to-space';
+		}
+
+		if (options.controls) {
+			$.each(options.controls, function(name, html) {
+				var li = document.createElement('li');
+				li.innerHTML = html;
+
+				var label = document.createElement('label');
+				label.textContent = name;
+
+				var input = li.querySelector('[id]');
+				if (input) {
+					label.for = input.id;
+				}
+
+				if (li.childNodes.length) {
+					li.insertBefore(document.createTextNode(' '), li.firstChild);
+					li.insertBefore(label, li.firstChild);
+					customControls.appendChild(li);
+				}
+			});
+		}
+
+		if (options.init) {
+			options.init(theProof);
+		}
+	}
+
 	window.VideoProof = {
 		'customFonts': {},
 		'clone': function(obj) { return JSON.parse(JSON.stringify(obj)); },
@@ -744,6 +798,7 @@
 		'getAllGlyphs': getAllGlyphs,
 		'getGlyphString': getGlyphString,
 		'fixLineBreaks': fixLineBreaks,
+		'sizeToSpace': sizeToSpace,
 		'registerLayout': registerLayout
 	};
 	
@@ -752,34 +807,8 @@
 		var theProof = document.getElementById('the-proof');
 		var controls = $('#controls');
 		$('head').append("<style id='style-general'></style>");
-		$('#mode-sections > sections').each(function() {
-			var styleid = 'style-' + this.id;
-			if ($('#' + styleid).length === 0) {
-				$('head').append("<style id='" + styleid + "'></style>");
-			}
-		});
 
-		$('#select-layout').on('change', function() {
-			var layout = this.value;
-			var options = layouts[layout] || {};
-			var previousLayout = (theProof.className || '').replace(/ fixed-line-breaks/g, '');
-			
-			if (previousLayout && previousLayout in layouts && 'deinit' in layouts[previousLayout]) {
-				layouts[previousLayout].deinit(theProof);
-			}
-			
-			theProof.className = layout;
-			theProof.removeAttribute('style');
-			
-			if (options.fixedLineBreaks) {
-				theProof.className += ' fixed-line-breaks';
-			}
-
-			if (options.init) {
-				options.init(theProof);
-			}
-		});
-
+		$('#select-layout').on('change', handleLayoutChange);
 		$('#select-font').on('change', VideoProof.handleFontChange);
 		$('#foreground, #background').on('move.spectrum change.spectrum hide.spectrum', function() { VideoProof.slidersToElement(); });
 
@@ -859,12 +888,21 @@
 		$('#select-layout').trigger('change');
 		$('#select-font').trigger('change');
 
+		var theProof = $('#the-proof');
+		function realResize() {
+			if (theProof.hasClass('fixed-line-breaks')) {
+				VideoProof.fixLineBreaks();
+			} else if (theProof.hasClass('size-to-space')) {
+				VideoProof.sizeToSpace();
+			}
+		}
+
 		var resizeTimeout;
 		$(window).on('resize', function() {
 			if (resizeTimeout) {
 				clearTimeout(resizeTimeout);
 			}
-			resizeTimeout = setTimeout(VideoProof.fixLineBreaks, 500);
+			resizeTimeout = setTimeout(realResize, 500);
 		});
 	});
 })();

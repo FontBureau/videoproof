@@ -240,6 +240,9 @@ EOD;
 					<?= $this->selectGlyphGroup(); ?>
 					<?= $this->selectMode() ?>
 
+					<ul id='layout-specific-controls'>
+					</ul>
+
 					<div id='alignment-color'>
 						<label for='foreground'>Foreground</label>
 						<div class='color'><input type='color' id='foreground' name='foreground' value='black'></div>

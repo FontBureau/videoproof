@@ -192,6 +192,22 @@ input[type=range][disabled] {
 }
 
 
+#layout-specific-controls {
+	display: block;
+	margin: 0;
+	padding: 0;
+}
+
+#layout-specific-controls > li {
+	margin: 0;
+	padding: 0;
+	text-indent: 0;
+}
+
+#layout-specific-controls > li + li {
+	margin-top: 1rem;
+}
+
 /* ANIMATIION */
 
 #animation-controls {
@@ -301,7 +317,7 @@ ul.sidebar-list a:hover {
 /* CONTENT */
 
 #the-proof {
-	width: 100%;
+/* 	width: 100%; */
 	max-width: none;
 	margin: 1rem;
 }
