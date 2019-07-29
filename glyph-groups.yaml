@@ -1,0 +1,63 @@
+Latin:
+    Uppercase: ABCDEFGHIJKLMNOPQRSTUVWXYZ&
+    Lowercase: abcdefghijklmnopqrstuvwxyz
+    Mixed: ǅǈǋǉ
+    Symbols:
+        Punctuation: ',-.:;…∙·!¡?¿–—―‐'
+        Reference: '*§¶†‡•'
+        Quotation: "\"'“”‚„‹›«»′″"
+        Parenthetical: '()[]{}'
+        Math: '+÷×−±<>≤≥≈≠=^~¬∕­/'
+        Commercial: '®©™#@⁒ʹʺ/\¦|_№⟨⟩µ⁄'
+World:
+    Figures:
+        Default: 0123456789
+        Extended: ⁰¹²³⁴⁵⁶⁷⁸⁹⅛⅙⅕¼⅓⅜⅖½⅗⅔⅝¾⅘⅚⅞%‰
+    Monetary:
+        Default: $¢£¥
+        Extended: ₡₣₤₦₧₩₫€ƒ₭₱₲₵₹₺₼₽¤
+    Accents:
+        Encoded: '`¨¯°´ˆˇ˘˙˚˛˜˝‘’¸ʼ'
+        Combining: 'ˉ̧̨̛̣̤̦̮̱̀́̂̃̄̆̇̈̉̊̋̌̏̑'
+_extended:
+    A: ÀÁÂÃÄÅĀĂǺȀȂẠẢẤẦẨẪẬẮẰẲẴẶÆǼ
+    C: ÇĆĈĊČ
+    D: ĎÐĐǄǅ
+    E: ÈÉÊËĒĔĖĘĚȄȆẸẺẼẾỀỂỄỆÆǼŒ
+    G: ĜĞĠĢǦ
+    H: ĤĦ
+    I: ÌÍÎÏĨĪĬĮİȈȊỈỊĲǉǇǊ, # /IJacute 
+    J: ĴĲ, # /IJacute
+    K: Ķ
+    L: ĹĻĽĿŁǇǈ
+    N: ÑŃŅŇŊǊǋ
+    O: ÒÓÔÕÖŌŎŐƠǪȌȎȪȬȰỌỎỐỒỔỖỘỚỜỞỠỢØǾŒ
+    P: Þ
+    R: ŔŖŘȐȒ
+    S: ŚŜŞŠȘẞ
+    T: ŢŤȚŦ
+    U: ÙÚÛÜŨŪŬŮŰŲƯȔȖỤỦỨỪỬỮỰ
+    W: ŴẀẂẄ
+    Y: ÝŶŸȲỲỴỶỸ
+    Z: ŹŻŽǄ
+    a: àáâãäåāăąǻȁȃạảấầẩẫậắằẳẵặæǽª
+    c: çćĉċč
+    d: ďđǆð
+    e: èéêëēĕėęěȅȇẹẻẽếềểễệəæǽœ
+    f: ﬀﬁﬂﬃﬄ, # /f_f_ij /f_ij 
+    g: ĝğġģǧ
+    h: ĥħ
+    i: ıĩīĭįȉȋỉịìíîïĳﬁﬃ, # /idotaccent /ijacute /f_ij /f_f_ij
+    j: ȷĵǉĳǌǈ, #/f_ij  /f_f_ij
+    k: ķĸ
+    l: ĺļľŀłﬂﬄ
+    n: ñńņňŉŋǌ
+    o: òóôõöōŏőơǫȍȏȫȭȱọỏốồổỗộớờởỡợøǿœº
+    p: þ
+    r: ŕŗřȑȓ
+    s: śŝşšșß
+    t: ţťțŧ
+    u: ùúûüũūŭůűųưȕȗụủứừửữự
+    w: ŵẁẃẅ
+    y: ýÿŷȳỳỵỷỹ
+    z: źżžǅ
