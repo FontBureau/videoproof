@@ -8,7 +8,7 @@ $videoproof = new VideoProof();
 <html lang="en" id="videoproof">
 	<head>
 		<meta charset="utf-8">
-		<title><?= $title ?></title>
+		<title>Video Proof</title>
 		<meta name="viewport" content="initial-scale=1,shrink-to-fit=no">
 		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/reset.css">
 		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/adobe-blank.css">
