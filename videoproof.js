@@ -93,26 +93,18 @@
 	function getKnownGlyphs() {
 		var glyphset = '';
 		var addthing = function(thing) {
-			if (typeof thing === 'string') {
-				glyphset += thing;
-				return true;
-/*
-			} elseif (typeof thing === 'object' && 'chars' in thing) {
-				glyphset += thing.chars;
-				return true;
-*/
+			switch (typeof thing) {
+				case "string":
+					glyphset += thing;
+					break;
+				case "object":
+					$.each(thing, function(k, v) {
+						addthing(v);
+					});
+					break;
 			}
-			return false;
 		};
-		$.each(window.glyphsets, function(group, sets) {
-			if (addthing(sets)) {
-				return;
-			} else {
-				$.each(sets, function(i, set) {
-					addthing(set);
-				});
-			}
-		});
+		addthing(window.glyphsets);
 		return glyphset;
 	}
 	
@@ -121,56 +113,30 @@
 	}
 	
 	function getGlyphString() {
-		var groupSet = $('#select-glyphs').val().split('::');
-		var glyphset;
+		var input = document.querySelector('#select-glyphs input:checked');
+		var extended = document.getElementById('show-extended-glyphs').checked;
 
-		if (groupSet.length > 1) {
-			if (groupSet[1] in window.glyphsets[groupSet[0]]) {
-				glyphset = window.glyphsets[groupSet[0]][groupSet[1]];
-			} else if (groupSet[1] === 'concat') {
-				glyphset = [];
-				$.each(window.glyphsets[groupSet[0]], function(label, glyphs) {
-					if (typeof glyphs === 'string') {
-						glyphset.push(glyphs);
-					}
-				});
-				glyphset = glyphset.join('').trim();
-			}
-		} else if (groupSet[0] === 'misc') {
-			glyphset = getMiscChars();
-		} else if (groupSet[0] === 'all-gid') {
-			glyphset = [];
-			
-		} else {
-			glyphset = window.glyphsets[groupSet[0]];
+		var glyphset = input.value;
+		if (extended && input.hasAttribute('data-extended')) {
+			glyphset += input.getAttribute('data-extended');
 		}
-		
-		if (groupSet.length === 1 && typeof glyphset === 'object' && 'default' in glyphset) {
-			if (!document.getElementById('show-extended-glyphs').checked) {
-				glyphset = glyphset['default'];
-			} else {
-				var result = "";
-				$.each(glyphset, function(k, v) {
-					result += typeof v === 'string' ? v : v.chars;
-				});
-				glyphset = result;
-			}
+		var glyphsort = glyphset === 'all-gid' ? 'gid' : 'group';
+
+		switch (glyphset) {
+			case 'all-gid':
+			case 'all-groups':
+				glyphset = getAllGlyphs();
+				break;
+			case 'misc':
+				glyphset = getMiscChars();
+				break;
 		}
-		
+
 		if (!glyphset) {
 			glyphset = getAllGlyphs();
 		}
 
 		//and now sort them by the selected method
-		var glyphsort = $('#select-glyphs').val() === 'all-gid' ? 'glyph' : 'glyphset';
-
-		if (typeof glyphset === 'object' && glyphset.chars && glyphset.feature) {
-//			proof.css('font-feature-settings', '"' + glyphset.feature + '" 1');
-			glyphset = glyphset.chars;
-		} else {
-//			proof.css('font-feature-settings', '');
-		}
-
 		if (!currentFont) {
 			return glyphset;
 		}
@@ -179,18 +145,18 @@
 		var unicodes = [];
 		var checkCmap = false;
 		switch (glyphsort) {
-			case 'glyph':
+			case 'gid': // sort by glyph ID
 				unicodes = Object.keys(cmap);
 				unicodes.sort(function(a, b) { return cmap[a] - cmap[b]; });
 				unicodes.forEach(function(u, i) {
 					unicodes[i] = String.fromCodePoint(u);
 				});
 				break;
-			case 'glyphset':
+			case 'group': // sort by defined groups
 				unicodes = Array.from(glyphset);
 				checkCmap = true;
 				break;
-			default:
+			default: // sort by unicode 
 				unicodes = Object.keys(cmap);
 				unicodes.sort(function(a, b) { return a-b; });
 				unicodes.forEach(function(u, i) {

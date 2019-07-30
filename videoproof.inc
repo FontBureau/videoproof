@@ -15,86 +15,7 @@ class VideoProof {
 	
 	private $registeredAxes = array('opsz', 'wdth', 'wght'); //, 'ital', 'slnt', 'grad', 'GRAD');
 	
-	private $glyphsets = array(
-		'Latin Uppercase' => [
-			'default' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ&',
-			'extended' => 'ÀÁÂÃÄÅĀĂǺȀȂẠẢẤẦẨẪẬẮẰẲẴẶĄÆǼÇĆĈĊČĎÐĐǄÈÉÊËĒĔĖĘĚȄȆẸẺẼẾỀỂỄỆƏÞĜĞĠĢǦĤĦÌÍÎÏĨĪĬĮİȈȊỈỊĲĴĶĹĻĽĿŁǇÑŃŅŇŊǊÒÓÔÕÖŌŎŐƠǪȌȎȪȬȰỌỎỐỒỔỖỘỚỜỞỠỢØǾŒÙÚÛÜŔŖŘȐȒŚŜŞŠȘẞŢŤȚŦŨŪŬŮŰŲƯȔȖỤỦỨỪỬỮỰŴẀẂẄÝŶŸȲỲỴỶỸŹŻŽ', // /IJacute
-			'mixed case' => 'ǅǈǋǉ',
-
-/*
-			'A' => 'ÀÁÂÃÄÅĀĂǺȀȂẠẢẤẦẨẪẬẮẰẲẴẶÆǼ',
-			'C' => 'ÇĆĈĊČ',
-			'D' => 'ĎÐĐǄǅ',
-			'E' => 'ÈÉÊËĒĔĖĘĚȄȆẸẺẼẾỀỂỄỆÆǼŒ',
-			'G' => 'ĜĞĠĢǦ',
-			'H' => 'ĤĦ',
-			'I' => ' ÌÍÎÏĨĪĬĮİȈȊỈỊĲǉǇǊ', // /IJacute 
-			'J' => 'ĴĲ', // /IJacute
-			'K' => 'Ķ',
-			'L' => 'ĹĻĽĿŁǇǈ',
-			'N' => 'ÑŃŅŇŊǊǋ',
-			'O' => 'ÒÓÔÕÖŌŎŐƠǪȌȎȪȬȰỌỎỐỒỔỖỘỚỜỞỠỢØǾŒ',
-			'P' => 'Þ',
-			'R' => 'ŔŖŘȐȒ',
-			'S' => 'ŚŜŞŠȘẞ',
-			'T' => 'ŢŤȚŦ',
-			'U' => 'ÙÚÛÜŨŪŬŮŰŲƯȔȖỤỦỨỪỬỮỰ',
-			'W' => 'ŴẀẂẄ',
-			'Y' => 'ÝŶŸȲỲỴỶỸ',
-			'Z' => 'ŹŻŽǄ',
-*/
-		],
-		'Latin Lowercase' => [
-			'default' => 'abcdefghijklmnopqrstuvwxyz',
-			'extended' => 'àáâãäåāăąǻȁȃạảấầẩẫậắằẳẵặæǽçćĉċčďđǆèéêëēĕėęěȅȇẹẻẽếềểễệəþﬀﬁﬂﬃﬄĝğġģǧĥħıĩīĭįȉȋỉịìíîïĳȷĵķĸĺļľŀłðñńņňŉŋǌòóôõöōŏőơǫȍȏȫȭȱọỏốồổỗộớờởỡợøǿœŕŗřȑȓśŝşšșßţťțŧùúûüũūŭůűųưȕȗụủứừửữựŵẁẃẅýÿŷȳỳỵỷỹźżž', // /f_f_ij /f_ij /idotaccent /ijacute
-			'superiors' => 'ªº',
-			
-/*
-			'a' => 'àáâãäåāăąǻȁȃạảấầẩẫậắằẳẵặæǽ',
-			'c' => 'çćĉċč',
-			'd' => 'ďđǆð',
-			'e' => 'èéêëēĕėęěȅȇẹẻẽếềểễệəæǽœ',
-			'f' => 'ﬀﬁﬂﬃﬄ', // /f_f_ij /f_ij ',
-			'g' => 'ĝğġģǧ',
-			'h' => 'ĥħ',
-			'i' => 'ıĩīĭįȉȋỉịìíîïĳﬁﬃ', // /idotaccent /ijacute /f_ij /f_f_ij',
-			'j' => 'ȷĵǉĳǌǈ', ///f_ij  /f_f_ij
-			'k' => 'ķĸ',
-			'l' => 'ĺļľŀłﬂﬄ',
-			'n' => 'ñńņňŉŋǌ',
-			'o' => 'òóôõöōŏőơǫȍȏȫȭȱọỏốồổỗộớờởỡợøǿœ',
-			'p' => 'þ',
-			'r' => 'ŕŗřȑȓ',
-			's' => 'śŝşšșß',
-			't' => 'ţťțŧ',
-			'u' => 'ùúûüũūŭůűųưȕȗụủứừửữự',
-			'w' => 'ŵẁẃẅ',
-			'y' => 'ýÿŷȳỳỵỷỹ',
-			'z' => 'źżžǅ',
-*/
-		],
-		'Figures' => [
-			'default' => '0123456789',
-
-			'extended' => '⁰¹²³⁴⁵⁶⁷⁸⁹⅛⅙⅕¼⅓⅜⅖½⅗⅔⅝¾⅘⅚⅞%‰',
-		],
-		'Monetary' => [
-			'default' => '$¢£¥',
-			'extended' => '₡₣₤₦₧₩₫€ƒ₭₱₲₵₹₺₼₽¤',
-		],
-		'Symbols' => [
-			'Latin punctuation' => ',-.:;…∙·!¡?¿–—―‐',
-			'Latin reference' => '*§¶†‡•',
-			'Latin quotation' => '"\'“”‚„‹›«»′″',
-			'Latin parenthetical' => '()[]{}',
-			'Latin math' => '+÷×−±<>≤≥≈≠=^~¬∕­/',
-			'Latin commercial' => '®©™#@⁒ʹʺ/\¦|_№⟨⟩µ⁄',
-		],
-		'Accents' => [
-			'Latin encoded' => '`¨¯°´ˆˇ˘˙˚˛˜˝‘’¸ʼ',
-			'Latin combining' => 'ˉ̧̨̛̣̤̦̮̱̀́̂̃̄̆̇̈̉̊̋̌̏̑',
-		],
-	);
+	private $glyphsets;
 	
 	public static function requireLogin($user, $password) {
 		if (!isset($_SERVER['PHP_AUTH_USER']) || $_SERVER['PHP_AUTH_USER'] !== $user || $_SERVER['PHP_AUTH_PW'] !== $password) {
@@ -106,9 +27,10 @@ class VideoProof {
 	}
 
 	function __construct() {
+		$this->glyphsets = yaml_parse_file('glyph-groups.yaml');
 		$this->axesFile = __DIR__ . "/fonts/axes.json";
 		if (!file_exists($this->axesFile)) {
-    		$this->axesFile = __DIR__ . "/fonts/example-axes.json";
+			$this->axesFile = __DIR__ . "/fonts/example-axes.json";
 		}
 		
 		$this->fontinfo = json_decode(file_get_contents($this->axesFile));
@@ -220,7 +142,7 @@ EOD;
 		print "<script>\n";
 		print "var fontInfo = " . json_encode($this->fontinfo) . ";\n";
 		print "var registeredAxes = " . json_encode($this->registeredAxes) . ";\n";
-		print "var glyphsets = " . json_encode($this->glyphsets) . ";\n";
+		print "var glyphsets = " . json_encode($this->glyphsets, JSON_UNESCAPED_UNICODE) . ";\n";
 		print "</script>\n";
 		
 		foreach ($this->tools as $tool => $name) {
@@ -315,35 +237,59 @@ EOD;
 		print <<<EOD
 		<div>
 			<h3 class="inline"><label for="select-glyphs">Glyphs:</label></h3>
-			<select name="glyphs" id='select-glyphs'>
-				<option value='all-gid'>All by GlyphID</option>
-				<option value='all-groups'>All by group</option>
+			<ul id='select-glyphs'>
+				<li><label><input type='radio' name='glyph-group' value='all-gid' checked> All by GlyphID</label></li>
+				<li><label><input type='radio' name='glyph-group' value='all-groups'> All by group</label></li>
 EOD;
 
-		foreach ($this->glyphsets as $group => $sets) {
-			if (is_array($sets)) {
-				if (isset($sets['default'])) {
-					print "<option value=\"$group\">$group</option>";
+print "<!-- ";
+var_dump($this->glyphsets);
+print " -->";
+
+		$showgroup = function($name, $group, $extended='') use (&$showgroup) {
+			if ($name[0] === '_') {
+				return;
+			}
+			print "<li>";
+			if (is_array($group)) {
+				if (isset($group['_default']) and isset($group['_extended'])) {
+					$showgroup($name, $group['_default'], $group['_extended']);
 				} else {
-					print "<optgroup label=\"$group\">";
-					foreach ($sets as $k => $glyphset) {
-						print "<option value=\"$group::$k\">$k</option>";
+					print "<strong>{$name}</strong>";
+					foreach ($group as $nn => $gg) {
+						print "<ul>";
+						$showgroup($nn, $gg);
+						print "</ul>";
 					}
-					if (count($sets) > 1) {
-						print "<option value=\"$group::concat\">All $group</option>";
-					}
-					print "</optgroup>";
 				}
 			} else {
-				print "<option value=\"$group\">$group</option>";
+				print '<label><input type="radio" name="glyph-group" value="' . htmlspecialchars($group) . '"';
+				if (!is_string($extended)) {
+					$extended = "";
+				}
+
+				for ($i=0, $l=mb_strlen($group); $i < $l; $i++) {
+					$c = mb_substr($group, $i, 1);
+					if (isset($this->glyphsets['_extended'][$c])) {
+						$extended .= $this->glyphsets['_extended'][$c];
+					}
+				}
+
+				if ($extended) {
+					print ' data-extended="' . htmlspecialchars($extended) . '"';
+				}
+				print "> $name</label>";
 			}
+			print "</li>";
+		};
+
+		foreach ($this->glyphsets as $n => $g) {
+			$showgroup($n, $g);
 		}
 		
 		print <<<EOD
-				<optgroup label="Miscellaneous">
-					<option value="misc">None of the above</option>
-				</optgroup>
-			</select>
+				<li><label><input type='radio' name='glyph-group' value='misc'> None of the above</label></li>
+			</ul>
 			<label for='show-extended-glyphs'><input id='show-extended-glyphs' type='checkbox' name='extended'> Show Extended</label>
 		</div>
 EOD;

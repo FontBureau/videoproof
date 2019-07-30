@@ -192,6 +192,20 @@ input[type=range][disabled] {
 }
 
 
+#select-glyphs label {
+	font-weight: normal;
+	font-size: smaller;
+}
+
+#select-glyphs ul {
+	margin: 0;
+}
+
+#select-glyphs li {
+	padding-left: 1em;
+	text-indent: 0;
+}
+
 #layout-specific-controls {
 	display: block;
 	margin: 0;
