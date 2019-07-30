@@ -27,7 +27,7 @@ class VideoProof {
 	}
 
 	function __construct() {
-		$this->glyphsets = yaml_parse_file('glyph-groups.yaml');
+		$this->glyphsets = yaml_parse_file(__DIR__ . '/glyph-groups.yaml');
 		$this->axesFile = __DIR__ . "/fonts/axes.json";
 		if (!file_exists($this->axesFile)) {
 			$this->axesFile = __DIR__ . "/fonts/example-axes.json";
