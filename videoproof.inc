@@ -38,7 +38,7 @@ class VideoProof {
 		ksort($this->fontinfo);
 			
 		$specific_font = false;
-		if (preg_match('/^(.+)-videoproof\./', $_SERVER['HTTP_HOST'], $matches)) {
+		if (isset($_SERVER['HTTP_HOST']) and preg_match('/^(.+)-videoproof\./', $_SERVER['HTTP_HOST'], $matches)) {
 			$specific_font = strtolower($matches[1]);
 		}
 		
