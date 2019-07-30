@@ -283,7 +283,11 @@
 		$.each(registeredAxes, function(index, axis) {
 			if (axis in font.axes) {
 				raxisPresent.push(axis);
-				axesMDM.push([font.axes[axis].default, font.axes[axis].min, font.axes[axis].max]);
+				if (axis === 'opsz') {
+					axesMDM.push([font.axes[axis].min, font.axes[axis].default, font.axes[axis].max]);
+				} else {
+					axesMDM.push([font.axes[axis].default, font.axes[axis].min, font.axes[axis].max]);
+				}
 			}
 		});
 
