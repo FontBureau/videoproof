@@ -181,9 +181,12 @@
 	function sizeToSpace() {
 		//shrink the font so it fits on the page
 		var winHeight = window.innerHeight - 96;
-		var gridHeight = theProof.getBoundingClientRect().height, fontsize = parseFloat(getComputedStyle(theProof).fontSize);
+		var gridBox = theProof.getBoundingClientRect();
+		var gridHeight = gridBox.height;
+		var fullWidth = gridBox.width;
+		var fontsize = parseFloat(getComputedStyle(theProof).fontSize);
 
-		while (gridHeight < winHeight) {
+		while (gridHeight < winHeight && theProof.scrollWidth <= fullWidth) {
 			fontsize *= 1.5;
 			theProof.style.fontSize = Math.floor(fontsize) + 'px';
 			gridHeight = theProof.getBoundingClientRect().height;
@@ -192,7 +195,7 @@
 			}
 		}
 
-		while (gridHeight > winHeight) {
+		while (gridHeight > winHeight || theProof.scrollWidth > fullWidth) {
 			fontsize *= 0.9;
 			theProof.style.fontSize = Math.floor(fontsize) + 'px';
 			gridHeight = theProof.getBoundingClientRect().height;
