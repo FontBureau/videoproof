@@ -1,4 +1,5 @@
 Latin:
+    ASCII: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789<([{@#$%&?!/|\\\"~`*^':;.,)]}>"
     Uppercase: ABCDEFGHIJKLMNOPQRSTUVWXYZ&
     Lowercase: abcdefghijklmnopqrstuvwxyz
     Mixed: ǅǈǋǉ
