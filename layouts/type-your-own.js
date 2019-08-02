@@ -29,8 +29,10 @@ VideoProof.registerLayout('type-your-own', {
 
 		proof.textContent = "Type your own";
 		proof.setAttribute('contenteditable', '');
+		proof.setAttribute('spellcheck', 'false');
+		
 		$(proof).on('keyup input', updateProof);
-		$('#show-extended-glyphs').on('change', updateProof);
+		$('#show-extended-glyphs').on('change', updateProof).trigger('change');
 	},
 	'deinit': function(proof) {
 		proof.removeAttribute('contenteditable');
