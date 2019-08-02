@@ -198,6 +198,7 @@
 		while (gridHeight > winHeight || theProof.scrollWidth > fullWidth) {
 			fontsize *= 0.9;
 			theProof.style.fontSize = Math.floor(fontsize) + 'px';
+			console.log(fontsize, gridHeight, winHeight);
 			gridHeight = theProof.getBoundingClientRect().height;
 			if (fontsize < 24) {
 				break;
@@ -215,7 +216,7 @@
 		var axes = fontInfo[$('#select-font').val()].axes;
 
 		//disable the animation for a minute
-		grid.style.animationName = 'none';
+		grid.style.animationName = 'none !important';
 
 		//reset
 		grid.style.removeProperty('font-size');
@@ -235,7 +236,7 @@
 		grid.style.fontVariationSettings = axesToFVS(fvs);
 
 		var fontsize = VideoProof.sizeToSpace();
-		
+
 		var lines = [], line = [], lastX = Infinity;
 		$.each(grid.childNodes, function(i, span) {
 			if (!span.tagName || span.tagName !== 'SPAN') {
@@ -245,7 +246,7 @@
 			if (box.width > 0) {
 				if (!span.style.width) {
 					//hard-code the max width so it doesn't move around
-					span.style.width = (box.width / fontsize + 0.3) + 'em';
+					span.style.width = (box.width / fontsize) + 'em';
 				}
 				if (box.left < lastX) {
 					if (line && line.length) {
