@@ -72,10 +72,9 @@ $videoproof = new VideoProof();
 				<footer class="footer-global">
 					<ul>
 						<li><a href="//www.typenetwork.com/about">About Type Network</a></li>
-						<li><a href="//www.typenetwork.com/about#subscribe">Subscribe to the Newsletter</a></li>
-						<li><a href="//www.typenetwork.com/support">Help and Support</a></li>
+						<li><a href="https://github.com/TypeNetwork/videoproof">Source code on GitHub</a></li>
+						<li><a href="https://github.com/TypeNetwork/videoproof/issues">Bug reports &amp; feature&nbsp;requests</a></li>
 					</ul>
-					<p>&copy; Type Network <?= date("Y") ?>. All rights reserved.</p>
 				</footer>
 			</div> <!-- content-main -->
 		</div> <!-- wrapper -->
