@@ -152,38 +152,6 @@ EOD;
 		return "";
 	}
 
-	public function pageSidebar() {
-?>
-			<aside class="content-filters">
-				<a class="content-filters-close" href="#">Close</a>
-
-				<form id='controls'>
-					<?= $this->selectFont() ?>
-					<?= $this->selectGlyphGroup(); ?>
-					<?= $this->selectMode() ?>
-
-					<ul id='layout-specific-controls'>
-					</ul>
-
-					<div id='alignment-color'>
-						<label for='foreground'>Foreground</label>
-						<div class='color'><input type='color' id='foreground' name='foreground' value='black'></div>
-						<label for='background'>Background</label>
-						<div class='color'><input type='color' id='background' name='background' value='white'></div>
-					</div>
-					
-					<?= $this->animationControls(); ?>
-
-					<ul id='axis-inputs'>
-					</ul>
-					<?= $this->metaLinks() ?>
-				</form>
-
-			</aside>
-<?php
-		return "";
-	}
-	
 	public function selectMode() {
 	?>
 		<div>
@@ -237,33 +205,36 @@ EOD;
 		print <<<EOD
 		<div>
 			<h3 class="inline"><label for="select-glyphs">Glyphs:</label></h3>
-			<ul id='select-glyphs'>
-				<li><label><input type='radio' name='glyph-group' value='all-gid' checked> All by GlyphID</label></li>
-				<li><label><input type='radio' name='glyph-group' value='all-groups'> All by group</label></li>
+			<select id='select-glyphs' name='glyph-group'>
+				<optgroup label="All">
+					<option value='all-gid' select>All by GlyphID</option>
+					<option value='all-groups'>All by group</option>
+				</optgroup>
 EOD;
 
 print "<!-- ";
 var_dump($this->glyphsets);
 print " -->";
 
-		$showgroup = function($name, $group, $extended='') use (&$showgroup) {
+		$showgroup = function($name, $group, $optgroup=false, $extended='') use (&$showgroup) {
 			if ($name[0] === '_') {
 				return;
 			}
-			print "<li>";
 			if (is_array($group)) {
 				if (isset($group['_default']) and isset($group['_extended'])) {
-					$showgroup($name, $group['_default'], $group['_extended']);
+					$showgroup($name, $group['_default'], $optgroup, $group['_extended']);
 				} else {
-					print "<strong>{$name}</strong>";
-					foreach ($group as $nn => $gg) {
-						print "<ul>";
-						$showgroup($nn, $gg);
-						print "</ul>";
+					if ($optgroup) {
+						print "</optgroup>";
 					}
+					print "<optgroup label='$name'>";
+					foreach ($group as $nn => $gg) {
+						$showgroup(is_array($gg) && !isset($gg['_default']) ? "$name $nn" : $nn, $gg, true);
+					}
+					print "</optgroup>";
 				}
 			} else {
-				print '<label><input type="radio" name="glyph-group" value="' . htmlspecialchars($group) . '"';
+				print '<option value="' . htmlspecialchars($group) . '"';
 				if (!is_string($extended)) {
 					$extended = "";
 				}
@@ -278,9 +249,8 @@ print " -->";
 				if ($extended) {
 					print ' data-extended="' . htmlspecialchars($extended) . '"';
 				}
-				print "> $name</label>";
+				print ">$name</option>";
 			}
-			print "</li>";
 		};
 
 		foreach ($this->glyphsets as $n => $g) {
@@ -288,9 +258,11 @@ print " -->";
 		}
 		
 		print <<<EOD
-				<li><label><input type='radio' name='glyph-group' value='misc'> None of the above</label></li>
-			</ul>
-			<label for='show-extended-glyphs'><input id='show-extended-glyphs' type='checkbox' name='extended'> Show Extended</label>
+				<option value='misc'>None of the above</option>
+			</select>
+			<div>
+				<input id='show-extended-glyphs' type='checkbox' name='extended'> <label for='show-extended-glyphs'>Show Extended</label>
+			</div>
 		</div>
 EOD;
 		return "";
@@ -310,6 +282,16 @@ EOD;
 -->
 		</div>
 		
+		<div id='animation-duration-container'>
+			<label for='animation-duration'>Full cycle</label>
+			<input id='animation-duration' type='number' min="1" step="1" value="60">sec
+		</div>
+<?php
+		return "";
+	}
+
+	public function animationKeyframes() {
+?>
 		<label>Keyframes</label>
 		<ul id='keyframes-display' class='sidebar-list'>
 		</ul>
@@ -317,9 +299,6 @@ EOD;
 		<label>But wait, there’s more</label>
 		<ul id='moar-axes-display' class='sidebar-list'>
 		</ul>
-		
-		<label for='animation-duration'>Full cycle</label>
-		<input id='animation-duration' type='number' min="1" step="1" value="60">sec
 <?php
 		return "";
 	}

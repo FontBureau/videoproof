@@ -61,10 +61,38 @@ $videoproof = new VideoProof();
 				</ul>
 			</nav>
 			
-			<?= $videoproof->pageSidebar() ?>
+			<!-- SIDEBAR! -->
+			<aside class="content-filters">
+				<a class="content-filters-close" href="#">Close</a>
+
+				<form id='controls'>
+					<?= $videoproof->selectFont() ?>
+					<?= $videoproof->selectMode() ?>
+					<?= $videoproof->selectGlyphGroup() ?>
+
+					<ul id='layout-specific-controls'>
+					</ul>
+
+					<div id='alignment-color'>
+						<label for='foreground'>Foreground</label>
+						<div class='color'><input type='color' id='foreground' name='foreground' value='black'></div>
+						<label for='background'>Background</label>
+						<div class='color'><input type='color' id='background' name='background' value='white'></div>
+					</div>
+
+					<?= $videoproof->animationKeyframes() ?>
+					
+					<ul id='axis-inputs'>
+					</ul>
+					<?= $videoproof->metaLinks() ?>
+				</form>
+
+			</aside>
 			
 			<div class="content-main">
 				<a class="content-options-show-filters" href="#">Sidebar</a>
+
+				<?= $videoproof->animationControls(); ?>
 				<output id='aniparams'>This animation will eat your CPU alive (depending on browser), so it doesn’t auto-start. Ready? <span id='first-play'>▶️</span></output>
 				
 				<div id='the-proof'></div>

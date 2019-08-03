@@ -187,23 +187,9 @@ input[type=range][disabled] {
 }
 
 /* GLYPH GROUPS */
-#controls label[for="show-extended-glyphs"] {
-	display: block;
-}
 
-
-#select-glyphs label {
-	font-weight: normal;
-	font-size: smaller;
-}
-
-#select-glyphs ul {
-	margin: 0;
-}
-
-#select-glyphs li {
-	padding-left: 1em;
-	text-indent: 0;
+#show-extended-glyphs:disabled ~ * {
+	opacity: 0.25;
 }
 
 #layout-specific-controls {
@@ -225,20 +211,18 @@ input[type=range][disabled] {
 /* ANIMATIION */
 
 #animation-controls {
-	display: grid;
-	grid-template-columns: 1fr 1fr 2fr 1fr 1fr;
-	align-items: center;
+	display: inline-block;
+	margin-top: 0.5rem;
+	font-size: 100%;
 }
 
 #animation-controls > * {
-	width: 100% !important;
+	width: 2em;
 	text-align: center;
-	vertical-align: middle;
-	grid-row: 2;
+	font-size: 100%;
 }
 
 #animation-controls button {
-	grid-row: 1;
 	border: none;
 	background: transparent;
 	box-shadow: none;
@@ -246,49 +230,35 @@ input[type=range][disabled] {
 }
 
 #animation-controls button.start {
-	grid-column: 1;
-	justify-self: end;
 }
 
 #animation-controls button.back {
-	grid-column: 2;
-	justify-self: end;
 }
 
 #animation-controls button.play-pause {
-	grid-column: 3;
+	vertical-align: middle;
 	font-size: 200%;
 }
 
 #animation-controls button.forward {
-	grid-column: 4;
-	justify-self: start;
 }
 
 #animation-controls button.end {
-	grid-column: 5;
-	justify-self: start;
 }
 
-#animation-controls #animation-scrub {
-	grid-column: 1 / 5;
-}
-
-#animation-controls label[for="animation-scrub"] {
-	grid-column: 5;
-	height: 1em;
-}
-
-#animation-controls label[for="animation-scrub"]::after {
-	content: "%";
+#animation-duration-container {
+	font-size: smaller;
+	display: inline-block;
+	margin: 0 1em;
 }
 
 input#animation-duration {
-	width: 4em;
+	width: 3em;
 }
 
 
 output#aniparams {
+	display: inline-block;
 	color: #09f;
 	font-size: 0.75rem;
 	font-family: Verdana;

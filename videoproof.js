@@ -113,7 +113,7 @@
 	}
 	
 	function getGlyphString() {
-		var input = document.querySelector('#select-glyphs input:checked');
+		var input = document.querySelector('#select-glyphs :checked');
 		var extended = document.getElementById('show-extended-glyphs').checked;
 
 		var glyphset = input.value;
@@ -755,6 +755,8 @@
 		if (options.init) {
 			options.init(theProof);
 		}
+		
+		setTimeout(animationUpdateOutput);
 	}
 
 	window.VideoProof = {
@@ -785,6 +787,17 @@
 		$('#select-layout').on('change', handleLayoutChange);
 		$('#select-font').on('change', VideoProof.handleFontChange);
 		$('#foreground, #background').on('move.spectrum change.spectrum hide.spectrum', function() { VideoProof.slidersToElement(); });
+
+		$('#select-glyphs').on('change', function() {
+			var hasExtended = this.querySelector(':checked[data-extended]');
+			var extendedCheckbox = document.getElementById('show-extended-glyphs');
+			if (hasExtended) {
+				extendedCheckbox.disabled = false;
+			} else {
+				extendedCheckbox.checked = false;
+				extendedCheckbox.disabled = true;
+			}
+		});
 
 		$('#add-your-own-button').on('click', function(evt) {
 			$('#custom-fonts')[0].click();
@@ -861,6 +874,7 @@
 		setupAnimation();
 		$('#select-layout').trigger('change');
 		$('#select-font').trigger('change');
+		$('#select-glyphs').trigger('change');
 
 		var theProof = $('#the-proof');
 		function realResize() {
