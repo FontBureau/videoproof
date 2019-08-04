@@ -669,10 +669,6 @@
 				$(document).trigger('videoproof:fontLoaded');
 			});
 		}
-		
-		slidersToElement();
-		resetAnimation();
-		resetMoarAxes(true);
 	}
 
 	function addCustomFont(fonttag, url, format, font) {
@@ -711,7 +707,7 @@
 		}
 		optgroup.append(option);
 
-		setTimeout(function() { $('#select-font').trigger('change') });
+		setTimeout(handleFontChange);
 	}
 
 	function addCustomFonts(files) {
@@ -801,6 +797,17 @@
 		setTimeout(animationUpdateOutput);
 	}
 
+	function handleGlyphsChange() {
+		var hasExtended = this.querySelector(':checked[data-extended]');
+		var extendedCheckbox = document.getElementById('show-extended-glyphs');
+		if (hasExtended) {
+			extendedCheckbox.disabled = false;
+		} else {
+			extendedCheckbox.checked = false;
+			extendedCheckbox.disabled = true;
+		}
+	}
+
 	window.VideoProof = {
 		'customFonts': {},
 		'clone': function(obj) { return JSON.parse(JSON.stringify(obj)); },
@@ -866,20 +873,16 @@
 		var controls = $('#controls');
 		$('head').append("<style id='style-general'></style>");
 
-		$('#select-layout').on('change', handleLayoutChange);
-		$('#select-font').on('change', VideoProof.handleFontChange);
-		$('#foreground, #background').on('move.spectrum change.spectrum hide.spectrum', function() { VideoProof.slidersToElement(); });
-
-		$('#select-glyphs').on('change', function() {
-			var hasExtended = this.querySelector(':checked[data-extended]');
-			var extendedCheckbox = document.getElementById('show-extended-glyphs');
-			if (hasExtended) {
-				extendedCheckbox.disabled = false;
-			} else {
-				extendedCheckbox.checked = false;
-				extendedCheckbox.disabled = true;
-			}
+		$(document).on('videoproof:fontLoaded', function() {
+			slidersToElement();
+			resetAnimation();
+			resetMoarAxes(true);
 		});
+
+		$('#select-layout').on('change', handleLayoutChange);
+		$('#select-font').on('change', handleFontChange);
+		$('#foreground, #background').on('move.spectrum change.spectrum hide.spectrum', function() { VideoProof.slidersToElement(); });
+		$('#select-glyphs').on('change', handleGlyphsChange);
 
 		$('#add-your-own-button').on('click', function(evt) {
 			$('#custom-fonts')[0].click();
@@ -964,8 +967,8 @@
 		}, 100);
 			
 		setupAnimation();
-		$('#select-layout').trigger('change');
-		$('#select-font').trigger('change');
+		handleLayoutChange();
+		handleFontChange();
 		$('#select-glyphs').trigger('change');
 
 		var theProof = $('#the-proof');
