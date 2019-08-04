@@ -75,7 +75,7 @@ VideoProof.registerLayout('contextual', {
 						words.push(autopad.replace(/\?/g, c));
 				}
 			});
-			proof.innerHTML = words.join(" ");
+			proof.textContent = words.join(" ");
 			VideoProof.sizeToSpace();
 		}
 
