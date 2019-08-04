@@ -80,19 +80,19 @@ VideoProof.registerLayout('contextual', {
 		}
 
 		setTimeout(populateGrid);
-		$(document).on('videoproof:fontLoaded.grid', populateGrid);
-		$('#select-glyphs').on('change.grid', populateGrid);
-		$('#show-extended-glyphs').on('change.grid', populateGrid);
+		$(document).on('videoproof:fontLoaded.contextual', populateGrid);
+		$('#select-glyphs').on('change.contextual', populateGrid);
+		$('#show-extended-glyphs').on('change.contextual', populateGrid);
 		$('#contextual-pad').on('change', function() { 
 			$('#contextual-custom-pad').val('');
 		});
-		$('#layout-specific-controls').on('input.grid change.grid', populateGrid);
+		$('#layout-specific-controls').on('input.contextual change.contextual', populateGrid);
 	},
 	'deinit': function(proof) {
-		$(document).off('.grid');
-		$('#select-glyphs').off('.grid');
-		$('#show-extended-glyphs').off('.grid');
-		$('#layout-specific-controls').off('.grid');
+		$(document).off('.contextual');
+		$('#select-glyphs').off('.contextual');
+		$('#show-extended-glyphs').off('.contextual');
+		$('#layout-specific-controls').off('.contextual');
 	}
 });
 })();
