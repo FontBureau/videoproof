@@ -28,8 +28,8 @@
 		
 		//workaround Safari default-opsz bug
 		try {
-			if ('opsz' in axes && axes.opsz == fontInfo[$('#select-font').val()].axes.opsz.default) {
-				axes.opsz = fontInfo[$('#select-font').val()].axes.opsz.default + 0.1;
+			if ('opsz' in axes && axes.opsz == currentFont.axes.opsz.default) {
+				axes.opsz = currentFont.axes.opsz.default + 0.1;
 			}
 		} catch (e) {}
 		
@@ -78,10 +78,10 @@
 			definedGlyphs[c] = true;
 		});
 		var result = "";
-		if (!currentFont) {
+		if (!currentFont || !currentFont.fontobj) {
 			return result;
 		}
-		Object.keys(currentFont.tables.cmap.glyphIndexMap).forEach(function(u) {
+		Object.keys(currentFont.fontobj.tables.cmap.glyphIndexMap).forEach(function(u) {
 			var c = String.fromCodePoint(u);
 			if (!(c in definedGlyphs)) {
 				result += c;
@@ -137,11 +137,11 @@
 		}
 
 		//and now sort them by the selected method
-		if (!currentFont) {
+		if (!currentFont || !currentFont.fontobj) {
 			return glyphset;
 		}
 
-		var cmap = currentFont.tables.cmap.glyphIndexMap;
+		var cmap = currentFont.fontobj.tables.cmap.glyphIndexMap;
 		var unicodes = [];
 		var checkCmap = false;
 		switch (glyphsort) {
@@ -212,7 +212,7 @@
 		if (!grid) {
 			return;
 		}
-		var axes = fontInfo[$('#select-font').val()].axes;
+		var axes = currentFont.axes;
 
 		//disable the animation for a minute
 		grid.style.animationName = 'none !important';
@@ -274,7 +274,7 @@
 		grid.style.removeProperty('animation-name');
 	}
 	
-	function calculateKeyframes(font) {
+	function calculateKeyframes() {
 		//O(3^n)? this might get ugly
 		var keyframes = [];
 
@@ -284,12 +284,12 @@
 		var axesMDM = [];
 		var raxisPresent = [];
 		$.each(registeredAxes, function(index, axis) {
-			if (axis in font.axes) {
+			if (axis in currentFont.axes) {
 				raxisPresent.push(axis);
 				if (axis === 'opsz') {
-					axesMDM.push([font.axes[axis].min, font.axes[axis].default, font.axes[axis].max]);
+					axesMDM.push([currentFont.axes[axis].min, currentFont.axes[axis].default, currentFont.axes[axis].max]);
 				} else {
-					axesMDM.push([font.axes[axis].default, font.axes[axis].min, font.axes[axis].max]);
+					axesMDM.push([currentFont.axes[axis].default, currentFont.axes[axis].min, currentFont.axes[axis].max]);
 				}
 			}
 		});
@@ -340,7 +340,7 @@
 	function axisRound(axis, value) {
 		var axisInfo, span, places, mult;
 		try {
-			axisInfo = window.fontInfo[$('#select-font').val()].axes[axis];
+			axisInfo = currentFont.axes[axis];
 			span = axisInfo.max - axisInfo.min;
 			if (span > 100) {
 				places = 0;
@@ -377,7 +377,7 @@
 			outputAxes.push(moarAxis + ' ' + axisRound(moarAxis, axes[moarAxis]));
 		}
 		var bits = [
-			window.fontInfo[$('#select-font').val()].name,
+			currentFont.name,
 			mode.options[mode.selectedIndex].textContent,
 			outputAxes.join(' ')
 // 			css ? parseFloat(css.outlineOffset) + '%' : ""
@@ -518,7 +518,7 @@
 		console.log('reset');
 		stopAnimation();
 		
-		var keyframes = currentKeyframes = calculateKeyframes(fontInfo[$('#select-font').val()]);
+		var keyframes = currentKeyframes = calculateKeyframes();
 		var perstep = 100 / keyframes.length;
 		$('#animation-duration').val(keyframes.length * 2).trigger('change');
 		updateAnimationParam('animation-delay', '0');
@@ -570,12 +570,11 @@
 		var moar = document.getElementById('moar-axes-display');
 		moar.innerHTML = "";
 		
-		var fontname = $('#select-font').val();
-		fontInfo[fontname].axisOrder.forEach(function(axis) {
+		currentFont.axisOrder.forEach(function(axis) {
 			if (registeredAxes.indexOf(axis) >= 0) {
 				return;
 			}
-			var info = fontInfo[fontname].axes[axis];
+			var info = currentFont.axes[axis];
 			var li = document.createElement('li');
 			var a = document.createElement('a');
 			a.textContent = axis + " " + info.min + " " + info['default'] + " " + info.max;
@@ -614,7 +613,7 @@
 	}
 	
 	function handleFontChange() {
-		var fonturl = $(this).val();
+		var fonturl = document.getElementById('select-font').value;
 		var spectropts = {
 			'showInput': true,
 			'showAlpha': true,
@@ -635,8 +634,8 @@
 		
 		$('head style[id^="style-"]').empty().removeData();
 
-		if (window.fontInfo[fonturl] && window.fontInfo[fonturl].fontobj) {
-			window.font = currentFont = window.fontInfo[fonturl].fontobj;
+		window.font = currentFont = window.fontInfo[fonturl];
+		if (currentFont && currentFont.fontobj) {
 			$(document).trigger('videoproof:fontLoaded');
 		} else {
 			var url = 'fonts/' + fonturl + '.woff';
@@ -645,7 +644,8 @@
 					alert(err);
 					return;
 				}
-				window.font = window.fontInfo[fonturl].fontobj = currentFont = font;
+				window.font = currentFont = window.fontInfo[fonturl];
+				currentFont.fontobj = font;
 				$(document).trigger('videoproof:fontLoaded');
 			});
 		}
@@ -660,7 +660,8 @@
 			'name': font.getEnglishName('fontFamily'),
 			'axes': {},
 			'axisOrder': [],
-			'fontobj': font
+			'fontobj': font,
+			'isCustom': true
 		};
 		if ('fvar' in font.tables && 'axes' in font.tables.fvar) {
 			$.each(font.tables.fvar.axes, function(i, axis) {
@@ -678,7 +679,7 @@
 
 		$('head').append('<style>@font-face { font-family:"' + fonttag + '-VP"; src: url("' + url + '") format("' + format + '"); font-weight: 100 900; }</style>');
 
-		window.fontInfo[fonttag] = info;
+		window.font = currentFont = window.fontInfo[fonttag] = info;
 		var optgroup = $('#custom-optgroup');
 		var option = document.createElement('option');
 		option.value = fonttag;
