@@ -574,6 +574,8 @@
 		document.getElementById('videoproof-keyframes').textContent = "@keyframes videoproof {\n" + keyframes.join("\n") + "}\n" + stepwise.join("\n");
 		
 		animationNameOnOff();
+		
+		$(document).trigger('videoproof:animationReset');
 	}
 
 	var moarAxis = null;
@@ -831,10 +833,14 @@
 		if (!window.location.search || window.location.search === '?') {
 			return;
 		}
+		var settings = {};
 		window.location.search.substring(1).split('&').forEach(function(clause) {
 			var kv = clause.split('=', 2);
-			var setting = kv[0];
-			var value = decodeURIComponent(kv[1]);
+			settings[kv[0]] = decodeURIComponent(kv[1]);
+			var input, subinput;
+		});
+
+		$.each(settings, function(setting, value) {
 			var input, subinput;
 			switch (setting) {
 			default:
@@ -863,6 +869,14 @@
 				}
 			}
 		});
+		
+		//set keyframe after they're calculated
+		if ('kf' in settings) {
+			$(document).on('videoproof:animationReset.urlToControls', function() {
+				jumpToKeyframe(settings.kf);
+				$(document).off('videoproof:animationReset.urlToControls');
+			});
+		}
 	}
 
 	//jquery overhead is sometimes causing window.load to fire before this! So use native events.
