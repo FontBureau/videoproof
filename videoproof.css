@@ -19,6 +19,10 @@ body.dropzone::after {
 	color: red;
 }
 
+#bookmark {
+	color: blue;
+}
+
 #videoproof *:focus {
 	outline: none;
 }

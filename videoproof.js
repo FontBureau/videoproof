@@ -23,6 +23,19 @@
 		return axes;
 	}
 	
+	function updateURL() {
+		var bits = {
+			'font': document.getElementById('select-font').value,
+			'layout': document.getElementById('select-layout').value,
+			'glyphs': document.querySelector('#select-glyphs :checked').value
+		};
+		var url = [];
+		$.each(bits, function(k, v) {
+			url.push(k + '=' + encodeURIComponent(v));
+		});
+		window.history.replaceState({}, '', '?' + url.join('&'));
+	}
+	
 	function axesToFVS(axes) {
 		var clauses = [];
 		
@@ -735,6 +748,8 @@
 		var previousLayout = (theProof.className || '').replace(/ (fixed-line-breaks|size-to-space)/g, '');
 		var customControls = document.getElementById('layout-specific-controls');
 
+		stopAnimation();
+
 		if (previousLayout && previousLayout in layouts && 'deinit' in layouts[previousLayout]) {
 			layouts[previousLayout].deinit(theProof);
 		}
@@ -878,6 +893,16 @@
 					}
 				}
 			});
+			return false;
+		});
+		
+		$('#reset').on('click', function() {
+			handleFontChange();
+			return false;
+		});
+		
+		$('#bookmark').on('click', function() {
+			updateURL();
 			return false;
 		});
 	});

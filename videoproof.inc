@@ -325,18 +325,4 @@ EOD;
 		}
 		return $date;
 	}
-
-	public function metaLinks() {
-	?>
-		<h3>Meta</h3>
-		<ul>
-			<!-- <p><a id="bookmark" href="?">Bookmark these settings</a></p> -->
-<!-- 			<li><a href="/" id='reset'>Reset to font defaults</a></li> -->
-			<?php /* don't print this if not PHP */
-				print "<li><a href='updatefonts.php' id='grab-new-fonts' title='Last updated " . $this->lastFontUpdate() . "'>Grab latest font files</a></li>";
-			?>
-		</ul>
-	<?php
-		return "";
-	}
 }
