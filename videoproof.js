@@ -198,7 +198,6 @@
 		while (gridHeight > winHeight || theProof.scrollWidth > fullWidth) {
 			fontsize *= 0.9;
 			theProof.style.fontSize = Math.floor(fontsize) + 'px';
-			console.log(fontsize, gridHeight, winHeight);
 			gridHeight = theProof.getBoundingClientRect().height;
 			if (fontsize < 24) {
 				break;
@@ -338,6 +337,25 @@
 		return fvsPerms;
 	}
 
+	function axisRound(axis, value) {
+		var axisInfo, span, places, mult;
+		try {
+			axisInfo = window.fontInfo[$('#select-font').val()].axes[axis];
+			span = axisInfo.max - axisInfo.min;
+			if (span > 100) {
+				places = 0;
+			} else if (span > 10) {
+				places = 1;
+			} else {
+				places = 2;
+			}
+		} catch (e) {
+			places = 0;
+		}
+		mult = Math.pow(10, places);
+		return Math.round(mult * value) / mult;
+	}
+
 	var videoproofOutputInterval, theProof, animationRunning = false;
 	function animationUpdateOutput() {
 		var output = document.getElementById('aniparams');
@@ -347,15 +365,16 @@
 
 		var css = theProof ? getComputedStyle(theProof) : {};
 		//var percent = animationRunning ? parseFloat(css.outlineOffset) : -parseFloat(css.animationDelay) / parseFloat(css.animationDuration) * 100;
+
 		var axes = fvsToAxes(css.fontVariationSettings);
 		var outputAxes = [];
 		$.each(registeredAxes, function(i, axis) {
 			if (axis in axes) {
-				outputAxes.push(axis + ' ' + Math.floor(axes[axis]));
+				outputAxes.push(axis + ' ' + axisRound(axis, axes[axis]));
 			}
 		});
 		if (moarAxis) {
-			outputAxes.push(moarAxis + ' ' + Math.floor(axes[moarAxis]));
+			outputAxes.push(moarAxis + ' ' + axisRound(moarAxis, axes[moarAxis]));
 		}
 		var bits = [
 			window.fontInfo[$('#select-font').val()].name,
@@ -539,8 +558,8 @@
 
 	var moarAxis = null;
 	var moarFresh = false;
-	function resetMoarAxes() {
-		if (moarFresh) { return; }
+	function resetMoarAxes(force) {
+		if (moarFresh && !force) { return; }
 
 		moarAxis = null;
 		moarFresh = true;
@@ -633,7 +652,7 @@
 		
 		slidersToElement();
 		resetAnimation();
-		resetMoarAxes();
+		resetMoarAxes(true);
 	}
 
 	function addCustomFont(fonttag, url, format, font) {
