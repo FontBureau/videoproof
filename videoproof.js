@@ -29,6 +29,9 @@
 			'layout': document.getElementById('select-layout').value,
 			'glyphs': document.querySelector('#select-glyphs :checked').value
 		};
+		if (currentKeyframe) {
+			bits.kf = currentKeyframe;
+		}
 		var url = [];
 		$.each(bits, function(k, v) {
 			url.push(k + '=' + encodeURIComponent(v));
@@ -418,6 +421,10 @@
 		}
 		animationRunning = true;
 		currentKeyframe = null;
+	}
+	
+	function getCurrentOffset() {
+		
 	}
 	
 	function stopAnimation() {
@@ -813,8 +820,48 @@
 		'registerLayout': registerLayout
 	};
 	
+	function urlToControls() {
+		if (!window.location.search || window.location.search === '?') {
+			return;
+		}
+		window.location.search.substring(1).split('&').forEach(function(clause) {
+			var kv = clause.split('=', 2);
+			var setting = kv[0];
+			var value = decodeURIComponent(kv[1]);
+			var input, subinput;
+			switch (setting) {
+			default:
+				input = document.getElementById('select-' + setting);
+				if (!input) {
+					break;
+				}
+				if (input.tagName === "INPUT") {
+					if (input.type === "checkbox" || input.type === "radio") {
+						input.checked = true;
+					} else {
+						input.value = value;
+					}
+				} else {
+					var selector = '[value="' + value.replace(/[\n\\"]/g, function (c) { return '\\' + c.charCodeAt(0).toString(16); }) + '"]';
+					subinput = input.querySelectorAll(selector);
+					if (subinput.length) {
+						$.each(subinput, function(i, si) {
+							if (si.tagName === 'INPUT') {
+								si.checked = true;
+							} else if (si.tagName === 'OPTION') {
+								si.selected = true;
+							}
+						});
+					}
+				}
+			}
+		});
+	}
+
 	//jquery overhead is sometimes causing window.load to fire before this! So use native events.
 	document.addEventListener('DOMContentLoaded', function() {
+		urlToControls();
+		
 		var theProof = document.getElementById('the-proof');
 		var controls = $('#controls');
 		$('head').append("<style id='style-general'></style>");
