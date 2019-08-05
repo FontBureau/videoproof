@@ -206,9 +206,6 @@ input[type=range][disabled] {
 	text-indent: 0;
 }
 
-#layout-specific-controls > li + li {
-	margin-top: 1rem;
-}
 
 /* ANIMATIION */
 
