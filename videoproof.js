@@ -65,8 +65,8 @@
 		
 		var rules = [];
 		
-		var foreground = $('#foreground').length && $('#foreground').spectrum('get').toString();
-		var background = $('#background').length && $('#background').spectrum('get').toString();
+		var foreground = $('#foreground').val();
+		var background = $('#background').val();
 
 		rules.push('font-family: "' + $('#select-font').val() + '-VP"');
 		
@@ -645,12 +645,6 @@
 			'preferredFormat': 'hex'
 		};
 
-		spectropts.color = $('#foreground').attr('value');
-		$('#foreground').spectrum(spectropts);
-
-		spectropts.color = $('#background').attr('value');
-		$('#background').spectrum(spectropts);
-		
 		$('head style[id^="style-"]').empty().removeData();
 
 		window.font = currentFont = window.fontInfo[fonturl];
@@ -892,7 +886,7 @@
 
 		$('#select-layout').on('change', handleLayoutChange);
 		$('#select-font').on('change', handleFontChange);
-		$('#foreground, #background').on('move.spectrum change.spectrum hide.spectrum', function() { VideoProof.slidersToElement(); });
+		$('#foreground, #background').on('change input', slidersToElement);
 		$('#select-glyphs').on('change', handleGlyphsChange);
 
 		$('#add-your-own-button').on('click', function(evt) {
@@ -902,12 +896,6 @@
 
 		$('#custom-fonts').on('change', function() {
 			addCustomFonts(this.files);
-		});
-		
-		$('#foreground, #background').on('click', function() {
-			//clicking color labels fires the real control and not the spectrum picker
-			$(this).spectrum('toggle');
-			return false;
 		});
 		
 		var dragging = false;
@@ -955,6 +943,16 @@
 				}
 			});
 			return false;
+		});
+		
+		$('#fg-bg-invert').on('click', function() {
+			var fg = document.getElementById('foreground');
+			var bg = document.getElementById('background');
+			var temp = fg.value;
+			fg.value = bg.value;
+			bg.value = temp;
+			$(fg).trigger('change');
+			$(bg).trigger('change');
 		});
 		
 		$('#controls').on('change input', function(evt) {

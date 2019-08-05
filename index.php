@@ -73,11 +73,12 @@ $videoproof = new VideoProof();
 					<ul id='layout-specific-controls'>
 					</ul>
 
-					<div id='alignment-color'>
-						<label for='foreground'>Foreground</label>
-						<div class='color'><input type='color' id='foreground' name='foreground' value='black'></div>
-						<label for='background'>Background</label>
-						<div class='color'><input type='color' id='background' name='background' value='white'></div>
+					<div id='colors'>
+						<label for='foreground'>FG</label>
+						<input type='color' id='foreground' name='foreground' value='#000000'>
+						<button type='button' id='fg-bg-invert'>⇄</button>
+						<label for='background'>BG</label>
+						<input type='color' id='background' name='background' value='#FFFFFF'>
 					</div>
 
 					<?= $videoproof->animationKeyframes() ?>

@@ -160,34 +160,32 @@ input[type=range][disabled] {
 
 /* alignment - color */
 
-#alignment-color {
-	display: grid;
-	width: 100%;
-	grid-template-columns: repeat(4, auto);
-	align-items: center;
+#colors > * {
+	display: inline-block;
+	vertical-align: middle;
 }
 
-#alignment-color label[for=foreground] {
-}
-
-#alignment-color label[for=background] {
-}
-
-#alignment-color .color .sp-replacer {
-	margin: 0.03in 0 0;
+#colors button {
+	background: transparent;
 	padding: 0;
-	border: none;
+	font-size: 1.2rem;
+	width: 1.5em;
+	line-height: 1;
+	text-align: center;
+	color: black;
+	border: 0;
+	box-shadow: none;
 }
 
-#alignment-color .color .sp-preview {
+#colors input[type=color] {
+	-webkit-appearance: none;
 	position: relative;
-	margin: 0;
-	height: 0.23in;
+	height: 0.24in;
 	width: 0.25in;
-}
-
-#alignment-color .color .sp-dd {
-	display: none;
+	padding: 0;
+	border: 0;
+	margin: 0 0.333em;
+	vertical-align: middle;
 }
 
 /* GLYPH GROUPS */
@@ -307,7 +305,8 @@ ul.sidebar-list a:hover {
 #the-proof {
 /* 	width: 100%; */
 	max-width: none;
-	margin: 1rem;
+	margin: 0;
+	padding: 1rem;
 }
 
 #the-proof.fixed-line-breaks {
