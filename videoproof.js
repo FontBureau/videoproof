@@ -722,6 +722,7 @@
 		}
 		optgroup.append(option);
 
+		updateURL();
 		setTimeout(handleFontChange);
 	}
 
@@ -880,7 +881,7 @@
 				}
 			}
 		});
-		
+
 		//set keyframe after they're calculated
 		$(document).on('videoproof:animationReset.urlToControls', function() {
 			if ('timestamp' in settings) {
@@ -987,6 +988,7 @@
 			document.getElementById('foreground').value = document.getElementById('foreground').getAttribute('value');
 			document.getElementById('background').value = document.getElementById('background').getAttribute('value');
 			handleFontChange();
+			updateURL();
 			return false;
 		});
 		
