@@ -84,7 +84,7 @@ $videoproof = new VideoProof();
 					
 					<h3>Meta</h3>
 					<ul>
-						<li><a id="bookmark" href="?">Bookmark these settings</a></li>
+<!-- 						<li><a id="bookmark" href="?">Bookmark these settings</a></li> -->
 						<li><a href="/" id='reset'>Reset to font defaults</a></li>
 						<?php /* don't print this if not PHP */
 							print "<li><a href='updatefonts.php' id='grab-new-fonts' title='Last updated " . $videoproof->lastFontUpdate() . "'>Grab latest font files</a></li>";

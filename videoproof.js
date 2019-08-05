@@ -24,17 +24,14 @@
 	}
 	
 	function updateURL() {
-		var bits = {
-			'font': document.getElementById('select-font').value,
-			'layout': document.getElementById('select-layout').value,
-			'glyphs': document.querySelector('#select-glyphs :checked').value
-		};
+		var settings = $('#controls').serializeArray();
+		//and other things outside the main form
 		if (currentKeyframe) {
-			bits.kf = currentKeyframe;
+			settings.push({'name': 'kf', 'value': currentKeyframe});
 		}
 		var url = [];
-		$.each(bits, function(k, v) {
-			url.push(k + '=' + encodeURIComponent(v));
+		settings.forEach(function(setting) {
+			url.push(setting.name.replace(/^select-/, '') + '=' + encodeURIComponent(setting.value));
 		});
 		window.history.replaceState({}, '', '?' + url.join('&'));
 	}
@@ -844,7 +841,7 @@
 			var input, subinput;
 			switch (setting) {
 			default:
-				input = document.getElementById('select-' + setting);
+				input = document.querySelector('#controls [name="' + setting + '"]');
 				if (!input) {
 					break;
 				}
@@ -960,6 +957,13 @@
 			return false;
 		});
 		
+		$('#controls').on('change input', function(evt) {
+			//only update URL for user-initiated events
+			if (evt.originalEvent || !evt.isTrigger) {
+				setTimeout(updateURL);
+			}
+		});
+		
 		$('#reset').on('click', function() {
 			handleFontChange();
 			return false;
@@ -984,6 +988,8 @@
 		handleLayoutChange();
 		handleFontChange();
 		$('#select-glyphs').trigger('change');
+
+		setTimeout(urlToControls);
 
 		var theProof = $('#the-proof');
 		function realResize() {

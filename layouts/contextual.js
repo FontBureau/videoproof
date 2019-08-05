@@ -3,7 +3,7 @@
 VideoProof.registerLayout('contextual', {
 	'sizeToSpace': true,
 	'controls': {
-		'Pad': '<select id="contextual-pad"><option value="auto-short">Auto short</option><option value="auto-long">Auto long</option><option>HH?HH</option><option>HH?HOHO?OO</option><option>nn?nn</option><option>nn?nono?oo</option><option>A?A</option><option>?A?</option></select> or <input type="text" maxlength="2" id="contextual-custom-pad" value="">'
+		'Pad': '<select id="contextual-pad" name="pad"><option value="auto-short">Auto short</option><option value="auto-long">Auto long</option><option>HH?HH</option><option>HH?HOHO?OO</option><option>nn?nn</option><option>nn?nono?oo</option><option>A?A</option><option>?A?</option></select> or <input type="text" maxlength="2" id="contextual-custom-pad" name="custom-pad" value="">'
 	},
 	'init': function(proof) {
 		function populateGrid() {
