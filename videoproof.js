@@ -36,6 +36,10 @@
 		//and other things outside the main form
 		settings.push({'name': 'timestamp', 'value': getTimestamp()});
 
+		if (moarAxis) {
+			settings.push({'name': 'moar', 'value': moarAxis + ' ' + fvsToAxes(getComputedStyle(theProof).fontVariationSettings)[moarAxis]});
+		}
+
 		var url = [];
 		settings.forEach(function(setting) {
 			url.push(setting.name.replace(/^select-/, '') + '=' + encodeURIComponent(setting.value));
@@ -582,7 +586,6 @@
 			keyframes[i] =  percent + '% { font-variation-settings: ' + fvs + '; outline-offset: ' + percent + 'px; }';
 		});
 		
-				
 		document.getElementById('videoproof-keyframes').textContent = 
 			"@keyframes videoproof {\n"
 			+ keyframes.join("\n") 
@@ -592,6 +595,8 @@
 			+ stepwise.join("\n");
 		
 		animationNameOnOff();
+
+		resetMoarAxes(true);
 		
 		$(document).trigger('videoproof:animationReset');
 	}
@@ -618,13 +623,17 @@
 			var li = document.createElement('li');
 			var a = document.createElement('a');
 			a.textContent = axis + " " + info.min + " " + info['default'] + " " + info.max;
+			a.setAttribute('data-axis', axis);
 			li.appendChild(a);
 			moar.appendChild(li);
-			a.addEventListener('click', function(evt) {
+			//use jquery event here because we trigger it artificially elsewhere
+			$(a).on('click', function(evt) {
 				moarFresh = false;
 				evt.preventDefault();
 				
-				var fvs = fvsToAxes(getComputedStyle(theProof).fontVariationSettings);
+				var css = getComputedStyle(theProof);
+				var fvs = fvsToAxes(css.fontVariationSettings);
+				var percent = css.outlineOffset;
 				var fvsBase = {};
 				registeredAxes.forEach(function(k) {
 					if (k in fvs) {
@@ -646,7 +655,7 @@
 					kf['default'] = 'font-variation-settings: ' + fvsBase + ', "' + axis + '" ' + info['default'];
 					kf['min'] = 'font-variation-settings: ' + fvsBase + ', "' + axis + '" ' + info['min'];
 					kf['max'] = 'font-variation-settings: ' + fvsBase + ', "' + axis + '" ' + info['max'];
-					style.textContent = "@keyframes moar { 0%, 100% { " + kf['default'] + "; } 33.333% { " + kf.min + "; } 66.666% { " + kf.max + "; } }";
+					style.textContent = "@keyframes moar { 0%, 100% { " + kf['default'] + "; outline-offset: " + percent + "; } 33.333% { " + kf.min + "; } 66.666% { " + kf.max + "; } }";
 					startAnimation('moar');
 				}
 			});
@@ -887,6 +896,19 @@
 			if ('timestamp' in settings) {
 				jumpToTimestamp(settings.timestamp);
 			}
+			if ('moar' in settings) {
+				var kv = settings.moar.split(' ');
+				var axis = kv[0];
+				var val = parseFloat(kv[1]);
+
+				setTimeout(function() {
+					$('#moar-axis-display a[data-axis="' + axis + '"]').addClass('current');
+					var fvs = fvsToAxes(getComputedStyle(theProof).fontVariationSettings);
+					fvs[axis] = val;
+					updateAnimationParam('animation-name', 'none');
+					updateAnimationParam('font-variation-settings', axesToFVS(fvs));
+				}, 100);
+			}
 			$(document).off('videoproof:animationReset.urlToControls');
 		});
 	}
@@ -902,7 +924,6 @@
 		$(document).on('videoproof:fontLoaded', function() {
 			slidersToElement();
 			resetAnimation();
-			resetMoarAxes(true);
 		});
 
 		$('#select-layout').on('change', handleLayoutChange);
