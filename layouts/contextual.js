@@ -21,8 +21,7 @@ VideoProof.registerLayout('contextual', {
 	
 			var ucre = /[A-Z]/;
 			var lcre = /[a-z]/;
-			var numre = /\d/;
-			
+			var numre = /[0-9]/;
 			function isGeneral(c, re) {
 				if (re.test(c)) { return true; }
 				var isExt = false;
@@ -76,7 +75,14 @@ VideoProof.registerLayout('contextual', {
 						words.push(autopad.replace(/\?/g, c));
 				}
 			});
-			proof.textContent = words.join(" ");
+			words.forEach(function(word, i) {
+				var span = document.createElement('span');
+				span.textContent = word;
+				if (i > 0) {
+					proof.appendChild(document.createTextNode(" "));
+				}
+				proof.appendChild(span);
+			});
 			VideoProof.sizeToSpace();
 		}
 

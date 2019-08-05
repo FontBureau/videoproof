@@ -3,3 +3,7 @@
 	box-sizing: content-box;
 	width: 2em;
 }
+
+#the-proof.contextual > span {
+	white-space: nowrap;
+}
