@@ -22,19 +22,19 @@
 		});
 		return axes;
 	}
-	
-	function updateURL() {
-		var settings = $('#controls').serializeArray();
-		//and other things outside the main form
+
+	function getTimestamp() {
 		var css = getComputedStyle(theProof);
 		var percent = parseFloat(css.outlineOffset);
 		var offset = percent / 100 * parseFloat(document.getElementById('animation-duration').value);
+		return currentKeyframe ? -parseFloat(css.animationDelay) : offset;
+	}
+	
+	function updateURL() {
+		var settings = $('#controls').serializeArray();
 
-		if (currentKeyframe) {
-			settings.push({'name': 'timestamp', 'value': -parseFloat(css.animationDelay)});
-		} else {
-			settings.push({'name': 'timestamp', 'value': offset});
-		}
+		//and other things outside the main form
+		settings.push({'name': 'timestamp', 'value': getTimestamp()});
 
 		var url = [];
 		settings.forEach(function(setting) {
@@ -418,10 +418,6 @@
 		currentKeyframe = null;
 	}
 	
-	function getCurrentOffset() {
-		
-	}
-	
 	function stopAnimation() {
 		console.log('stop', Date.now());
 		animationRunning = false;
@@ -583,11 +579,17 @@
 			stepwise.push("@keyframes " + stepwiseName + " { 0%, " + prevPercent + '%, ' + nextPercent + '%, 100% { color:black; font-weight:400; } ' + percent + '% { color: red; font-weight: 700; } } #keyframes-display li:nth-child(' + (i+1) + ') a { animation-name: ' + stepwiseName + '; }');
 
 			//add CSS step
-			var percentOutput = (percent == 0 ? percent + '%, 100' : percent) + '%';
-			keyframes[i] =  percentOutput + ' { font-variation-settings: ' + fvs + '; outline-offset: ' + percent + 'px; }';
+			keyframes[i] =  percent + '% { font-variation-settings: ' + fvs + '; outline-offset: ' + percent + 'px; }';
 		});
+		
 				
-		document.getElementById('videoproof-keyframes').textContent = "@keyframes videoproof {\n" + keyframes.join("\n") + "}\n" + stepwise.join("\n");
+		document.getElementById('videoproof-keyframes').textContent = 
+			"@keyframes videoproof {\n"
+			+ keyframes.join("\n") 
+			//duplicate 0% to 100%
+			+ keyframes[0].replace("0%", "100%").replace("outline-offset: 0px", "outline-offset: 100px") + "\n"
+			+ "}\n" 
+			+ stepwise.join("\n");
 		
 		animationNameOnOff();
 		

@@ -337,7 +337,7 @@ ul.sidebar-list a:hover {
 #the-proof, #keyframes-display a {
 	animation-name: videoproof;
     animation-timing-function: linear;
-    animation-iteration-count: 1;
+    animation-iteration-count: infinite;
     animation-duration: 60s;
     outline-offset: 100px; /* this is a standin for percent of animation cycle */
     outline-style: solid;
