@@ -26,9 +26,16 @@
 	function updateURL() {
 		var settings = $('#controls').serializeArray();
 		//and other things outside the main form
+		var css = getComputedStyle(theProof);
+		var percent = parseFloat(css.outlineOffset);
+		var offset = percent / 100 * parseFloat(document.getElementById('animation-duration').value);
+
 		if (currentKeyframe) {
-			settings.push({'name': 'kf', 'value': currentKeyframe});
+			settings.push({'name': 'timestamp', 'value': -parseFloat(css.animationDelay)});
+		} else {
+			settings.push({'name': 'timestamp', 'value': offset});
 		}
+
 		var url = [];
 		settings.forEach(function(setting) {
 			url.push(setting.name.replace(/^select-/, '') + '=' + encodeURIComponent(setting.value));
@@ -372,12 +379,9 @@
 	var videoproofOutputInterval, theProof, animationRunning = false;
 	function animationUpdateOutput() {
 		var output = document.getElementById('aniparams');
-// 		var timestamp = $('label[for=animation-scrub]');
-// 		var scrub = $('#animation-scrub')[0];
 		var mode = $('#select-layout')[0];
 
 		var css = theProof ? getComputedStyle(theProof) : {};
-		//var percent = animationRunning ? parseFloat(css.outlineOffset) : -parseFloat(css.animationDelay) / parseFloat(css.animationDuration) * 100;
 
 		var axes = fvsToAxes(css.fontVariationSettings);
 		var outputAxes = [];
@@ -393,14 +397,8 @@
 			currentFont.name,
 			mode.options[mode.selectedIndex].textContent,
 			outputAxes.join(' ')
-// 			css ? parseFloat(css.outlineOffset) + '%' : ""
 		];
 		output.textContent = bits.join(": ");
-// 		scrub.value = percent;
-// 		timestamp.text(Math.round(percent));
-		//if (animationRunning && percent == 100) {
-		//	resetAnimation();
-		//}
 	}
 
 	function startAnimation(anim) {
@@ -434,6 +432,29 @@
 		}
 	};
 
+	function jumpToTimestamp(timestamp) {
+		timestamp = parseFloat(timestamp);
+		if (isNaN(timestamp)) {
+			return;
+		}
+		if (timestamp < 0) {
+			timestamp = -timestamp;
+		}
+
+		stopAnimation();
+
+		updateAnimationParam('animation-delay', -timestamp + 's');
+		animationNameOnOff();
+
+		setTimeout(animationUpdateOutput);
+		
+		//need to do a bit of extra hoop jumping for the keyframe display
+		$('#keyframes-display a').css('animation-name', 'none');
+		setTimeout(function() {
+			$('#keyframes-display a').css('animation-name', '');
+		}, 100);
+	}
+
 	var currentKeyframe;
 	function jumpToKeyframe(index) {
 		console.log('jump');
@@ -445,27 +466,25 @@
 		var kfTime = ratio * duration;
 
 		//set "timestamp" in animation, for resuming
-		updateAnimationParam('animation-delay', -kfTime + 's');
-// 		$('#animation-scrub').val(Math.round(ratio * 100));
+		jumpToTimestamp(kfTime);
 
-		//but the timing is imprecise, so also set the explicit FVS for the keyframe
-		updateAnimationParam('animation-name', 'none');
+		//but the interpolation is imprecise, so also set the explicit FVS for the keyframe
 		if (/font-variation-settings\s*:\s*([^;\}]+)/.test(currentKeyframes[index])) {
 			updateAnimationParam('font-variation-settings', RegExp.$1);
 		}
-		setTimeout(animationUpdateOutput);
 		
-		//need to do a bit of extra hoop jumping for the keyframe display
-		$('#keyframes-display a').css('animation-name', 'none');
-		setTimeout(function() {
-			$('#keyframes-display a').css('animation-name', '');
-		}, 100);
+		updateURL();
 	}
 
 	function setupAnimation() {
 		theProof = document.getElementById('the-proof');
 		$('#animation-controls button.play-pause').on('click', function() {
-			videoproofOutputInterval ? stopAnimation() : startAnimation();
+			if ($('html').hasClass('paused')) {
+				startAnimation();
+			} else {
+				stopAnimation();
+				updateURL();
+			}
 		});
 		
 		$('#animation-controls').find('button.back, button.forward').on('click', function() {
@@ -615,6 +634,7 @@
 				if (animationRunning && evt.target.parentNode.className === 'current') {
 					console.log('moarpause');
 					stopAnimation();
+					updateURL();
 				} else {
 					console.log('moarstart');
 					moarAxis = axis;
@@ -817,7 +837,8 @@
 		'getGlyphString': getGlyphString,
 		'fixLineBreaks': fixLineBreaks,
 		'sizeToSpace': sizeToSpace,
-		'registerLayout': registerLayout
+		'registerLayout': registerLayout,
+		'jumpToTimestamp': jumpToTimestamp
 	};
 	
 	function urlToControls() {
@@ -832,42 +853,39 @@
 		});
 
 		$.each(settings, function(setting, value) {
-			var input, subinput;
-			switch (setting) {
-			default:
-				input = document.querySelector('#controls [name="' + setting + '"]');
-				if (!input) {
-					break;
-				}
-				if (input.tagName === "INPUT") {
-					if (input.type === "checkbox" || input.type === "radio") {
-						input.checked = true;
-					} else {
-						input.value = value;
-					}
+			var input, subinput, selector;
+			input = document.querySelector('#controls [name="' + setting + '"]');
+			if (!input) {
+				return;
+			}
+			if (input.tagName === "INPUT") {
+				if (input.type === "checkbox" || input.type === "radio") {
+					input.checked = true;
 				} else {
-					var selector = '[value="' + value.replace(/[\n\\"]/g, function (c) { return '\\' + c.charCodeAt(0).toString(16); }) + '"]';
-					subinput = input.querySelectorAll(selector);
-					if (subinput.length) {
-						$.each(subinput, function(i, si) {
-							if (si.tagName === 'INPUT') {
-								si.checked = true;
-							} else if (si.tagName === 'OPTION') {
-								si.selected = true;
-							}
-						});
-					}
+					input.value = value;
+				}
+			} else {
+				selector = '[value="' + value.replace(/[\n\\"]/g, function (c) { return '\\' + c.charCodeAt(0).toString(16); }) + '"]';
+				subinput = input.querySelectorAll(selector);
+				if (subinput.length) {
+					$.each(subinput, function(i, si) {
+						if (si.tagName === 'INPUT') {
+							si.checked = true;
+						} else if (si.tagName === 'OPTION') {
+							si.selected = true;
+						}
+					});
 				}
 			}
 		});
 		
 		//set keyframe after they're calculated
-		if ('kf' in settings) {
-			$(document).on('videoproof:animationReset.urlToControls', function() {
-				jumpToKeyframe(settings.kf);
-				$(document).off('videoproof:animationReset.urlToControls');
-			});
-		}
+		$(document).on('videoproof:animationReset.urlToControls', function() {
+			if ('timestamp' in settings) {
+				jumpToTimestamp(settings.timestamp);
+			}
+			$(document).off('videoproof:animationReset.urlToControls');
+		});
 	}
 
 	//jquery overhead is sometimes causing window.load to fire before this! So use native events.
@@ -953,11 +971,12 @@
 			bg.value = temp;
 			$(fg).trigger('change');
 			$(bg).trigger('change');
+			updateURL();
 		});
 		
 		$('#controls').on('change input', function(evt) {
 			//only update URL for user-initiated events
-			if (evt.originalEvent || !evt.isTrigger) {
+			if (evt.originalEvent) {
 				setTimeout(updateURL);
 			}
 		});
