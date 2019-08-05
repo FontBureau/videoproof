@@ -963,6 +963,8 @@
 		});
 		
 		$('#reset').on('click', function() {
+			document.getElementById('foreground').value = document.getElementById('foreground').getAttribute('value');
+			document.getElementById('background').value = document.getElementById('background').getAttribute('value');
 			handleFontChange();
 			return false;
 		});
