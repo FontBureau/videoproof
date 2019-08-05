@@ -1,10 +1,13 @@
 (function() {
 "use strict";
 VideoProof.registerLayout('type-your-own', {
+	'controls': {
+		'Text': '<input type="text" id="custom-text" name="text" value="Type your own">'
+	},
 	'init': function(proof) {
 		
 		function updateProof() {
-			$(proof).find('span.extended-chars').remove();
+			proof.textContent = document.getElementById('custom-text').value;
 			if (document.getElementById('show-extended-glyphs').checked) {
 				var chars = Array.from(proof.textContent.trim());
 				var seen = {};
@@ -27,15 +30,14 @@ VideoProof.registerLayout('type-your-own', {
 			}
 		}
 
-		proof.textContent = "Type your own";
-		proof.setAttribute('contenteditable', '');
-		proof.setAttribute('spellcheck', 'false');
-		
-		$(proof).on('keyup input', updateProof);
-		$('#show-extended-glyphs').on('change', updateProof).trigger('change');
+		$('#custom-text').on('keyup.typeyourown input.typeyourown', updateProof).trigger('change');
+		$('#show-extended-glyphs').on('change.typeyourown', updateProof).trigger('change');
+		$(document).on('videoproof:fontLoaded.typeyourown', updateProof);
 	},
 	'deinit': function(proof) {
-		proof.removeAttribute('contenteditable');
+		$('#custom-text').off('.typeyourown');
+		$('#show-extended-glyphs').off('.typeyourown');
+		$(document).off('.typeyourown');
 	}
 });
 })();
