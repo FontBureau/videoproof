@@ -168,7 +168,7 @@ EOD;
 	
 	public function selectFont($label="Font") {
 	?>
-		<div>
+		<div id='select-font-container'>
 			<h3 class="inline"><label for="select-font">Family:</label></h3>
 			<select name="font" id='select-font'>
 <?php foreach ($this->fontinfo as $filebase => $info): ?>
@@ -203,7 +203,7 @@ EOD;
 	
 	public function selectGlyphGroup() {
 		print <<<EOD
-		<div>
+		<div id='select-glyphs-container'>
 			<h3 class="inline"><label for="select-glyphs">Glyphs:</label></h3>
 			<select id='select-glyphs' name='glyph-group'>
 				<optgroup label="All">
@@ -292,13 +292,15 @@ EOD;
 
 	public function animationKeyframes() {
 ?>
-		<label>Keyframes</label>
-		<ul id='keyframes-display' class='sidebar-list'>
-		</ul>
-		
-		<label>But wait, there’s more</label>
-		<ul id='moar-axes-display' class='sidebar-list'>
-		</ul>
+		<div id='keyframes-display-container'>
+			<label>Keyframes</label>
+			<ul id='keyframes-display' class='sidebar-list'>
+			</ul>
+			
+			<label>But wait, there’s more</label>
+			<ul id='moar-axes-display' class='sidebar-list'>
+			</ul>
+		</div>
 <?php
 		return "";
 	}

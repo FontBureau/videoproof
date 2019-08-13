@@ -4,3 +4,6 @@
 [submodule "spectrum"]
 	path = spectrum
 	url = https://github.com/bgrins/spectrum.git
+[submodule "intro.js"]
+	path = intro.js
+	url = https://github.com/usablica/intro.js
