@@ -75,6 +75,7 @@ VideoProof.registerLayout('contextual', {
 						words.push(autopad.replace(/\?/g, c));
 				}
 			});
+			proof.innerHTML = "";
 			words.forEach(function(word, i) {
 				var span = document.createElement('span');
 				span.textContent = word;
