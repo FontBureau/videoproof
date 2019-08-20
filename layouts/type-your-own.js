@@ -5,10 +5,45 @@ VideoProof.registerLayout('type-your-own', {
 		'Text': '<input type="text" id="custom-text" name="text" value="Type your own">'
 	},
 	'init': function(proof) {
+
+		var selectGlyphs = document.getElementById('select-glyphs');
+		var showExtended = document.getElementById('show-extended-glyphs');
+
+		setTimeout(function() {
+			selectGlyphs.disabled = true;
+			showExtended.disabled = false;
+		});
+		
+		function fitToSpace() {
+			VideoProof.setWidest();
+			
+			var winHeight = window.innerHeight - 96;
+			var gridBox = proof.getBoundingClientRect();
+			var gridHeight = gridBox.height;
+			var fullWidth = gridBox.width;
+			var fontsize = parseFloat(getComputedStyle(proof).fontSize);
+	
+			while (gridHeight < winHeight && proof.scrollWidth <= fullWidth) {
+				fontsize *= 1.5;
+				proof.style.fontSize = Math.floor(fontsize) + 'px';
+				gridHeight = proof.getBoundingClientRect().height;
+			}
+	
+			while (gridHeight > winHeight || proof.scrollWidth > fullWidth) {
+				fontsize *= 0.9;
+				proof.style.fontSize = Math.floor(fontsize) + 'px';
+				gridHeight = proof.getBoundingClientRect().height;
+				if (fontsize < 24) {
+					break;
+				}
+			}
+
+			VideoProof.unsetWidest();
+		}
 		
 		function updateProof() {
 			proof.textContent = document.getElementById('custom-text').value;
-			if (document.getElementById('show-extended-glyphs').checked) {
+			if (showExtended.checked) {
 				var chars = Array.from(proof.textContent.trim());
 				var seen = {};
 				var extended = "";
@@ -27,6 +62,13 @@ VideoProof.registerLayout('type-your-own', {
 					span.textContent = extended;
 					proof.appendChild(span);
 				}
+				
+				fitToSpace();
+			} else {
+				//fit to width up to window height
+				proof.style.whiteSpace = 'nowrap';
+				fitToSpace();
+				proof.style.whiteSpace = '';
 			}
 		}
 
@@ -38,6 +80,7 @@ VideoProof.registerLayout('type-your-own', {
 		$('#custom-text').off('.typeyourown');
 		$('#show-extended-glyphs').off('.typeyourown');
 		$(document).off('.typeyourown');
+		document.getElementById('select-glyphs').disabled = false;
 	}
 });
 })();

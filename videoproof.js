@@ -231,21 +231,13 @@
 		return fontsize;
 	}
 	
-	function fixLineBreaks() {
-		var grid = document.querySelector('#the-proof.fixed-line-breaks');
-		if (!grid) {
+	function setWidest() {
+		if (!currentFont) {
 			return;
 		}
-		var axes = currentFont.axes;
-
-		//disable the animation for a minute
-		grid.style.animationName = 'none !important';
-
-		//reset
-		grid.style.removeProperty('font-size');
-		grid.innerHTML = grid.innerHTML.replace(/<\/?div[^>]*>/g, '');
 
 		//get the stuff as wide as possible
+		var axes = currentFont.axes;
 		var fvs = {};
 		if ('wdth' in axes) {
 			fvs.wdth = axes.wdth.max;
@@ -256,7 +248,27 @@
 		if ('opsz' in axes) {
 			fvs.opsz = axes.opsz.min;
 		}
-		grid.style.fontVariationSettings = axesToFVS(fvs);
+		theProof.style.fontVariationSettings = axesToFVS(fvs);
+	}
+
+	function unsetWidest() {
+		theProof.style.removeProperty('font-variation-settings');
+	}
+	
+	function fixLineBreaks() {
+		var grid = document.querySelector('#the-proof.fixed-line-breaks');
+		if (!grid) {
+			return;
+		}
+
+		//disable the animation for a minute
+		grid.style.animationName = 'none !important';
+
+		//reset
+		grid.style.removeProperty('font-size');
+		grid.innerHTML = grid.innerHTML.replace(/<\/?div[^>]*>/g, '');
+
+		setWidest();
 
 		var fontsize = VideoProof.sizeToSpace();
 
@@ -294,7 +306,7 @@
 		});
 
 		//re-enable the animation and remove the wide settings
-		grid.style.removeProperty('font-variation-settings');
+		unsetWidest();
 		grid.style.removeProperty('animation-name');
 	}
 	
@@ -840,6 +852,8 @@
 		'handleFontChange': handleFontChange,
 		'fvsToAxes': fvsToAxes,
 		'axesToFVS': axesToFVS,
+		'setWidest': setWidest,
+		'unsetWidest': unsetWidest,
 		'addCustomFonts': addCustomFonts,
 		'addCustomFont': addCustomFont,
 		'resetAnimation': resetAnimation,
