@@ -1,4 +1,4 @@
-$(document).on('videoproof:fontLoaded', function() {
+(function() {
 	"use strict";
 	
 	function viewedAlready() {
@@ -19,10 +19,13 @@ $(document).on('videoproof:fontLoaded', function() {
 		} catch (e) {
 			document.cookie = "userguide=viewed;max-age=31536000;path=/";
 		}
+		if (window.location.hash === '#view-intro') {
+			window.location.hash = '';
+		}
 	}
 
 	function setup(force) {
-		if (viewedAlready() && !force) {
+		if (viewedAlready() && force !== true) {
 			return Promise.reject();
 		}
 
@@ -94,4 +97,6 @@ $(document).on('videoproof:fontLoaded', function() {
 	window.videoproofViewIntroHints = function() {
 		viewHints(true);
 	};
-});
+	
+	$(document).on('videoproof:fontLoaded', viewHints);
+})();
