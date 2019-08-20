@@ -93,6 +93,7 @@ $videoproof = new VideoProof();
 						<?php /* don't print this if not PHP */
 							print "<li><a href='updatefonts.php' id='grab-new-fonts' title='Last updated " . $videoproof->lastFontUpdate() . "'>Grab latest font files</a></li>";
 						?>
+						<li><a href="#view-intro" onclick="videoproofViewIntroHints(); return false;" title="Show the interactive introduction guide">Show introduction</a></li>
 					</ul>
 				</form>
 
