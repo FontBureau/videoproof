@@ -15,6 +15,10 @@ VideoProof.registerLayout('type-your-own', {
 		});
 		
 		function fitToSpace() {
+			if (proof.textContent.trim().length === 0) {
+				return;
+			}
+
 			VideoProof.setWidest();
 			
 			var winHeight = window.innerHeight - 96;
@@ -53,7 +57,7 @@ VideoProof.registerLayout('type-your-own', {
 					}
 					seen[c] = true;
 					if (c in window.glyphsets._extended) {
-						extended += " " + window.glyphsets._extended[c];
+						extended += window.glyphsets._extended[c];
 					}
 				});
 				if (extended.length) {
@@ -62,7 +66,6 @@ VideoProof.registerLayout('type-your-own', {
 					span.textContent = extended;
 					proof.appendChild(span);
 				}
-				
 				fitToSpace();
 			} else {
 				//fit to width up to window height

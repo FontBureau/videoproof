@@ -236,6 +236,9 @@
 			return;
 		}
 
+		//disable the animation for a minute
+		theProof.style.animationName = 'none !important';
+
 		//get the stuff as wide as possible
 		var axes = currentFont.axes;
 		var fvs = {};
@@ -248,11 +251,14 @@
 		if ('opsz' in axes) {
 			fvs.opsz = axes.opsz.min;
 		}
+
 		theProof.style.fontVariationSettings = axesToFVS(fvs);
 	}
 
 	function unsetWidest() {
+		//re-enable the animation and remove the wide settings
 		theProof.style.removeProperty('font-variation-settings');
+		theProof.style.removeProperty('animation-name');
 	}
 	
 	function fixLineBreaks() {
@@ -260,9 +266,6 @@
 		if (!grid) {
 			return;
 		}
-
-		//disable the animation for a minute
-		grid.style.animationName = 'none !important';
 
 		//reset
 		grid.style.removeProperty('font-size');
@@ -305,9 +308,7 @@
 			grid.appendChild(div);
 		});
 
-		//re-enable the animation and remove the wide settings
 		unsetWidest();
-		grid.style.removeProperty('animation-name');
 	}
 	
 	function calculateKeyframes() {
