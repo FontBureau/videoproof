@@ -209,25 +209,26 @@
 		var gridHeight = gridBox.height;
 		var fullWidth = gridBox.width;
 		var fontsize = parseFloat(getComputedStyle(theProof).fontSize);
+		var minFontSize = 24, maxFontSize = 144;
 
-		while (gridHeight < winHeight && theProof.scrollWidth <= fullWidth) {
+		while (fontsize <= maxFontSize && (gridHeight < winHeight && theProof.scrollWidth <= fullWidth)) {
 			fontsize *= 1.5;
 			theProof.style.fontSize = Math.floor(fontsize) + 'px';
 			gridHeight = theProof.getBoundingClientRect().height;
-			if (fontsize > 144) {
-				break;
-			}
 		}
 
-		while (gridHeight > winHeight || theProof.scrollWidth > fullWidth) {
+		while (fontsize >= minFontSize && (gridHeight > winHeight || theProof.scrollWidth > fullWidth)) {
 			fontsize *= 0.9;
 			theProof.style.fontSize = Math.floor(fontsize) + 'px';
 			gridHeight = theProof.getBoundingClientRect().height;
-			if (fontsize < 24) {
-				break;
-			}
 		}
-		
+
+		if (fontsize < minFontSize) {
+			theProof.style.fontSize = minFontSize + 'px';
+		} else if (fontsize > maxFontSize) {
+			theProof.style.fontSize = maxFontSize + 'px';
+		}
+
 		return fontsize;
 	}
 	
