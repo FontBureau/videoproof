@@ -1,4 +1,28 @@
 
+/* override a few global TN styles */
+footer.footer-global {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+}
+
+@media screen and (min-width: 56.25rem) {
+	footer.footer-global {
+		width: calc(100vw - 15.625rem);
+	}
+}
+
+@media (min-width: 78.75rem) {
+	footer.footer-global {
+		width: calc(100vw - 17.375rem);
+	}
+}
+
+.content-main {
+	padding-bottom: 4em;
+}
+
+
 body.dropzone::after {
 	position: fixed;
 	top: 0;
