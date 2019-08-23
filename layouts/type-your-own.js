@@ -19,7 +19,7 @@ VideoProof.registerLayout('type-your-own', {
 				return;
 			}
 
-			VideoProof.setWidest();
+			//VideoProof.setWidest();
 			
 			var winHeight = window.innerHeight - 96;
 			var gridBox = proof.getBoundingClientRect();
@@ -42,7 +42,7 @@ VideoProof.registerLayout('type-your-own', {
 				}
 			}
 
-			VideoProof.unsetWidest();
+			//VideoProof.unsetWidest();
 		}
 		
 		function updateProof() {

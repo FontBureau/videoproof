@@ -4,6 +4,11 @@
 	var temp;
 	var currentFont;
 	
+	function cssStringEscape(s) {
+		//for e.g. input[value="arbitrary string"]
+		return s.replace(/[\n\\"\\']/g, function (c) { return '\\' + c.charCodeAt(0).toString(16); });
+	}
+	
 	function fvsToAxes(fvs) {
 		if (!fvs) {
 			return {};
@@ -136,11 +141,20 @@
 		return getKnownGlyphs() + getMiscChars();
 	}
 	
-	function getGlyphString() {
+	function getGlyphString(glyphset, extended) {
 		var input = document.querySelector('#select-glyphs :checked');
-		var extended = document.getElementById('show-extended-glyphs').checked;
+		
+		if (typeof glyphset === 'string') {
+			input = document.querySelector('#select-glyphs option[value="' + cssStringEscape(glyphset) + '"]');
+		} else {
+			input = document.querySelector('#select-glyphs :checked');
+			glyphset = input.value;
+		}
 
-		var glyphset = input.value;
+		if (typeof extended !== 'boolean') {
+			extended = document.getElementById('show-extended-glyphs').checked;
+		}
+
 		if (extended && input.hasAttribute('data-extended')) {
 			glyphset += input.getAttribute('data-extended');
 		}
@@ -893,7 +907,7 @@
 					input.value = value;
 				}
 			} else {
-				selector = '[value="' + value.replace(/[\n\\"]/g, function (c) { return '\\' + c.charCodeAt(0).toString(16); }) + '"]';
+				selector = '[value="' + cssStringEscape(value) + '"]';
 				subinput = input.querySelectorAll(selector);
 				if (subinput.length) {
 					$.each(subinput, function(i, si) {
