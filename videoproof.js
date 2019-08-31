@@ -902,7 +902,12 @@
 			}
 			if (input.tagName === "INPUT") {
 				if (input.type === "checkbox" || input.type === "radio") {
-					input.checked = true;
+					input = document.querySelector('#controls [name="' + setting + '"][value="' + cssStringEscape(value) + '"]');
+					if (input) {
+						input.checked = true;
+					} else {
+						return;
+					}
 				} else {
 					input.value = value;
 				}

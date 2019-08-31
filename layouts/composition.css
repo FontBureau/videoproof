@@ -1,0 +1,28 @@
+
+#the-proof.composition p {
+	margin-bottom: 1em;
+	max-width: 40rem;
+}
+
+#the-proof.composition p.pull-quote {
+	font-size: 166%;
+}
+
+#the-proof.composition p.caption {
+	font-size: 75%;
+}
+
+#the-proof.composition h1 {
+	font-size: 1200%;
+	text-transform: uppercase;
+}
+
+#the-proof.composition h2 {
+	font-size: 1000%;
+	text-transform: capitalize;
+}
+
+#the-proof.composition h3 {
+	font-size: 700%;
+}
+

@@ -11,6 +11,7 @@ class VideoProof {
 //		'grid' => "Grid",
 		'type-your-own' => "Input", 
 		'contextual' => "Contextual",
+		'composition' => "Composition",
 	);
 	
 	private $registeredAxes = array('opsz', 'wdth', 'wght'); //, 'ital', 'slnt', 'grad', 'GRAD');
