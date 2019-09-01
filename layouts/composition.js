@@ -43,11 +43,11 @@ VideoProof.registerLayout('composition', {
 				if (this.value === 'small') {
 					p = document.createElement('p');
 					p.className = 'pull-quote';
-					p.textContent = getChunks(pangrams, 3).join(". ");
+					p.textContent = getChunks(pangrams, 3).join(". ") + ".";
 					proof.appendChild(p);
 
 					p = document.createElement('p');
-					p.textContent = getChunks(pangrams, 20).join(". ");
+					p.textContent = getChunks(pangrams, 20).join(". ") + ".";
 					proof.appendChild(p);
 
 					getChunks(paragraphs, 2).forEach(function(paragraph) {
@@ -59,7 +59,7 @@ VideoProof.registerLayout('composition', {
 					
 					p = document.createElement('p');
 					p.className = 'caption';
-					p.textContent = getChunks(pangrams, 2).join(". ");
+					p.textContent = getChunks(pangrams, 2).join(". ") + ".";
 					proof.appendChild(p);
 				} else {
 					p = document.createElement('h1');
@@ -71,7 +71,7 @@ VideoProof.registerLayout('composition', {
 					proof.appendChild(p);
 
 					p = document.createElement('h3');
-					p.textContent = getChunks(pangrams, 3).join(". ");
+					p.textContent = getChunks(pangrams, 3).join(". ") + ".";
 					proof.appendChild(p);
 				}
 			});
