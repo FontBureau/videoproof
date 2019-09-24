@@ -9,6 +9,10 @@ VideoProof.registerLayout('composition', {
 		var paragraphs, pangrams;
 		
 		function getChunks(src, num) {
+			if (isNaN(num) || num <= 0) {
+				num = 1;
+			}
+			
 			var result = [];
 			var i, j;
 			for (i=0; i<num; i++) {
@@ -16,6 +20,7 @@ VideoProof.registerLayout('composition', {
 			}
 			return result;
 		}
+		var getChunk = getChunks;
 		
 		Promise.all([
 			new Promise(function(resolve, reject) {
@@ -38,45 +43,56 @@ VideoProof.registerLayout('composition', {
 			})
 		]).then(function() {
 			sizecontrols.on('change', function() {
-				var p;
+				
+				function doTTW() {
+					TextToWidth({'.large-container .pane > *': {'wordList': '/texts/pangram-words.txt'}});
+				}
+				
+				var wrapper, p;
 				proof.textContent = "";
 				if (this.value === 'small') {
+					wrapper = document.createElement('div');
+					wrapper.className = 'small-container';
+					
 					p = document.createElement('p');
 					p.className = 'pull-quote';
 					p.textContent = getChunks(pangrams, 3).join(". ") + ".";
-					proof.appendChild(p);
+					wrapper.appendChild(p);
 
-					p = document.createElement('p');
-					p.textContent = getChunks(pangrams, 20).join(". ") + ".";
-					proof.appendChild(p);
-
-					getChunks(paragraphs, 2).forEach(function(paragraph) {
+					[16, 10, 14, 9, 12, 8].forEach(function(size) {
+						var paragraph = getChunk(paragraphs);
 						p = document.createElement('p');
+						p.style.fontSize = size + 'pt';
 						p.textContent = paragraph;
-						p.innerHTML = p.innerHTML.replace(/(^|\s)_([^_]+)_(\s|$)/g, '$1<i>$2</i>$3');
-						proof.appendChild(p);
+						//project gutenberg uses underscores for italics
+						p.innerHTML = p.innerHTML.replace(/(^|\s)_([^_]+)_(,|\s|$)/g, '$1$2$3'); //'$1<i>$2</i>$3');
+						wrapper.appendChild(p);
 					});
 					
-					p = document.createElement('p');
-					p.className = 'caption';
-					p.textContent = getChunks(pangrams, 2).join(". ") + ".";
-					proof.appendChild(p);
+					proof.appendChild(wrapper);
 				} else {
-					p = document.createElement('h1');
-					p.textContent = getChunks(pangrams, 1)[0].split(' ').slice(0, 3).join(" ");
-					proof.appendChild(p);
+					wrapper = document.createElement('div');
+					wrapper.className = 'large-container';
 
-					p = document.createElement('h2');
-					p.textContent = getChunks(pangrams, 1)[0];
-					proof.appendChild(p);
+					['regular', 'bold'].forEach(function(weight) {
+						var pane = document.createElement('div');
+						pane.className = 'pane ' + weight;
+	
+						['h1', 'h2', 'h3', 'h4', 'h5'].forEach(function(h) {
+							pane.appendChild(document.createElement(h));
+						});
+						
+						wrapper.appendChild(pane);
+					});
 
-					p = document.createElement('h3');
-					p.textContent = getChunks(pangrams, 3).join(". ") + ".";
-					proof.appendChild(p);
+					proof.appendChild(wrapper);
+
+					setTimeout(doTTW, 500);
 				}
 			});
 			sizecontrols.filter(':checked').trigger('change');
 		}).catch(function(e) {
+			console.log(e);
 			alert("Error loading composition text file(s)");
 		});
 	},

@@ -16,14 +16,15 @@ $videoproof = new VideoProof();
 		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/style.css">
 		<link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-		<script src="./opentype.js/dist/opentype.min.js"></script>
+		<script src="opentype.js/dist/opentype.min.js"></script>
 
-		<script src="./spectrum/spectrum.js"></script>
+		<script src="spectrum/spectrum.js"></script>
 		<link rel="stylesheet" href="./spectrum/spectrum.css">
 
 		<script src="https://www.typenetwork.com/assets_content/js/functions.js"></script>
 
-		<script src="/user-guide.js" async defer></script>
+		<script src="user-guide.js" defer></script>
+		<script src="text-to-width.js" defer></script>
 
 		<style id='videoproof-keyframes'></style>
 		<style id='videoproof-moar-animation'></style>

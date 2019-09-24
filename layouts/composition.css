@@ -5,24 +5,95 @@
 }
 
 #the-proof.composition p.pull-quote {
-	font-size: 166%;
 }
 
 #the-proof.composition p.caption {
 	font-size: 75%;
 }
 
-#the-proof.composition h1 {
-	font-size: 1200%;
-	text-transform: uppercase;
+#the-proof.composition .large-container .pane > * {
+	white-space: nowrap;
+	font-weight: inherit;
+	font-variation-settings: inherit;
 }
 
-#the-proof.composition h2 {
-	font-size: 1000%;
+#the-proof.composition .large-container .pane + .pane {
+	margin-top: 0.25in;
+}
+
+#the-proof.composition .large-container .regular {
+	font-weight: normal;
+}
+
+#the-proof.composition .large-container .bold {
+	font-weight: bold;
+}
+
+@media (min-width: 8in) {
+	#the-proof.composition .large-container {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-gap: 0.25in;
+	}
+	
+	#the-proof.composition .large-container .pane {
+		overflow: hidden;
+	}
+	
+	#the-proof.composition .large-container .pane + .pane {
+		margin-top: 0;
+	}
+}
+
+#the-proof.composition .large-container h1 {
+	font-size: 64pt;
+	text-transform: uppercase;
+	line-height: 1;
+}
+
+#the-proof.composition .large-container h2 {
+	font-size: 48pt;
+	text-transform: capitalize;
+	line-height: 1.1;
+}
+
+#the-proof.composition .large-container h3 {
+	font-size: 36pt;
+	text-transform: uppercase;
+	line-height: 1.2;
+}
+
+#the-proof.composition .large-container h4 {
+	font-size: 24pt;
+	text-transform: capitalize;
+	line-height: 1.4;
+}
+
+#the-proof.composition .large-container h5 {
+	font-size: 21pt;
+	text-transform: uppercase;
+	line-height: 1.4;
+}
+
+/*
+#the-proof.composition .large-container h6 {
+	font-size: 18pt;
 	text-transform: capitalize;
 }
+*/
 
-#the-proof.composition h3 {
-	font-size: 700%;
+
+#the-proof.composition .small-container {
+	 display: grid;
+	 grid-template-columns: 2fr 1fr;
+	 grid-gap: 1rem;
+	 grid-auto-flow: row;
+	 max-width: 60rem;
+}
+
+#the-proof.composition .small-container p.pull-quote {
+	grid-column: 1/3;
+	font-size: 166%;
+	max-width: none;
 }
 
