@@ -57,8 +57,8 @@
 		
 		//workaround Safari default-opsz bug
 		try {
-			if ('opsz' in axes && axes.opsz == currentFont.axes.opsz.default) {
-				axes.opsz = currentFont.axes.opsz.default + 0.1;
+			if ('opsz' in axes && axes.opsz == currentFont.axes.opsz['default']) {
+				axes.opsz = currentFont.axes.opsz['default'] + 0.1;
 			}
 		} catch (e) {}
 		
@@ -326,6 +326,16 @@
 		unsetWidest();
 	}
 	
+	var rapBracket = false;
+	
+	//acceptable ranges of various axes
+	var rapTolerances = {
+		'opsz': [0.5, 2.0],
+		'wght': [-100, +100],
+		'wdth': [0.8, 1.2],
+		'default': [0.5, 2.0]
+	};
+	
 	function calculateKeyframes() {
 		//O(3^n)? this might get ugly
 		var keyframes = [];
@@ -335,13 +345,35 @@
 		// some combinations might be skipped if the min/max is the default
 		var axesMDM = [];
 		var raxisPresent = [];
+		
+		var axisRanges = currentFont.axes;
+		
+		if (typeof rapBracket === 'object') {
+			axisRanges = {};
+			var span = 0.5;
+			$.each(rapBracket, function(axis, pivot) {
+				var tol = axis in rapTolerances ? rapTolerances[axis] : rapTolerances['default'];
+				var min = currentFont.axes[axis].min;
+				var max = currentFont.axes[axis].max;
+
+				var lower = tol[0] > 0 && tol[0] < 1 ? pivot * tol[0] : pivot + tol[0];
+				//yes these first two should be tol[0] and not tol[1]
+				var upper = tol[0] > 0 && tol[0] < 1 ? pivot * tol[1] : pivot + tol[1];
+
+				axisRanges[axis] = {};
+				axisRanges[axis].min = Math.max(min, lower);
+				axisRanges[axis]['default'] = pivot;
+				axisRanges[axis].max = Math.min(max, upper);
+			});
+		}
+		
 		$.each(registeredAxes, function(index, axis) {
-			if (axis in currentFont.axes) {
+			if (axis in axisRanges) {
 				raxisPresent.push(axis);
 				if (axis === 'opsz') {
-					axesMDM.push([currentFont.axes[axis].min, currentFont.axes[axis].default, currentFont.axes[axis].max]);
+					axesMDM.push([axisRanges[axis].min, axisRanges[axis]['default'], axisRanges[axis].max]);
 				} else {
-					axesMDM.push([currentFont.axes[axis].default, currentFont.axes[axis].min, currentFont.axes[axis].max]);
+					axesMDM.push([axisRanges[axis]['default'], axisRanges[axis].min, axisRanges[axis].max]);
 				}
 			}
 		});
@@ -582,6 +614,10 @@
 		console.log('reset');
 		stopAnimation();
 		
+		if (!currentFont) {
+			return;
+		}
+		
 		var keyframes = currentKeyframes = calculateKeyframes();
 		var perstep = 100 / keyframes.length;
 		$('#animation-duration').val(keyframes.length * 2).trigger('change');
@@ -793,6 +829,23 @@
 		});
 	}
 
+	function bracketRap(src) {
+		theProof.style.animationName = "none";
+		theProof.style.fontVariationSettings = 'normal';
+		var style = getComputedStyle(src);
+		rapBracket = fvsToAxes(style.fontVariationSettings);
+		if (!('opsz' in rapBracket) && currentFont && 'opsz' in currentFont.axes) {
+			rapBracket.opsz = parseFloat(style.fontSize);
+		}
+		if (!('wght' in rapBracket) && currentFont && 'wght' in currentFont.axes) {
+			rapBracket.wght = parseInt(style.fontWeight) || 400;
+		}
+		if (!('wdth' in rapBracket) && currentFont && 'wdth' in currentFont.axes) {
+			rapBracket.wdth = currentFont.axes.wdth['default'];
+		}
+		resetAnimation();
+	}
+
 	var layouts = {};
 	function registerLayout(layout, options) {
 		layouts[layout] = options;
@@ -804,7 +857,8 @@
 		var previousLayout = (theProof.className || '').replace(/ (fixed-line-breaks|size-to-space)/g, '');
 		var customControls = document.getElementById('layout-specific-controls');
 
-		stopAnimation();
+		//stopAnimation();
+		resetAnimation();
 
 		if (previousLayout && previousLayout in layouts && 'deinit' in layouts[previousLayout]) {
 			layouts[previousLayout].deinit(theProof);
@@ -843,6 +897,8 @@
 			});
 		}
 
+		rapBracket = !!options.bracketRap;
+
 		if (options.init) {
 			options.init(theProof);
 		}
@@ -880,7 +936,8 @@
 		'fixLineBreaks': fixLineBreaks,
 		'sizeToSpace': sizeToSpace,
 		'registerLayout': registerLayout,
-		'jumpToTimestamp': jumpToTimestamp
+		'jumpToTimestamp': jumpToTimestamp,
+		'bracketRap': bracketRap
 	};
 	
 	function urlToControls() {

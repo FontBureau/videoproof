@@ -2,6 +2,22 @@
 #the-proof.composition p {
 	margin-bottom: 1em;
 	max-width: 40rem;
+	font-weight: normal;
+}
+
+#the-proof.composition input[name="para-select"] {
+	position: absolute;
+	left: 200vw;
+}
+
+#the-proof.composition label {
+	font: inherit !important;
+	font-variation-settings: inherit !important;
+	display: block;
+}
+
+#the-proof.composition input:checked + label {
+	background: #DDDDFF;
 }
 
 #the-proof.composition p.pull-quote {
@@ -11,7 +27,8 @@
 	font-size: 75%;
 }
 
-#the-proof.composition .large-container .pane > * {
+#the-proof.composition .large-container .pane label {
+	display: block;
 	white-space: nowrap;
 	font-weight: inherit;
 	font-variation-settings: inherit;
