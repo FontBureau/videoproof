@@ -105,9 +105,9 @@ VideoProof.registerLayout('composition', {
 			//select text blocks
 			proof.addEventListener('change', function() {
 				var para = document.querySelector('input[name="para-select"]:checked').parentNode;
-				$('#the-proof.animation-target').removeClass('animation-target');
-				$(para).addClass('animation-target');
+				$('#the-proof .animation-target').removeClass('animation-target');
 				VideoProof.bracketRap(para);
+				$(para).addClass('animation-target');
 			});
 			if (!document.querySelector('input[name="para-select"]:checked')) {
 				document.querySelector('input[name="para-select"]').checked = true;

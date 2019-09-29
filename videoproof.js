@@ -440,12 +440,12 @@
 		return Math.round(mult * value) / mult;
 	}
 
-	var videoproofOutputInterval, theProof, animationRunning = false;
+	var videoproofOutputInterval, theProof, animTarget, animationRunning = false;
 	function animationUpdateOutput() {
 		var output = document.getElementById('aniparams');
 		var mode = $('#select-layout')[0];
 
-		var css = theProof ? getComputedStyle(theProof) : {};
+		var css = animTarget ? getComputedStyle(animTarget) : {};
 
 		var axes = fvsToAxes(css.fontVariationSettings);
 		var outputAxes = [];
@@ -466,6 +466,7 @@
 	}
 
 	function startAnimation(anim) {
+		animTarget = theProof.querySelector('.animation-target') || theProof;
 		console.log('start', anim, Date.now());
 		if (anim === 'moar') {
 			$('html').addClass('moar');
@@ -493,6 +494,7 @@
 	};
 
 	function jumpToTimestamp(timestamp) {
+		animTarget = theProof.querySelector('.animation-target') || theProof;
 		timestamp = parseFloat(timestamp);
 		if (isNaN(timestamp)) {
 			return;
@@ -538,6 +540,7 @@
 
 	function setupAnimation() {
 		theProof = document.getElementById('the-proof');
+		animTarget = theProof.querySelector('.animation-target') || theProof;
 		$('#animation-controls button.play-pause').on('click', function() {
 			if ($('html').hasClass('paused')) {
 				startAnimation();
@@ -606,7 +609,7 @@
 		if (v === '' || v === null) {
 			style.empty();
 		} else {
-			style.text('#the-proof, #keyframes-display a { ' + k + ': ' + v + '; }');
+			style.text('#the-proof, #the-proof .animation-target, #keyframes-display a { ' + k + ': ' + v + '; }');
 		}
 	}
 
