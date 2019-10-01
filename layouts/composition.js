@@ -118,13 +118,25 @@ VideoProof.registerLayout('composition', {
 			//select text blocks
 			proof.addEventListener('change', function() {
 				var para = document.querySelector('input[name="para-select"]:checked').parentNode;
-				$('#the-proof .animation-target').removeClass('animation-target');
 				
+				//freeze current settings on previously selected para
+				$('#the-proof .animation-target').each(function() {
+					var style = getComputedStyle(this);
+					this.style.fontVariationSettings = style.fontVariationSettings;
+					this.setAttribute('data-timestamp', VideoProof.getTimestamp());
+					$(this).removeClass('animation-target');
+				});
+				
+				//restore the previous settings if it had been modified before
+				para.style.removeProperty('font-variation-settings');
+
 				var tol = currentSize === 'small' ? { 'wght': [-100, +100], 'wdth': [0.8, 1.2] } : { 'wght': [-1000000, +10000000], 'wdth': [-100000000, +10000000] };
 
 				VideoProof.bracketRap(para, tol);
-
 				$(para).addClass('animation-target');
+				if (para.hasAttribute('data-timestamp')) {
+					VideoProof.jumpToTimestamp(para.getAttribute('data-timestamp'));
+				}
 			});
 			
 			if (!document.querySelector('input[name="para-select"]:checked')) {

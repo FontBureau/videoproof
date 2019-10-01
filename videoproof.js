@@ -955,6 +955,7 @@
 		'fixLineBreaks': fixLineBreaks,
 		'sizeToSpace': sizeToSpace,
 		'registerLayout': registerLayout,
+		'getTimestamp': getTimestamp,
 		'jumpToTimestamp': jumpToTimestamp,
 		'bracketRap': bracketRap
 	};
