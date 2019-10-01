@@ -1,7 +1,7 @@
 (function() {
 "use strict";
 VideoProof.registerLayout('composition', {
-	'rapBracket': true,
+	'bracketRap': true,
 	'controls': {
 		'Size': '<label><input type="radio" name="composition-size" value="small" checked> Small</label> <label><input type="radio" name="composition-size" value="large"> Large</label>',
 	},

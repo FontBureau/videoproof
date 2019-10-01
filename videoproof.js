@@ -29,7 +29,7 @@
 	}
 
 	function getTimestamp() {
-		var css = getComputedStyle(theProof);
+		var css = getComputedStyle(animTarget);
 		var percent = parseFloat(css.outlineOffset);
 		var offset = percent / 100 * parseFloat(document.getElementById('animation-duration').value);
 		return currentKeyframe ? -parseFloat(css.animationDelay) : offset;
@@ -42,7 +42,7 @@
 		settings.push({'name': 'timestamp', 'value': getTimestamp()});
 
 		if (moarAxis) {
-			settings.push({'name': 'moar', 'value': moarAxis + ' ' + fvsToAxes(getComputedStyle(theProof).fontVariationSettings)[moarAxis]});
+			settings.push({'name': 'moar', 'value': moarAxis + ' ' + fvsToAxes(getComputedStyle(animTarget).fontVariationSettings)[moarAxis]});
 		}
 
 		var url = [];
@@ -565,7 +565,7 @@
 			if (typeof currentKeyframe === 'number') {
 				toIndex = $(this).hasClass('back') ? currentKeyframe - 1 : currentKeyframe + 1;
 			} else {
-				var css = getComputedStyle(theProof);
+				var css = getComputedStyle(animTarget);
 				var percent = parseFloat(css.outlineOffset);
 				var exactIndex = percent / 100 * currentKeyframes.length;
 				//if we're already on an index, go to the next int
@@ -705,7 +705,7 @@
 				moarFresh = false;
 				evt.preventDefault();
 				
-				var css = getComputedStyle(theProof);
+				var css = getComputedStyle(animTarget);
 				var fvs = fvsToAxes(css.fontVariationSettings);
 				var percent = css.outlineOffset;
 				var fvsBase = {};
@@ -875,8 +875,7 @@
 		var previousLayout = (theProof.className || '').replace(/ (fixed-line-breaks|size-to-space)/g, '');
 		var customControls = document.getElementById('layout-specific-controls');
 
-		//stopAnimation();
-		resetAnimation();
+		stopAnimation();
 
 		if (previousLayout && previousLayout in layouts && 'deinit' in layouts[previousLayout]) {
 			layouts[previousLayout].deinit(theProof);
@@ -920,6 +919,8 @@
 		if (options.init) {
 			options.init(theProof);
 		}
+
+		resetAnimation();
 		
 		setTimeout(animationUpdateOutput);
 	}
@@ -1013,7 +1014,7 @@
 
 				setTimeout(function() {
 					$('#moar-axis-display a[data-axis="' + axis + '"]').addClass('current');
-					var fvs = fvsToAxes(getComputedStyle(theProof).fontVariationSettings);
+					var fvs = fvsToAxes(getComputedStyle(animTarget).fontVariationSettings);
 					fvs[axis] = val;
 					updateAnimationParam('animation-name', 'none');
 					updateAnimationParam('font-variation-settings', axesToFVS(fvs));
