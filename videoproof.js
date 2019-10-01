@@ -329,12 +329,7 @@
 	var rapBracket = false;
 	
 	//acceptable ranges of various axes
-	var rapTolerances = {
-		'opsz': [1, 1],
-		'wght': [-100, +100],
-		'wdth': [0.8, 1.2],
-		'default': [0.5, 2.0]
-	};
+	var rapTolerances = {};
 	
 	function calculateKeyframes() {
 		//O(3^n)? this might get ugly
@@ -349,7 +344,7 @@
 			axisRanges = {};
 			var span = 0.5;
 			$.each(rapBracket, function(axis, pivot) {
-				var tol = axis in rapTolerances ? rapTolerances[axis] : rapTolerances['default'];
+				var tol = axis in rapTolerances ? rapTolerances[axis] : [1,1];
 				var min = currentFont.axes[axis].min;
 				var max = currentFont.axes[axis].max;
 
@@ -416,8 +411,6 @@
 		}
 
 		getPermutations();
-
-		console.log(permutations);
 
 		var fvsPerms = [];
 		$.each(permutations, function(i, perm) {
@@ -846,7 +839,7 @@
 		});
 	}
 
-	function bracketRap(src) {
+	function bracketRap(src, tol) {
 		theProof.style.animationName = "none";
 		theProof.style.fontVariationSettings = 'normal';
 		var style = getComputedStyle(src);
@@ -860,6 +853,14 @@
 		if (!('wdth' in rapBracket) && currentFont && 'wdth' in currentFont.axes) {
 			rapBracket.wdth = currentFont.axes.wdth['default'];
 		}
+
+		rapTolerances = tol || {
+			'opsz': [1, 1],
+			'wght': [-100, +100],
+			'wdth': [0.8, 1.2],
+			'default': [0.5, 2.0]
+		};
+	
 		resetAnimation();
 	}
 

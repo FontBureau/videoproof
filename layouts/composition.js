@@ -43,7 +43,9 @@ VideoProof.registerLayout('composition', {
 				});
 			})
 		]).then(function() {
+			var currentSize;
 			sizecontrols.on('change', function() {
+				currentSize = this.value;
 				
 				function doTTW() {
 					TextToWidth({'.large-container .pane label': {'wordList': '/texts/pangram-words.txt'}});
@@ -53,7 +55,7 @@ VideoProof.registerLayout('composition', {
 				function addPara(el, txt, cls, size, parent) {
 					p = document.createElement(el);
 					if (cls) { p.className = cls; }
-					if (size) { p.style.fontSize = size + 'pt' };
+					if (size) { p.style.fontSize = size + (size <= 4 ? 'rem' : 'pt'); }
 					var input = document.createElement('input');
 					input.type = 'radio';
 					input.name = 'para-select';
@@ -66,16 +68,18 @@ VideoProof.registerLayout('composition', {
 					p.appendChild(input);
 					p.appendChild(label);
 					(parent || wrapper).appendChild(p);
+
+					p.setAttribute('data-size', '');
 				}
 				
 				proof.textContent = "";
-				if (this.value === 'small') {
+				if (currentSize === 'small') {
 					wrapper = document.createElement('div');
 					wrapper.className = 'small-container';
 					
 					addPara('p', getChunks(pangrams, 3).join(". ") + ".", 'pull-quote');
 
-					[16, 10, 14, 9, 12, 8].forEach(function(size) {
+					[1.3, 1, 1.2, 0.9, 1.1, 0.8].forEach(function(size) {
 						addPara('p', getChunk(paragraphs), null, size);
 					});
 					
@@ -99,6 +103,15 @@ VideoProof.registerLayout('composition', {
 
 					setTimeout(doTTW, 500);
 				}
+
+				$(proof).find('[data-size]').each(function() {
+					var p = this;
+					var fontsize = parseFloat(getComputedStyle(p).fontSize);
+					var rem = parseFloat(getComputedStyle(document.body).fontSize);
+
+					var sizeLabel = Math.round(fontsize / rem * 100)/100 + 'em / ' + Math.round(fontsize * 72/96) + 'pt';
+					p.setAttribute('data-size', sizeLabel);
+				});
 			});
 			sizecontrols.filter(':checked').trigger('change');
 			
@@ -106,9 +119,14 @@ VideoProof.registerLayout('composition', {
 			proof.addEventListener('change', function() {
 				var para = document.querySelector('input[name="para-select"]:checked').parentNode;
 				$('#the-proof .animation-target').removeClass('animation-target');
-				VideoProof.bracketRap(para);
+				
+				var tol = currentSize === 'small' ? { 'wght': [-100, +100], 'wdth': [0.8, 1.2] } : { 'wght': [-1000000, +10000000], 'wdth': [-100000000, +10000000] };
+
+				VideoProof.bracketRap(para, tol);
+
 				$(para).addClass('animation-target');
 			});
+			
 			if (!document.querySelector('input[name="para-select"]:checked')) {
 				document.querySelector('input[name="para-select"]').checked = true;
 				proof.trigger('change');
