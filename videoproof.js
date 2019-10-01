@@ -330,7 +330,7 @@
 	
 	//acceptable ranges of various axes
 	var rapTolerances = {
-		'opsz': [0.5, 2.0],
+		'opsz': [1, 1],
 		'wght': [-100, +100],
 		'wdth': [0.8, 1.2],
 		'default': [0.5, 2.0]
@@ -340,9 +340,6 @@
 		//O(3^n)? this might get ugly
 		var keyframes = [];
 
-		//represent each frame as a trinary number: 000, 001, 002, 010, 011, 012…
-		// 0 is axis default, 1 is axis min, 2 is axis max
-		// some combinations might be skipped if the min/max is the default
 		var axesMDM = [];
 		var raxisPresent = [];
 		
@@ -356,9 +353,9 @@
 				var min = currentFont.axes[axis].min;
 				var max = currentFont.axes[axis].max;
 
-				var lower = tol[0] > 0 && tol[0] < 1 ? pivot * tol[0] : pivot + tol[0];
+				var lower = tol[0] > 0 && tol[0] <= 1 ? pivot * tol[0] : pivot + tol[0];
 				//yes these first two should be tol[0] and not tol[1]
-				var upper = tol[0] > 0 && tol[0] < 1 ? pivot * tol[1] : pivot + tol[1];
+				var upper = tol[0] > 0 && tol[0] <= 1 ? pivot * tol[1] : pivot + tol[1];
 
 				axisRanges[axis] = {};
 				axisRanges[axis].min = Math.max(min, lower);
@@ -366,15 +363,30 @@
 				axisRanges[axis].max = Math.min(max, upper);
 			});
 		}
-		
+
 		$.each(registeredAxes, function(index, axis) {
+			var ar, mdm;
 			if (axis in axisRanges) {
+				ar = axisRanges[axis];
 				raxisPresent.push(axis);
 				if (axis === 'opsz') {
-					axesMDM.push([axisRanges[axis].min, axisRanges[axis]['default'], axisRanges[axis].max]);
+					mdm = [ar.min];
+					if (ar['default'] !== ar.min) {
+						mdm.push(ar['default']);
+					}
+					if (ar.max !== ar['default']) {
+						mdm.push(ar.max);
+					}
 				} else {
-					axesMDM.push([axisRanges[axis]['default'], axisRanges[axis].min, axisRanges[axis].max]);
+					mdm = [ar['default']];
+					if (ar['default'] !== ar.min) {
+						mdm.push(ar.min);
+					}
+					if (ar.max !== ar['default']) {
+						mdm.push(ar.max);
+					}
 				}
+				axesMDM.push(mdm);
 			}
 		});
 
@@ -386,24 +398,26 @@
 		var i, maxperms, j, l;
 		var raxisCount = raxisPresent.length;
 		var perm, filler, prev, current;
-		for (i=0, maxperms = Math.pow(3, raxisCount); i < maxperms; i++) {
-			current = i.toString(3);
-			filler = raxisCount - current.length;
-			perm = [];
-			for (j=0; j<filler; j++) {
-				perm.push(axesMDM[j][0]);
-			}
-			for (j=0, l=current.length; j<l; j++) {
-				perm.push(axesMDM[filler+j][current[j]]);
-			}
-			permutations.push(perm);
-			// and go back to default at the end of each cycle
-			if (current[j-1] == 2) {
-				perm = perm.slice(0, -1);
-				perm.push(axesMDM[filler+j-1][0]);
-				permutations.push(perm);
-			}
+
+		function getPermutations() {
+		    var max = axesMDM.length-1;
+		    function helper(arr, i) {
+			    var a;
+		        for (var j=0, l=axesMDM[i].length; j<l; j++) {
+		            a = arr.slice(0); // clone arr
+		            a.push(axesMDM[i][j]);
+		            if (i===max)
+		                permutations.push(a);
+		            else
+		                helper(a, i+1);
+		        }
+		    }
+		    helper([], 0);
 		}
+
+		getPermutations();
+
+		console.log(permutations);
 
 		var fvsPerms = [];
 		$.each(permutations, function(i, perm) {

@@ -125,6 +125,10 @@
 	    };
 	}
 	
+	if (!Document.prototype.trigger) {
+		Document.prototype.trigger = HTMLElement.prototype.trigger;
+	}
+	
 	// closest, from MDN
 	if (!Element.prototype.matches) {
 	    Element.prototype.matches = Element.prototype.msMatchesSelector || 
@@ -744,6 +748,7 @@
 				sortWordList(el);
 			}
 			el.textContent = fillElementWithText(el);
+			el.trigger('TextToWidth:populated');
 		};
 	
 		TTW.update = function() {
