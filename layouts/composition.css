@@ -38,7 +38,8 @@
 }
 
 #the-proof.composition input:checked + label {
-	background: #DDDDFF;
+	outline: 1px solid #09F;
+	outline-offset: 0.6em;
 }
 
 #the-proof.composition p.pull-quote {
