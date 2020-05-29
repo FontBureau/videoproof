@@ -1,3 +1,15 @@
+# Format tips:
+#  * Indentation is important! Four spaces.
+#  * Most strings can be unquoted, unless they contain quotes or some other punctuation. If in doubt, you can quote (single or double)
+#  * Unquoted single characters Y/N/y/n are synonyms for True and False in YAML, so they should be quoted if used
+#
+# Character groupings can be one or two levels deep (see Latin > Symbols)
+#
+# Two ways of handling "extended" character sets:
+# 1. For simple one-to-many character extensions (e.g. accented Latin letters), add them to the global "_extended" list at the bottom.
+#     These will be expanded "in place" automatically whenever that character is encountered in a character set.
+# 2. For custom extensions (e.g. currency symbols) include "_default" and "_extended" strings under each label
+
 Latin:
     Uppercase: ABCDEFGHIJKLMNOPQRSTUVWXYZ&
     Lowercase: abcdefghijklmnopqrstuvwxyz
