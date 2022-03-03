@@ -21,7 +21,15 @@ $videoproof = new VideoProof();
 		<script src="spectrum/spectrum.js"></script>
 		<link rel="stylesheet" href="./spectrum/spectrum.css">
 
+		<!--
+		Not sure what this is supposed to do, but it triggers an error
+		where  `const moreBtn = document.querySelector('.pop_button');`
+		is null:
+			"Uncaught TypeError: moreBtn is null"
+		in: <anonymous> https://www.typenetwork.com/assets_content/js/functions.js:110
+
 		<script src="https://www.typenetwork.com/assets_content/js/functions.js"></script>
+		-->
 
 		<script src="user-guide.js" defer></script>
 		<script src="text-to-width.js" defer></script>
