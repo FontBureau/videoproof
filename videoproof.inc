@@ -3,28 +3,28 @@ namespace TypeNetwork\VideoProof;
 
 class VideoProof {
 	public $fontinfo;
-	
+
 	private $tools = array(
-// 		'typespec' => "Ramp", 
+// 		'typespec' => "Ramp",
 		'grid' => "Array",
 // 		'waterfall' => "Waterfall",
 //		'grid' => "Grid",
-		'type-your-own' => "Input", 
+		'type-your-own' => "Input",
 		'contextual' => "Contextual",
 		'composition' => "Composition",
 	);
-	
+
 	private $registeredAxes = array('opsz', 'wdth', 'wght'); //, 'ital', 'slnt', 'grad', 'GRAD');
-	
+
 	private $glyphsets;
-	
+
 	public static function requireLogin($user, $password) {
 		if (!isset($_SERVER['PHP_AUTH_USER']) || $_SERVER['PHP_AUTH_USER'] !== $user || $_SERVER['PHP_AUTH_PW'] !== $password) {
 			header('HTTP/1.1 401 Unauthorized');
 			header('WWW-Authenticate: Basic realm="TN Video Proof"');
 			echo 'Varfontnügen';
 			exit;
-		}	
+		}
 	}
 
 	function __construct() {
@@ -34,16 +34,16 @@ class VideoProof {
 		if (!file_exists($this->axesFile)) {
 			$this->axesFile = __DIR__ . "/fonts/example-axes.json";
 		}
-		
+
 		$this->fontinfo = json_decode(file_get_contents($this->axesFile));
 		$this->fontinfo = get_object_vars($this->fontinfo);
 		ksort($this->fontinfo);
-			
+
 		$specific_font = false;
 		if (isset($_SERVER['HTTP_HOST']) and preg_match('/^(.+)-videoproof\./', $_SERVER['HTTP_HOST'], $matches)) {
 			$specific_font = strtolower($matches[1]);
 		}
-		
+
 		foreach ($this->fontinfo as $filebase => $axes) {
 			if ($specific_font) {
 				if (strpos(strtolower($filebase), $specific_font) !== 0) {
@@ -51,38 +51,38 @@ class VideoProof {
 					continue;
 				}
 			}
-			
+
 			if (!isset($axes->wght) || !isset($axes->wdth)) {
 				unset($this->fontinfo[$filebase]);
 				continue;
 			}
-	
+
 			#take off dev stuff from the end of the filename
 			//$fontname = preg_replace('/(?:[Vv]\d+|[Aa]lpha|[Bb]eta)?-VF$/', '', $filebase);
 			//$fontname = preg_replace('/(?:[Vv]\d+)?-VF$/', '', $filebase);
 			$fontname = preg_replace('/-VF$/', '', $filebase);
-			
+
 			#separate into words
 			$fontname = preg_replace('/(?<=[a-z])[_-]?(?=[A-Z])/', ' ', $fontname);
 
 			//figure out axis order
 			$order = array();
-			
+
 			if (isset($axes->order)) {
 				if (!$order) {
 					$order = $axes->order;
 				}
 				unset($axes->order);
 			}
-			
+
 			if (isset($axes->instances)) {
 				unset($axes->instances);
 			}
-			
+
 			if (in_array('instances', $order)) {
 				$order = array_diff($order, array('instances'));
 			}
-			
+
 			//sanity check on axis order
 			foreach ($order as $oaxis) {
 				if (!isset($axes->$oaxis)) {
@@ -146,7 +146,7 @@ EOD;
 		print "var registeredAxes = " . json_encode($this->registeredAxes) . ";\n";
 		print "var glyphsets = " . json_encode($this->glyphsets, JSON_UNESCAPED_UNICODE) . ";\n";
 		print "</script>\n";
-		
+
 		foreach ($this->tools as $tool => $name) {
 			print "<script src='layouts/$tool.js'></script>\n";
 		}
@@ -167,7 +167,7 @@ EOD;
 	<?php
 		return "";
 	}
-	
+
 	public function selectFont($label="Font") {
 	?>
 		<div id='select-font-container'>
@@ -190,7 +190,7 @@ EOD;
 	<?php
 		return "";
 	}
-	
+
 	public function color($name='color', $color='black', $label='') {
 		if (!$label) {
 			$label = ucfirst($name);
@@ -202,7 +202,7 @@ EOD;
 	<?php
 		return "";
 	}
-	
+
 	public function selectGlyphGroup() {
 		print <<<EOD
 		<div id='select-glyphs-container'>
@@ -258,7 +258,7 @@ print " -->";
 		foreach ($this->glyphsets as $n => $g) {
 			$showgroup($n, $g);
 		}
-		
+
 		print <<<EOD
 				<option value='misc'>None of the above</option>
 			</select>
@@ -269,7 +269,7 @@ print " -->";
 EOD;
 		return "";
 	}
-	
+
 	public function animationControls() {
 ?>
 		<div id='animation-controls'>
@@ -283,7 +283,7 @@ EOD;
 			<label for='animation-scrub'>0</label>
 -->
 		</div>
-		
+
 		<div id='animation-duration-container'>
 			<label for='animation-duration'>Full cycle</label>
 			<input id='animation-duration' type='number' min="1" step="1" value="60">sec
@@ -298,7 +298,7 @@ EOD;
 			<label>Keyframes</label>
 			<ul id='keyframes-display' class='sidebar-list'>
 			</ul>
-			
+
 			<label>But wait, there’s more</label>
 			<ul id='moar-axes-display' class='sidebar-list'>
 			</ul>
@@ -306,7 +306,7 @@ EOD;
 <?php
 		return "";
 	}
-	
+
 	public function lastFontUpdate() {
 		$now = time();
 		$then = filemtime($this->axesFile);

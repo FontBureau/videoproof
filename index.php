@@ -28,7 +28,7 @@ $videoproof = new VideoProof();
 
 		<style id='videoproof-keyframes'></style>
 		<style id='videoproof-moar-animation'></style>
-		
+
 		<link rel="stylesheet" href="videoproof.css">
 		<link rel="stylesheet" href="form-controls.css">
 
@@ -41,7 +41,7 @@ $videoproof = new VideoProof();
 			<header class="header-global">
 				<h1><a href="https://www.typenetwork.com/">Type Network</a></h1>
 			</header>
-		
+
 			<nav class="nav-global">
 				<a class="nav-global-reveal" href="#">Menu</a>
 				<ul>
@@ -53,7 +53,7 @@ $videoproof = new VideoProof();
 -->
 				</ul>
 			</nav>
-			
+
 			<nav class="nav-user">
 				<a class="nav-user-reveal" href="#">Menu</a>
 				<ul>
@@ -64,7 +64,7 @@ $videoproof = new VideoProof();
 -->
 				</ul>
 			</nav>
-			
+
 			<!-- SIDEBAR! -->
 			<aside class="content-filters">
 				<a class="content-filters-close" href="#">Close</a>
@@ -86,7 +86,7 @@ $videoproof = new VideoProof();
 					</div>
 
 					<?= $videoproof->animationKeyframes() ?>
-					
+
 					<h3>Meta</h3>
 					<ul>
 <!-- 						<li><a id="bookmark" href="?">Bookmark these settings</a></li> -->
@@ -99,13 +99,13 @@ $videoproof = new VideoProof();
 				</form>
 
 			</aside>
-			
+
 			<div class="content-main">
 				<a class="content-options-show-filters" href="#">Sidebar</a>
 
 				<?= $videoproof->animationControls(); ?>
 				<output id='aniparams'>This animation will eat your CPU alive (depending on browser), so it doesn’t auto-start. Ready? <span id='first-play'>▶️</span></output>
-				
+
 				<div id='the-proof'></div>
 
 				<footer class="footer-global">
