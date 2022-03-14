@@ -959,23 +959,18 @@
 		'jumpToTimestamp': jumpToTimestamp,
 		'bracketRap': bracketRap
 	};
-	
+
 	function urlToControls() {
 		if (!window.location.search || window.location.search === '?') {
 			return;
 		}
-		var settings = {};
-		window.location.search.substring(1).split('&').forEach(function(clause) {
-			var kv = clause.split('=', 2);
-			settings[kv[0]] = decodeURIComponent(kv[1]);
-			var input, subinput;
-		});
+		var settings = Object.fromEntries( new URL(window.location).searchParams );
 
-		$.each(settings, function(setting, value) {
-			var input, subinput, selector;
+		for(let [setting, value] of Object.entries(settings)) {
+			let input, subinput, selector;
 			input = document.querySelector('#controls [name="' + setting + '"]');
 			if (!input) {
-				return;
+				continue;
 			}
 			if (input.tagName === "INPUT") {
 				if (input.type === "checkbox" || input.type === "radio") {
@@ -983,7 +978,7 @@
 					if (input) {
 						input.checked = true;
 					} else {
-						return;
+						continue;
 					}
 				} else {
 					input.value = value;
@@ -991,17 +986,15 @@
 			} else {
 				selector = '[value="' + cssStringEscape(value) + '"]';
 				subinput = input.querySelectorAll(selector);
-				if (subinput.length) {
-					$.each(subinput, function(i, si) {
-						if (si.tagName === 'INPUT') {
-							si.checked = true;
-						} else if (si.tagName === 'OPTION') {
-							si.selected = true;
-						}
-					});
-				}
+                                for(let si of input.querySelectorAll(selector)){
+                                        if (si.tagName === 'INPUT') {
+                                                si.checked = true;
+                                        } else if (si.tagName === 'OPTION') {
+                                                si.selected = true;
+                                        }
+                                }
 			}
-		});
+		};
 
 		//set keyframe after they're calculated
 		$(document).on('videoproof:animationReset.urlToControls', function() {
