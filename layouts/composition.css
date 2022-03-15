@@ -28,7 +28,7 @@
 
 #the-proof.composition input[name="para-select"] {
 	position: absolute;
-	left: 200vw;
+	left: -200vw;
 }
 
 #the-proof.composition label {
@@ -74,11 +74,11 @@
 		grid-template-columns: 1fr 1fr;
 		grid-gap: 0.25in;
 	}
-	
+
 	#the-proof.composition .large-container .pane {
 		overflow: hidden;
 	}
-	
+
 	#the-proof.composition .large-container .pane + .pane {
 		margin-top: 0;
 	}

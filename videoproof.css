@@ -359,11 +359,17 @@ ul.sidebar-list a:hover {
 /* ANIMATION */
 
 #the-proof, #the-proof .animation-target, #keyframes-display a {
-	animation-name: videoproof;
+    animation-name: videoproof;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
     animation-duration: 60s;
-    outline-offset: 100px; /* this is a standin for percent of animation cycle */
+    /* this is a standin for percent of animation cycle
+     * TODO: I don't really understand how this is used.
+     * It has the same numeric value as the percentage progress of
+     * the the animation, but I can't find where it is used. Maybe
+     * it's intended for debugging to read in the web-developer tool.
+     */
+    outline-offset: 100px;
     outline-style: solid;
     outline-color: transparent;
     outline-width: 1px;
