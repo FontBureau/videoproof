@@ -659,10 +659,20 @@
 
             //add timeline hints
             var stepwiseName = "videoproof-hint-" + i;
-            stepwise.push("@keyframes " + stepwiseName + " { 0%, " + prevPercent + '%, ' + nextPercent + '%, 100% { color:black; font-weight:400; } ' + percent + '% { color: red; font-weight: 700; } } #keyframes-display li:nth-child(' + (i+1) + ') a { animation-name: ' + stepwiseName + '; }');
+            stepwise.push("@keyframes " + stepwiseName
+                    + " { 0%, "
+                         + prevPercent + '%, '
+                         + nextPercent + '%, '
+                         + '100% { color:black; font-weight:400; } '
+                    + percent + '% { color: red; font-weight: 700; }'
+                    + ' } '
+                    +'#keyframes-display li:nth-child(' + (i+1) + ') a {'
+                    + ' animation-name: ' + stepwiseName
+                    + '; }');
 
             //add CSS step
-            keyframes[i] =  percent + '% { font-variation-settings: ' + fvs + '; outline-offset: ' + percent + 'px; }';
+            keyframes[i] =  percent + '% { font-variation-settings: ' + fvs
+                           + '; outline-offset: ' + percent + 'px; }';
         });
 
         document.getElementById('videoproof-keyframes').textContent =
