@@ -78,6 +78,8 @@ $videoproof = new VideoProof();
 				<a class="content-filters-close" href="#">Close</a>
 
 				<form id='controls'>
+					<input id="comment-store" name="comment" type="hidden" />
+
 					<?= $videoproof->selectFont() ?>
 					<?= $videoproof->selectMode() ?>
 					<?= $videoproof->selectGlyphGroup() ?>
@@ -113,6 +115,11 @@ $videoproof = new VideoProof();
 
 				<?= $videoproof->animationControls(); ?>
 				<output id='aniparams'>This animation will eat your CPU alive (depending on browser), so it doesn’t auto-start. Ready? <span id='first-play'>▶️</span></output>
+
+				<div id="comment-box">
+					Leave a comment here, it will be shared together with the page link.<br />
+					<textarea></textarea>
+				</div>
 
 				<div id='the-proof'></div>
 

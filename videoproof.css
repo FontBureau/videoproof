@@ -382,3 +382,8 @@ ul.sidebar-list a:hover {
 .moar #keyframes-display a {
 	animation-play-state: paused;
 }
+
+
+#comment-box textarea {
+	width: 100%;
+}

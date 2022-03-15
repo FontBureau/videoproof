@@ -36,6 +36,11 @@
     }
 
     function updateURL() {
+        // Only acts on #controls, that's why layout mode:composition is
+        // not serialized. Similarly, animation-duration is not serialized,
+        // but it also has no "name" attribute.
+        // In composition mode, however, the interface can recall and
+        // reload the keyframe settings for the diferent elements.
         var settings = $('#controls').serializeArray();
 
         //and other things outside the main form
@@ -968,40 +973,45 @@
 
         for(let [setting, value] of Object.entries(settings)) {
             let input, subinput, selector;
-            input = document.querySelector('#controls [name="' + setting + '"]');
-            if (!input) {
+            let inputs = document.querySelectorAll('#controls [name="' + setting + '"]');
+            if (!inputs.length)
                 continue;
-            }
-            if (input.tagName === "INPUT") {
-                if (input.type === "checkbox" || input.type === "radio") {
-                    input = document.querySelector('#controls [name="' + setting + '"][value="' + cssStringEscape(value) + '"]');
-                    if (input) {
-                        input.checked = true;
-                    } else {
+
+            switch(inputs[0].tagName) {
+                case "INPUT":
+                    if (inputs[0].type !== "checkbox" && inputs[0].type !== "radio"){
+                        inputs[0].value = value;
+                        $(inputs[0]).trigger('change:from-url');
                         continue;
                     }
-                } else {
-                    input.value = value;
-                }
-            } else {
-                selector = '[value="' + cssStringEscape(value) + '"]';
-                subinput = input.querySelectorAll(selector);
-                                for(let si of input.querySelectorAll(selector)){
-                                        if (si.tagName === 'INPUT') {
-                                                si.checked = true;
-                                        } else if (si.tagName === 'OPTION') {
-                                                si.selected = true;
-                                        }
-                                }
+                    for(let input of inputs) {
+                        if(input.value === value) {
+                            input.checked = true
+                            break;
+                        }
+                    }
+                break;
+                case "SELECT":
+                    inputs[0].value = value;
+                break;
             }
         };
 
         //set keyframe after they're calculated
+        $(document).off('videoproof:animationReset.urlToControls');
         $(document).on('videoproof:animationReset.urlToControls', function() {
             if ('timestamp' in settings) {
+                // Would NOT do anything in Layout mode: composition
+                // but it seems alright in the other modes
+                // layout composition also let's you select different boxes
+                // to apply keyframe settings to, I expect the bug and
+                // this specialty to be related.
                 jumpToTimestamp(settings.timestamp);
             }
             if ('moar' in settings) {
+                // I can't find  case where "moar" is in settings.
+                // NOT true, seems like it's present an selected when
+                // stopping/pausing it
                 var kv = settings.moar.split(' ');
                 var axis = kv[0];
                 var val = parseFloat(kv[1]);
@@ -1035,6 +1045,21 @@
         $('#select-font').on('change', handleFontChange);
         $('#foreground, #background').on('change input', slidersToElement);
         $('#select-glyphs').on('change', handleGlyphsChange);
+
+
+        // #comment-store is an hidden input, it will be serialized and
+        // deserialized by the urlToControls mechanism.
+        // The <textarea> is just the user interface and it can be located
+        // anywhere in the document.
+        var commentStore = document.querySelector('#comment-store')
+          , commentBox = document.querySelector('#comment-box textarea')
+          ;
+        $(commentBox).on('change', evt=> {
+            commentStore.value = evt.target.value;
+            updateURL();
+        });
+        $(commentStore).on('change:from-url',
+                            evt=>commentBox.value = evt.target.value);
 
         $('#add-your-own-button').on('click', function(evt) {
             $('#custom-fonts')[0].click();
