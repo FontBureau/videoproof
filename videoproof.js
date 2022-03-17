@@ -1072,7 +1072,9 @@ var layouts = {
 
     // FIXME
     //jquery overhead is sometimes causing window.load to fire before this! So use native events.
-    document.addEventListener('DOMContentLoaded', function onDOMContentLoaded() {
+    // document.addEventListener('DOMContentLoaded',
+
+    function onDOMContentLoaded() {
         urlToControls();
 
         var theProof = document.getElementById('the-proof');
@@ -1190,10 +1192,11 @@ var layouts = {
             updateURL();
             return false;
         });
-    });
+    };
 
 
 function main() {
+    onDOMContentLoaded();
     //this timeout is for the sidebar load
     setTimeout(function() {
         var showSidebar = $('a.content-options-show-filters');
