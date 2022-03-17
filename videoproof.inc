@@ -147,9 +147,9 @@ EOD;
 		print "var glyphsets = " . json_encode($this->glyphsets, JSON_UNESCAPED_UNICODE) . ";\n";
 		print "</script>\n";
 
-		foreach ($this->tools as $tool => $name) {
-			print "<script src='layouts/$tool.js'></script>\n";
-		}
+		//foreach ($this->tools as $tool => $name) {
+		//	print "<script src='layouts/$tool.js'></script>\n";
+		//}
 
 		return "";
 	}

@@ -1,5 +1,18 @@
-(function() {
-    "use strict";
+/* jshint browser: true, esversion: 7, laxcomma: true, laxbreak: true */
+
+import opentype from './opentype.js/dist/opentype.module.js';
+
+import grid from './layouts/grid.js';
+import typeYourOwn from './layouts/type-your-own.js';
+import contextual from './layouts/contextual.js';
+import composition from './layouts/composition.js';
+
+var layouts = {
+    grid: grid,
+    'type-your-own': typeYourOwn,
+    contextual: contextual,
+    composition: composition
+};
 
     var temp;
     var currentFont;
@@ -331,12 +344,13 @@
         unsetWidest();
     }
 
+    // definitely one of the eval global states
     var rapBracket = false;
 
     //acceptable ranges of various axes
     var rapTolerances = {};
 
-    function calculateKeyframes() {
+    function calculateKeyframes(currentFont) {
         //O(3^n)? this might get ugly
         var keyframes = [];
 
@@ -345,8 +359,11 @@
 
         var axisRanges = currentFont.axes;
 
+        console.log('axisRanges:', axisRanges);
+
         if (typeof rapBracket === 'object') {
             axisRanges = {};
+            console.log('"rapBracket":', rapBracket);
             var span = 0.5;
             $.each(rapBracket, function(axis, pivot) {
                 var tol = axis in rapTolerances ? rapTolerances[axis] : [1,1];
@@ -363,6 +380,8 @@
                 axisRanges[axis].max = Math.min(max, upper);
             });
         }
+
+        console.log('axisRanges:', axisRanges);
 
         $.each(registeredAxes, function(index, axis) {
             var ar, mdm;
@@ -387,7 +406,8 @@
                     }
                 }
                 axesMDM.push(mdm);
-            }
+            }else
+                console.log(`axis ${axis} not in axisRanges`, axisRanges);
         });
 
         if (!raxisPresent.length) {
@@ -633,7 +653,13 @@
             return;
         }
 
-        var keyframes = currentKeyframes = calculateKeyframes();
+        var keyframes = currentKeyframes = calculateKeyframes(currentFont);
+
+        if(!keyframes.length){
+            // want to see the stack trace
+            console.log('currentFont:', currentFont);
+            throw new Error('keyframes is empty!');
+        }
         var perstep = 100 / keyframes.length;
         $('#animation-duration').val(keyframes.length * 2).trigger('change');
         updateAnimationParam('animation-delay', '0');
@@ -752,6 +778,7 @@
     }
 
     function handleFontChange() {
+
         var fonturl = document.getElementById('select-font').value;
         var spectropts = {
             'showInput': true,
@@ -772,9 +799,12 @@
             $(document).trigger('videoproof:fontLoaded');
         } else {
             var url = 'fonts/' + fonturl + '.woff';
-            window.opentype.load(url, function (err, font) {
+            // FIXME: This shouldn't be done here, having opentype.js handle
+            // the XHR requerst
+            opentype.load(url, function (err, font) {
                 if (err) {
-                    alert(err);
+                    console.warn('window.fontInfo[fonturl];', window.fontInfo[fonturl], err);
+                    alert(`${url}: ${err}`);
                     return;
                 }
                 window.font = currentFont = window.fontInfo[fonturl];
@@ -841,7 +871,7 @@
             var blob = new Blob([file], {'type': mimetype});
             reader.addEventListener('load', function() {
                 var datauri = this.result;
-                window.opentype.load(datauri, function(err, font) {
+                opentype.load(datauri, function(err, font) {
                     if (err) {
                         console.log(err);
                         return;
@@ -869,6 +899,8 @@
             rapBracket.wdth = currentFont.axes.wdth['default'];
         }
 
+        console.log('new "rapBracket":', rapBracket, 'currentFont:', currentFont);
+
         rapTolerances = tol || {
             'opsz': [1, 1],
             'wght': [-100, +100],
@@ -877,11 +909,6 @@
         };
 
         resetAnimation();
-    }
-
-    var layouts = {};
-    function registerLayout(layout, options) {
-        layouts[layout] = options;
     }
 
     function handleLayoutChange() {
@@ -969,7 +996,6 @@
         'getGlyphString': getGlyphString,
         'fixLineBreaks': fixLineBreaks,
         'sizeToSpace': sizeToSpace,
-        'registerLayout': registerLayout,
         'getTimestamp': getTimestamp,
         'jumpToTimestamp': jumpToTimestamp,
         'bracketRap': bracketRap
@@ -1003,6 +1029,11 @@
                 break;
                 case "SELECT":
                     inputs[0].value = value;
+
+                    // FIXME: this is a general issue with the loading of settings
+                    if(inputs[0].value !== value)
+                        console.warn(`${setting}: can\'t select "${value}".`);
+
                 break;
             }
         };
@@ -1038,8 +1069,10 @@
         });
     }
 
+
+    // FIXME
     //jquery overhead is sometimes causing window.load to fire before this! So use native events.
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function onDOMContentLoaded() {
         urlToControls();
 
         var theProof = document.getElementById('the-proof');
@@ -1159,37 +1192,39 @@
         });
     });
 
-    window.addEventListener('load', function() {
-        //this timeout is for the sidebar load
-        setTimeout(function() {
-            var showSidebar = $('a.content-options-show-filters');
-            if (showSidebar.is(':visible')) {
-                showSidebar.click();
-            }
-        }, 100);
 
-        setupAnimation();
-        handleLayoutChange();
-        handleFontChange();
-        $('#select-glyphs').trigger('change');
-
-        setTimeout(urlToControls);
-
-        var theProof = $('#the-proof');
-        function realResize() {
-            if (theProof.hasClass('fixed-line-breaks')) {
-                VideoProof.fixLineBreaks();
-            } else if (theProof.hasClass('size-to-space')) {
-                VideoProof.sizeToSpace();
-            }
+function main() {
+    //this timeout is for the sidebar load
+    setTimeout(function() {
+        var showSidebar = $('a.content-options-show-filters');
+        if (showSidebar.is(':visible')) {
+            showSidebar.click();
         }
+    }, 100);
 
-        var resizeTimeout;
-        $(window).on('resize', function() {
-            if (resizeTimeout) {
-                clearTimeout(resizeTimeout);
-            }
-            resizeTimeout = setTimeout(realResize, 500);
-        });
+    setupAnimation();
+    handleLayoutChange();
+    handleFontChange();
+    $('#select-glyphs').trigger('change');
+
+    setTimeout(urlToControls);
+
+    var theProof = $('#the-proof');
+    function realResize() {
+        if (theProof.hasClass('fixed-line-breaks')) {
+            VideoProof.fixLineBreaks();
+        } else if (theProof.hasClass('size-to-space')) {
+            VideoProof.sizeToSpace();
+        }
+    }
+
+    var resizeTimeout;
+    $(window).on('resize', function() {
+        if (resizeTimeout) {
+            clearTimeout(resizeTimeout);
+        }
+        resizeTimeout = setTimeout(realResize, 500);
     });
-})();
+}
+
+window.addEventListener('load', main);

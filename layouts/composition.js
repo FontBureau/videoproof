@@ -1,6 +1,8 @@
-(function() {
-"use strict";
-VideoProof.registerLayout('composition', {
+/* jshint browser: true, esversion: 7, laxcomma: true, laxbreak: true */
+
+import { trigger, textToWidth } from '../text-to-width.js';
+
+export default {
 	'bracketRap': true,
 	'controls': {
 		'Size': '<label><input type="radio" name="composition-size" value="small" checked> Small</label> <label><input type="radio" name="composition-size" value="large"> Large</label>',
@@ -8,12 +10,12 @@ VideoProof.registerLayout('composition', {
 	'init': function(proof) {
 		var sizecontrols = $('input[name="composition-size"]');
 		var paragraphs, pangrams;
-		
+
 		function getChunks(src, num) {
 			if (isNaN(num) || num <= 0) {
 				num = 1;
 			}
-			
+
 			var result = [];
 			var i, j;
 			for (i=0; i<num; i++) {
@@ -22,7 +24,7 @@ VideoProof.registerLayout('composition', {
 			return result;
 		}
 		var getChunk = getChunks;
-		
+
 		Promise.all([
 			new Promise(function(resolve, reject) {
 				$.ajax('/texts/paragraphs.txt', {
@@ -48,9 +50,9 @@ VideoProof.registerLayout('composition', {
 				currentSize = this.value;
 				
 				function doTTW() {
-					TextToWidth({'.large-container .pane label': {'wordList': '/texts/pangram-words.txt'}});
+					textToWidth({'.large-container .pane label': {'wordList': '/texts/pangram-words.txt'}});
 				}
-				
+
 				var wrapper, p, cb, label;
 				function addPara(el, txt, cls, size, parent) {
 					p = document.createElement(el);
@@ -71,18 +73,18 @@ VideoProof.registerLayout('composition', {
 
 					p.setAttribute('data-size', '');
 				}
-				
+
 				proof.textContent = "";
 				if (currentSize === 'small') {
 					wrapper = document.createElement('div');
 					wrapper.className = 'small-container';
-					
+
 					addPara('p', getChunks(pangrams, 3).join(". ") + ".", 'pull-quote');
 
 					[1.3, 1, 1.2, 0.9, 1.1, 0.8].forEach(function(size) {
 						addPara('p', getChunk(paragraphs), null, size);
 					});
-					
+
 					proof.appendChild(wrapper);
 				} else {
 					wrapper = document.createElement('div');
@@ -91,11 +93,11 @@ VideoProof.registerLayout('composition', {
 					['regular', 'bold'].forEach(function(weight) {
 						var pane = document.createElement('div');
 						pane.className = 'pane ' + weight;
-	
+
 						['h1', 'h2', 'h3', 'h4', 'h5'].forEach(function(h) {
 							addPara(h, '', null, null, pane);
 						});
-						
+
 						wrapper.appendChild(pane);
 					});
 
@@ -114,11 +116,11 @@ VideoProof.registerLayout('composition', {
 				});
 			});
 			sizecontrols.filter(':checked').trigger('change');
-			
+
 			//select text blocks
 			proof.addEventListener('change', function() {
 				var para = document.querySelector('input[name="para-select"]:checked').parentNode;
-				
+
 				//freeze current settings on previously selected para
 				$('#the-proof .animation-target').each(function() {
 					var style = getComputedStyle(this);
@@ -126,7 +128,7 @@ VideoProof.registerLayout('composition', {
 					this.setAttribute('data-timestamp', VideoProof.getTimestamp());
 					$(this).removeClass('animation-target');
 				});
-				
+
 				//restore the previous settings if it had been modified before
 				para.style.removeProperty('font-variation-settings');
 
@@ -138,10 +140,10 @@ VideoProof.registerLayout('composition', {
 					VideoProof.jumpToTimestamp(para.getAttribute('data-timestamp'));
 				}
 			});
-			
+
 			if (!document.querySelector('input[name="para-select"]:checked')) {
 				document.querySelector('input[name="para-select"]').checked = true;
-				proof.trigger('change');
+				trigger(proof, 'change');
 			}
 		}).catch(function(e) {
 			console.log(e);
@@ -150,5 +152,4 @@ VideoProof.registerLayout('composition', {
 	},
 	'deinit': function(proof) {
 	}
-});
-})();
+};

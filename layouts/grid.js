@@ -1,11 +1,11 @@
-(function() {
-"use strict";
-VideoProof.registerLayout('grid', {
+/* jshint browser: true, esversion: 7, laxcomma: true, laxbreak: true */
+
+export default {
 	'fixedLineBreaks': true,
 	'init': function(proof) {
 		function populateGrid() {
 			var glyphset = VideoProof.getGlyphString();
-	
+
 	/*
 			if (typeof glyphset === 'object' && glyphset.chars && glyphset.feature) {
 				proof.css('font-feature-settings', '"' + glyphset.feature + '" 1');
@@ -34,5 +34,4 @@ VideoProof.registerLayout('grid', {
 		$('#select-glyphs').off('.grid');
 		$('#show-extended-glyphs').off('.grid');
 	}
-});
-})();
+};

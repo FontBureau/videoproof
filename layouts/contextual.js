@@ -1,6 +1,6 @@
-(function() {
-"use strict";
-VideoProof.registerLayout('contextual', {
+/* jshint browser: true, esversion: 7, laxcomma: true, laxbreak: true */
+
+export default {
 	'sizeToSpace': true,
 	'controls': {
 		'Pad': '<select id="contextual-pad" name="pad"><option value="auto-short">Auto short</option><option value="auto-long">Auto long</option><option value="kern-upper">Kern upper</option><option value="kern-mixed">Kern mixed</option><option value="kern-lower">Kern lower</option></select>',
@@ -9,7 +9,7 @@ VideoProof.registerLayout('contextual', {
 	'init': function(proof) {
 		function populateGrid() {
 			var glyphset = VideoProof.getGlyphString();
-	
+
 	/*
 			if (typeof glyphset === 'object' && glyphset.chars && glyphset.feature) {
 				proof.css('font-feature-settings', '"' + glyphset.feature + '" 1');
@@ -18,7 +18,7 @@ VideoProof.registerLayout('contextual', {
 				proof.css('font-feature-settings', '');
 			}
 	*/
-	
+
 			var ucre = /[A-Z]/;
 			var lcre = /[a-z]/;
 			var numre = /[0-9]/;
@@ -33,7 +33,7 @@ VideoProof.registerLayout('contextual', {
 				});
 				return isExt;
 			}
-			
+
 			function isUppercase(c) {
 				return isGeneral(c, ucre);
 			}
@@ -50,7 +50,7 @@ VideoProof.registerLayout('contextual', {
 			var custompad = $('#contextual-custom-pad').val();
 			var words = [];
 			var extended = document.getElementById('show-extended-glyphs').checked;
-			
+
 			if (custompad.length || !autopad.match(/^kern/)) {
 				Array.from(glyphset).forEach(function(c) {
 					if (custompad.length) {
@@ -81,12 +81,12 @@ VideoProof.registerLayout('contextual', {
 			} else {
 				//kern pads
 				switch (autopad) {
-					case 'kern-upper': 
+					case 'kern-upper':
 						var glyphselect = document.getElementById('select-glyphs');
 						glyphselect.querySelector('option[value^="ABC"]').selected = true;
 						var outer = VideoProof.getGlyphString(null, false);
 						var inner = extended ? VideoProof.getGlyphString(null, true) : outer;
-						
+
 						outer = Array.from(outer);
 						inner = Array.from(inner);
 
@@ -98,12 +98,12 @@ VideoProof.registerLayout('contextual', {
 						});
 						words.push(c);
 						break;
-					case 'kern-mixed': 
+					case 'kern-mixed':
 						var glyphselect = document.getElementById('select-glyphs');
 						glyphselect.querySelector('option[value^="abc"]').selected = true;
 						var outer = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 						var inner = VideoProof.getGlyphString(null, extended);
-						
+
 						outer = Array.from(outer);
 						inner = Array.from(inner);
 
@@ -115,13 +115,13 @@ VideoProof.registerLayout('contextual', {
 						});
 						words.push(c);
 						break;
-					case 'kern-lower': 
+					case 'kern-lower':
 						var glyphselect = document.getElementById('select-glyphs');
 						glyphselect.querySelector('option[value^="abc"]').selected = true;
 
 						var outer = VideoProof.getGlyphString(null, false);
 						var inner = extended ? VideoProof.getGlyphString(null, true) : outer;
-						
+
 						outer = Array.from(outer);
 						inner = Array.from(inner);
 
@@ -152,7 +152,7 @@ VideoProof.registerLayout('contextual', {
 		$(document).on('videoproof:fontLoaded.contextual', populateGrid);
 		$('#select-glyphs').on('change.contextual', populateGrid);
 		$('#show-extended-glyphs').on('change.contextual', populateGrid);
-		$('#contextual-pad').on('change', function() { 
+		$('#contextual-pad').on('change', function() {
 			$('#contextual-custom-pad').val('');
 		});
 		$('#layout-specific-controls').on('input.contextual change.contextual', populateGrid);
@@ -163,5 +163,4 @@ VideoProof.registerLayout('contextual', {
 		$('#show-extended-glyphs').off('.contextual');
 		$('#layout-specific-controls').off('.contextual');
 	}
-});
-})();
+}
