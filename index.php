@@ -24,8 +24,11 @@ $videoproof = new VideoProof();
 		<script src="opentype.js/dist/opentype.min.js"></script>
 		-->
 
+		<!--
+		Color pickers are supported in all browsers expect interent explorer.
 		<script src="spectrum/spectrum.js"></script>
 		<link rel="stylesheet" href="./spectrum/spectrum.css">
+		-->
 
 		<!--
 		Not sure what this is supposed to do, but it triggers an error
