@@ -2,14 +2,14 @@
 
 Experimental tools for creating animated proofs for variable fonts.
 
-https://videoproof.typenetwork.com/
+https://videoproof.graphicore.de/
 SOME DEVELOPERS need more sophisticated composition tools for variable fonts; To exercise, proof and, annotate, demo and share
 
 CREATE AND DEMONSTRATE options for integration of registered and parametric axes with the value systems and processes of composition and composers.
 
 >Proof and adjust the integration via a combination of css, js, and Ui developments
 
->Analyze both visually and with filtering and sorting of the data-rich CSS environment now available 
+>Analyze both visually and with filtering and sorting of the data-rich CSS environment now available
 
 >Annotate issues on glyp, gvar, gpos and other font tables uses with css, js in compostion.
 

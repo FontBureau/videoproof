@@ -56,8 +56,11 @@ $videoproof = new VideoProof();
 	</head>
 	<body>
 		<div class="wrapper">
-			<header class="header-global">
+			<header> <!--  class="header-global"> -->
+				<h1>Video Proof</h1>
+				<!--
 				<h1><a href="https://www.typenetwork.com/">Type Network</a></h1>
+				-->
 			</header>
 
 			<nav class="nav-global">
@@ -135,9 +138,9 @@ $videoproof = new VideoProof();
 
 				<footer class="footer-global">
 					<ul>
-						<li><a href="//www.typenetwork.com/about">About Type Network</a></li>
-						<li><a href="https://github.com/TypeNetwork/videoproof">Source code on GitHub</a></li>
-						<li><a href="https://github.com/TypeNetwork/videoproof/issues">Bug reports &amp; feature&nbsp;requests</a></li>
+						<!--<li><a href="//www.typenetwork.com/about">About Type Network</a></li>-->
+						<li><a href="https://github.com/graphicore/videoproof">Source code on GitHub</a></li>
+						<li><a href="https://github.com/graphicore/videoproof/issues">Bug reports &amp; feature&nbsp;requests</a></li>
 					</ul>
 				</footer>
 			</div> <!-- content-main -->
