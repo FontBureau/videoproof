@@ -95,6 +95,7 @@ var layouts = {
 
     function slidersToElement() {
         var styleEl = $('#style-general');
+        // FIXME: stuff like this could go directly to element.style
         var selector = '#the-proof';
 
         var rules = [];
@@ -159,6 +160,7 @@ var layouts = {
         return getKnownGlyphs() + getMiscChars();
     }
 
+    // impure
     function getGlyphString(glyphset, extended) {
         var input = document.querySelector('#select-glyphs :checked');
 
@@ -176,28 +178,29 @@ var layouts = {
         if (extended && input.hasAttribute('data-extended')) {
             glyphset += input.getAttribute('data-extended');
         }
+
         var glyphsort = glyphset === 'all-gid' ? 'gid' : 'group';
 
         switch (glyphset) {
-            case 'all-gid':
-            case 'all-groups':
-                glyphset = getAllGlyphs();
-                break;
             case 'misc':
                 glyphset = getMiscChars();
                 break;
-        }
-
-        if (!glyphset) {
-            glyphset = getAllGlyphs();
+            case 'all-gid':
+            case 'all-groups':
+            default:
+                glyphset = getAllGlyphs();
+                break;
         }
 
         //and now sort them by the selected method
         if (!currentFont || !currentFont.fontobj) {
             return glyphset;
         }
+        return _pure_getGlyphString(currentFont.fontobj, glyphsort, glyphset, extended);
+    }
 
-        var cmap = currentFont.fontobj.tables.cmap.glyphIndexMap;
+    function _pure_getGlyphString(fontobj, glyphsort, glyphset, extended) {
+        var cmap = fontobj.tables.cmap.glyphIndexMap;
         var unicodes = [];
         var checkCmap = false;
         switch (glyphsort) {
@@ -212,6 +215,7 @@ var layouts = {
                 unicodes = Array.from(glyphset);
                 checkCmap = true;
                 break;
+            case 'unicode':
             default: // sort by unicode
                 unicodes = Object.keys(cmap);
                 unicodes.sort(function(a, b) { return a-b; });
@@ -235,7 +239,14 @@ var layouts = {
     }
 
     function sizeToSpace() {
-        //shrink the font so it fits on the page
+        // In general I think this could be made quicker, as the size change
+        // is linear because it doesn't change i.e. opsz when chahnging
+        // font-size. Hence, we can change once to min-font-size and measure
+        // then to max-font-size and measure, and then interpolate to
+        // the size we want.
+
+
+        //grow/shrink the font so it "fits" on the page
         var winHeight = window.innerHeight - 96;
         var gridBox = theProof.getBoundingClientRect();
         var gridHeight = gridBox.height;
@@ -243,17 +254,56 @@ var layouts = {
         var fontsize = parseFloat(getComputedStyle(theProof).fontSize);
         var minFontSize = 24, maxFontSize = 144;
 
+        // growing until
+        //      first term:
+        //          as in shrinking, this has the problem of surpassing
+        //          maxFontSize :-(. However, it will be shrunken in the
+        //          next loop.
+        //      AND
+        //      second term
+        //          grid height must fit into "window.innerHeight - 96;"
+        //          I can only speculate what evil kind of hardcoding the
+        //          96 px is supposed to be...
+        //          AND scrollWidth must be lower than getBoundingClientRect.width
+        //          i.e. we want to avoid horizontal/x scroll
+        //          THIS TERM as well will go just beyond the point until
+        //          there is scrolling, hence the shrinking is required.
+        //
+        //          This will do one of both: gridHeight >= winHeight
+        //                                    OR theProof.scrollWidth > fullWidth
         while (fontsize <= maxFontSize && (gridHeight < winHeight && theProof.scrollWidth <= fullWidth)) {
             fontsize *= 1.5;
+            // apply font-size (floored?)
             theProof.style.fontSize = Math.floor(fontsize) + 'px';
+            // after setting font-size, get new height of theProof/grid
             gridHeight = theProof.getBoundingClientRect().height;
         }
 
+        // shrinking until
+        //      first term:
+        //          it's funny, when fontsize is just below minFontSize
+        //          this will stop, so it will be smaller than minFontSize
+        //          should be: fontsize = Math.max(minFontSize, fontsize * 09)
+        //      AND
+        //      second term:
+        //          gridHeight must shrink below win-height, so we fit
+        //          on page vertically.
+        //          OR scroll width shrinks below getBoundingClientRect.width
+        //          i.e. we stop when there's no more scrolling in the
+        //          horizontal direction
+        //
+        //          This will do both:   gridHeight <= winHeight
+        //                              AND theProof.scrollWidth <= fullWidth
+        //          so if possible within min/max, it should fit on the page
+        //          without scrolling, if I read this correctly.
         while (fontsize >= minFontSize && (gridHeight > winHeight || theProof.scrollWidth > fullWidth)) {
             fontsize *= 0.9;
             theProof.style.fontSize = Math.floor(fontsize) + 'px';
             gridHeight = theProof.getBoundingClientRect().height;
         }
+
+        // and now, we clamp to min/max fontsize, could be earlier or:
+        // theProof.style.fontSize = Math.min(maxFontSize, Math.max(minFontSize, Math.floor(fontsize)));
 
         if (fontsize < minFontSize) {
             theProof.style.fontSize = minFontSize + 'px';
@@ -270,6 +320,10 @@ var layouts = {
         }
 
         //disable the animation for a minute
+
+        // one would think there's no way to override element.style properties
+        // yet, still we're using !important. Which means the author has
+        // no clue where and how the property is handled.
         theProof.style.animationName = 'none !important';
 
         //get the stuff as wide as possible
@@ -294,6 +348,14 @@ var layouts = {
         theProof.style.removeProperty('animation-name');
     }
 
+    // OK, I think this is to make the longest possible lines, that won't
+    // break, even when wdth etc. go to their max values. it's interesting,
+    // that this seems to be NOT working right now!
+    // Ii IS WORKING, it's only applied in grid, nowhere else.
+    // It doesn't work as expected, when applied to contextual, likely
+    // because of the width set to the spans, which indeed stops "stuff"
+    // from moving around, but since that is a more line based then grid
+    // based view, it would be nice when the lines grow/and shrink.
     function fixLineBreaks() {
         var grid = document.querySelector('#the-proof.fixed-line-breaks');
         if (!grid) {
@@ -302,8 +364,14 @@ var layouts = {
 
         //reset
         grid.style.removeProperty('font-size');
+
+        // OOF, this is bad style, meant to remove the divs
+        // which represent/style the individual lines, but one should
+        // not use regex to manipulate (or even read within) the DOM.
         grid.innerHTML = grid.innerHTML.replace(/<\/?div[^>]*>/g, '');
 
+        // Setting the widest wdth/wght/opsz combination the font can
+        // handle.
         setWidest();
 
         var fontsize = VideoProof.sizeToSpace();
@@ -311,24 +379,45 @@ var layouts = {
         var lines = [], line = [], lastX = Infinity;
         $.each(grid.childNodes, function(i, span) {
             if (!span.tagName || span.tagName !== 'SPAN') {
+                // In cases like this I must wonder who controls the
+                // content! If we'd iterate grid.children we'd get only
+                // elements and if we had control, we'd get only spans.
+                // So why is there no control? I believe and hope there \
+                // is actually control, but it's written with an insecure
+                // style.
                 return;
             }
             var box = span.getBoundingClientRect();
             if (box.width > 0) {
+                // WHY would it already be set? If fontsize changes,
+                // width should maybe change as well. OK, width is set
+                // in em and in this case em scales linearly ...
+                // but then again, why should it ever "move around"?
+                // I hope I will learn the answers...
                 if (!span.style.width) {
-                    //hard-code the max width so it doesn't move around
+                    // hard-code the max width so it doesn't move around
+                    // Maybe, for the "grid" view, this all could be
+                    // simplified using css table, grid or flex layout.
+                    // besides, the grid is not very strictly a grid,
+                    // depending on glyph-widths columns align sloppily.
+                    // It's not too bad though, because of min-width: 1em;
+                    // for each element, but e.g. "Ǆ" can be wider than
+                    // 1em.
                     span.style.width = (box.width / fontsize) + 'em';
                 }
                 if (box.left < lastX) {
+                    // a line break
                     if (line && line.length) {
                         lines.push(line);
                     }
                     line = [];
                 }
+                // moves the cursor
                 lastX = box.left;
             }
             line.push(span);
         });
+        // keep the last line
         if (line && line.length) {
             lines.push(line);
         }
@@ -344,7 +433,7 @@ var layouts = {
         unsetWidest();
     }
 
-    // definitely one of the eval global states
+    // definitely one of the evil global states
     var rapBracket = false;
 
     //acceptable ranges of various axes
@@ -491,7 +580,7 @@ var layouts = {
         }
         var bits = [
             currentFont.name,
-            mode.options[mode.selectedIndex].textContent,
+            `${mode.options[mode.selectedIndex].textContent} (${mode.value})`,
             outputAxes.join(' ')
         ];
         output.textContent = bits.join(": ");
@@ -780,7 +869,9 @@ var layouts = {
     function handleFontChange() {
 
         var fonturl = document.getElementById('select-font').value;
-        var spectropts = {
+
+       // FIXME: looks unused
+       var spectropts = {
             'showInput': true,
             'showAlpha': true,
             'showPalette': true,
@@ -799,7 +890,7 @@ var layouts = {
             $(document).trigger('videoproof:fontLoaded');
         } else {
             var url = 'fonts/' + fonturl + '.woff';
-            // FIXME: This shouldn't be done here, having opentype.js handle
+            // FIXME: This shouldn't be done here: having opentype.js handle
             // the XHR requerst
             opentype.load(url, function (err, font) {
                 if (err) {
@@ -814,7 +905,10 @@ var layouts = {
         }
     }
 
-    function addCustomFont(fonttag, url, format, font) {
+    function getFontInfo(font) {
+        // Feels like we could always get the data live from the font
+        // instead of caching it, there are othere cases where fontobj
+        // is still used, and the extraction of info.axes is trivial.
         var info = {
             'name': font.getEnglishName('fontFamily'),
             'axes': {},
@@ -823,7 +917,7 @@ var layouts = {
             'isCustom': true
         };
         if ('fvar' in font.tables && 'axes' in font.tables.fvar) {
-            $.each(font.tables.fvar.axes, function(i, axis) {
+            for (let axis of font.tables.fvar.axes) {
                 info.axes[axis.tag] = {
                     'name': 'name' in axis ? axis.name.en : axis.tag,
                     'min': axis.minValue,
@@ -831,57 +925,101 @@ var layouts = {
                     'default': axis.defaultValue
                 };
                 info.axisOrder.push(axis.tag);
-            });
+            }
         }
+        return info;
+    }
 
-        window.font = font;
-
-        $('head').append('<style>@font-face { font-family:"' + fonttag + '-VP"; src: url("' + url + '") format("' + format + '"); font-weight: 100 900; }</style>');
-
-        window.font = currentFont = window.fontInfo[fonttag] = info;
-        var optgroup = $('#custom-optgroup');
-        var option = document.createElement('option');
+    // queries document for element ids, not ideal...
+    function addCustomFontToSelectInterface(fonttag, fontname) {
+        // add to interface
+        let optgroup = document.getElementById('custom-optgroup')
+          , option = document.createElement('option')
+          ;
         option.value = fonttag;
-        option.innerHTML = info.name;
+        option.textContent = fontname;
         option.selected = true;
-        if (!optgroup.length) {
-            $('#select-font').wrapInner('<optgroup label="Defaults"></optgroup>');
-            optgroup = $('<optgroup id="custom-optgroup" label="Your fonts"></optgroup>').prependTo($('#select-font'));
+        if (optgroup === null) {
+            let select = document.getElementById('select-font')
+              , defaultOptgroup = document.createElement('optgroup')
+              ;
+            defaultOptgroup.label = 'Defaults'
+            defaultOptgroup.append(...select.children);
+            select.append(defaultOptgroup);
+
+            optgroup =  document.createElement('optgroup');
+            optgroup.id = 'custom-optgroup';
+            optgroup.label = 'Your fonts';
+            select.insertBefore(optgroup, defaultOptgroup);
         }
         optgroup.append(option);
+    }
+
+    function addCustomFont(fonttag, url, format, font) {
+        var info = getFontInfo(font);
+
+        // changing a lot of globl state ...
+        window.font = font;
+        $('head').append('<style>@font-face { '
+                + 'font-family:"' + fonttag + '-VP"; '
+                + 'src: url("' + url + '") format("' + format + '"); '
+                + 'font-weight: 100 900; '
+                + '}</style>');
+        window.font = currentFont = window.fontInfo[fonttag] = info;
+
+        // queries document for element ids, not ideal...
+        addCustomFontToSelectInterface(fonttag, info.name);
 
         updateURL();
         setTimeout(handleFontChange);
     }
 
-    function addCustomFonts(files) {
-        $.each(files, function(i, file) {
-            var reader = new FileReader();
-            var mimetype, format;
-            if (file.name.match(/\.[ot]tf$/)) {
-                mimetype = "application/font-sfnt";
-                format = "opentype";
-            } else if (file.name.match(/\.(woff2?)$/)) {
-                mimetype = "application/font-" + RegExp.$1;
-                format = RegExp.$1;
-            } else {
-                alert(file.name + " not a supported file type");
-                return;
-            }
-            var blob = new Blob([file], {'type': mimetype});
-            reader.addEventListener('load', function() {
-                var datauri = this.result;
-                opentype.load(datauri, function(err, font) {
-                    if (err) {
-                        console.log(err);
-                        return;
-                    }
-                    var fonttag = 'custom-' + file.name.replace(/(-VF)?\.\w+$/, '');
-                    addCustomFont(fonttag, datauri, format, font);
-                });
-            });
-            reader.readAsDataURL(blob);
+    async function loadFontFromFile(file) {
+        var reader = new FileReader();
+        var mimetype, format;
+        if (file.name.match(/\.[ot]tf$/)) {
+            mimetype = "application/font-sfnt";
+            format = "opentype";
+        } else if (file.name.match(/\.(woff2?)$/)) {
+            mimetype = "application/font-" + RegExp.$1;
+            format = RegExp.$1;
+        } else {
+            // alert(file.name + " not a supported file type");
+            throw new Error(file.name + " not a supported file type");
+        }
+
+        let fontBuffer = await file.arrayBuffer();
+        // If you already have an ArrayBuffer, you can use opentype.parse(buffer)
+        // to parse the buffer. This method always returns a Font, but check
+        // font.supported to see if the font is in a supported format.
+        // (Fonts can be marked unsupported if they have encoding tables we can't read).
+        const font = opentype.parse(fontBuffer);
+        // Not sure this is still required as it also says in the opentype.js
+        // sources about supported:
+        //      Deprecated: parseBuffer will throw an error if font is not supported.
+        if(!font.supported)
+            throw new Error(file.name + " not a supported font file type");
+
+        let promise = new Promise((resolve, reject)=>{
+            reader.addEventListener('load', (/*event*/)=>resolve(reader.result));
+            let failHandler = event=>reject(`Failed readAsDataURL with ${event.type}: ${event.loaded}.`)
+            reader.addEventListener('error', failHandler);
+            reader.addEventListener('abort', failHandler);
         });
+
+        reader.readAsDataURL(file);
+        return promise.then(datauri=>{
+            var fonttag = 'custom-' + file.name.replace(/(-VF)?\.\w+$/, '');
+            return [fonttag, datauri, format, font];
+        });
+    }
+
+    async function addCustomFonts(files) {
+        return Promise.all(Array.from(files).map(
+                            /* args = [fonttag, datauri, format, font] */
+            file=>loadFontFromFile(file).then(args=>addCustomFont(...args))
+                        .then(null, err=>{console.error(err); alert(err);})
+        ))
     }
 
     function bracketRap(src, tol) {
@@ -914,6 +1052,7 @@ var layouts = {
     function handleLayoutChange() {
         var layout = $('#select-layout').val();
         var options = layouts[layout] || {};
+        // FIXME: use classlist.remove for these things
         var previousLayout = (theProof.className || '').replace(/ (fixed-line-breaks|size-to-space)/g, '');
         var customControls = document.getElementById('layout-specific-controls');
 
@@ -994,8 +1133,14 @@ var layouts = {
         'getKnownGlyphs': getKnownGlyphs,
         'getAllGlyphs': getAllGlyphs,
         'getGlyphString': getGlyphString,
-        'fixLineBreaks': fixLineBreaks,
-        'sizeToSpace': sizeToSpace,
+
+        // It seems to me, these should be in the layout code
+        // and the layout should expose a reset/layoutchange api
+        // so that the controller doesn't have to know all the
+        // details of the "proof" tool implementation.
+        'fixLineBreaks': fixLineBreaks, // required/used by/in layout grid.js
+        'sizeToSpace': sizeToSpace, // required/used by/in layout contextual.js
+
         'getTimestamp': getTimestamp,
         'jumpToTimestamp': jumpToTimestamp,
         'bracketRap': bracketRap
@@ -1070,10 +1215,6 @@ var layouts = {
     }
 
 
-    // FIXME
-    //jquery overhead is sometimes causing window.load to fire before this! So use native events.
-    // document.addEventListener('DOMContentLoaded',
-
     function onDOMContentLoaded() {
         urlToControls();
 
@@ -1082,12 +1223,13 @@ var layouts = {
         $('head').append("<style id='style-general'></style>");
 
         $(document).on('videoproof:fontLoaded', function() {
-            slidersToElement();
+            slidersToElement(); // sets bg/fg-colors, CSS-font-family
             resetAnimation();
         });
 
         $('#select-layout').on('change', handleLayoutChange);
         $('#select-font').on('change', handleFontChange);
+                                                         // sets bg/fg-colors, CSS-font-family
         $('#foreground, #background').on('change input', slidersToElement);
         $('#select-glyphs').on('change', handleGlyphsChange);
 
@@ -1210,6 +1352,7 @@ function main() {
     handleFontChange();
     $('#select-glyphs').trigger('change');
 
+    // waiting for what?
     setTimeout(urlToControls);
 
     var theProof = $('#the-proof');
@@ -1217,6 +1360,7 @@ function main() {
         if (theProof.hasClass('fixed-line-breaks')) {
             VideoProof.fixLineBreaks();
         } else if (theProof.hasClass('size-to-space')) {
+            // NOTE: fixLineBreaks will itself call sizeToSpace
             VideoProof.sizeToSpace();
         }
     }
