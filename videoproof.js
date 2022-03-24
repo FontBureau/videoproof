@@ -1,4 +1,4 @@
-/* jshint browser: true, esversion: 7, laxcomma: true, laxbreak: true */
+/* jshint browser: true, esversion: 8, laxcomma: true, laxbreak: true */
 
 import opentype from './opentype.js/dist/opentype.module.js';
 
@@ -31,8 +31,10 @@ var layouts = {
         }
         var axes = {};
         $.each(fvs, function(i, setting) {
-            var k, v;
-            if (temp = setting.match(/["'](....)['"]\s+([\-\d\.]+)/)) {
+            var k, v
+              , temp = setting.match(/["'](....)['"]\s+([\-\d\.]+)/)
+              ;
+            if (temp) {
                 k = temp[1];
                 v = parseFloat(temp[2]);
                 axes[k] = v;
@@ -74,7 +76,11 @@ var layouts = {
         var clauses = [];
 
         //workaround Safari default-opsz bug
+        //   FIXME: does this still exist? Would be nice to have a reference
+        //          link to this.
         try {
+            // FIXME: Why would this thow an error? Maybe because the
+            // font has no opsz?
             if ('opsz' in axes && axes.opsz == currentFont.axes.opsz['default']) {
                 axes.opsz = currentFont.axes.opsz['default'] + 0.1;
             }
@@ -434,111 +440,183 @@ var layouts = {
     }
 
     // definitely one of the evil global states
+    // set by bracketRap in init of comosition, unset via
+    // options of each other layout,
     var rapBracket = false;
 
     //acceptable ranges of various axes
     var rapTolerances = {};
 
+/**
+ * Array.from( cartesianProductGen([['a', 'b'], ['c', 'd']]) )
+ * >>> [['a', 'c'], ['a', 'd'], ['b', 'c'], ['b', 'd']]
+ *
+ * No intermediate arrays are created.
+ */
+function* cartesianProductGen([head, ...tail]) {
+    if(!head)
+        yield [];
+    else {
+        // NOTE: the sequence of productGen(tail) could be stored
+        // here as an intermediate array, but it may not improve
+        // performance, as it's heavier on memory:
+        // let products = [...productGen(tail)];
+        for(let item of head)
+            for(let prod of cartesianProductGen(tail))
+                yield [item, ...prod];
+    }
+}
+
+/**
+ *  Just like Pythons zip.
+ */
+function* zip(...arrays) {
+    let len = Math.min(...arrays.map(a=>a.length));
+    for(let i=0;i<len;i++)
+        yield arrays.map(a=>a[i]); // jshint ignore:line
+}
+
+function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
+    let axisRanges = {};
+    console.log('"rapBracket":', rapBracket);
+    // Composition @ small
+    // {
+    //     opsz: 19.919999999999998,
+    //     wdth: 100,
+    //     wght: 400
+    // }
+    // Composition @ large
+    // {
+    //     opsz: 63.99997499999999,
+    //     wdth: 100,
+    //     wght: 400
+    // }
+
+    console.log('"rapTolerances":', rapTolerances);
+    // rapTolerances: acceptable ranges of various axes
+    //
+    // Composition @ small
+    // In this case wdth will be multiplied while
+    // wght will be added.
+    // {
+    //      wdth: Array [ 0.8, 1.2 ]
+    //      wght: Array [ -100, 100 ]
+    // }
+    //
+    // Composition @ large
+    // Both will be added, this forces always min/max
+    // instead of lower/upper.
+    // {
+    //         wdth: Array [ -100000000, 10000000 ]
+    //         wght: Array [ -1000000, 10000000 ]
+    //}
+
+    // Here are generic tolerances, from the function bracketRap,
+    // but they are never used because bracketRap is only called
+    // in one position, and there always witht the tol argument.
+    // rapTolerances = tol || {
+    //     'opsz': [1, 1],
+    //     'wght': [-100, +100],
+    //     'wdth': [0.8, 1.2],
+    //     'default': [0.5, 2.0]
+    // };
+
+    // tol is defined in composition like this:
+    // var tol = currentSize === 'small'
+    //                 ? { 'wght': [-100, +100], 'wdth': [0.8, 1.2] }
+    //                 : { 'wght': [-1000000, +10000000], 'wdth': [-100000000, +10000000] };
+
+    for(let [axis, pivot] of Object.entries(rapBracket)) {
+        let  [tolMin, tolMax] = axis in rapTolerances
+                                    ? rapTolerances[axis]
+                                    : [1, 1]
+          , min = fontAxes[axis].min
+          , max = fontAxes[axis].max
+          // Make the product if tolMin is netween 0 and 1 otherwise
+          // make the sum. because it's the product for tolMin == 1
+          // [tolMin, tolMax] = [1, 1] will create an identity function
+          // as well as [tolMin, tolMax] = [0, 0] where addition
+          // is used.
+          // FIXME: I think this is VERY implicit and not at all
+          //        clear in which case and why which mode is
+          //        chosen
+          , operation = tolMin > 0 && tolMin <= 1
+                        ? (a, b)=>a * b
+                        : (a, b)=>a + b
+          , lower = operation(pivot, tolMin)
+          , upper = operation(pivot, tolMax)
+          ;
+        axisRanges[axis] = {
+            min: Math.max(min, lower),
+            'default': pivot,
+            max: Math.min(max, upper)
+        };
+    }
+    return axisRanges;
+}
+
+    // TODO: rewrite this next!
     function calculateKeyframes(currentFont) {
-        //O(3^n)? this might get ugly
-        var keyframes = [];
 
-        var axesMDM = [];
-        var raxisPresent = [];
-
-        var axisRanges = currentFont.axes;
-
-        console.log('axisRanges:', axisRanges);
-
-        if (typeof rapBracket === 'object') {
-            axisRanges = {};
-            console.log('"rapBracket":', rapBracket);
-            var span = 0.5;
-            $.each(rapBracket, function(axis, pivot) {
-                var tol = axis in rapTolerances ? rapTolerances[axis] : [1,1];
-                var min = currentFont.axes[axis].min;
-                var max = currentFont.axes[axis].max;
-
-                var lower = tol[0] > 0 && tol[0] <= 1 ? pivot * tol[0] : pivot + tol[0];
-                //yes these first two should be tol[0] and not tol[1]
-                var upper = tol[0] > 0 && tol[0] <= 1 ? pivot * tol[1] : pivot + tol[1];
-
-                axisRanges[axis] = {};
-                axisRanges[axis].min = Math.max(min, lower);
-                axisRanges[axis]['default'] = pivot;
-                axisRanges[axis].max = Math.min(max, upper);
-            });
-        }
+        var axesMDM = []; // min-default-max
+        var axesOrder = [];
+        var axisRanges = (typeof rapBracket === 'object')
+            // FIXME: rapBracket, rapTolerances are global
+            ? axisRangesForRapBracket(currentFont.axes, rapBracket, rapTolerances)
+            : currentFont.axes
+            ;
 
         console.log('axisRanges:', axisRanges);
 
-        $.each(registeredAxes, function(index, axis) {
-            var ar, mdm;
-            if (axis in axisRanges) {
-                ar = axisRanges[axis];
-                raxisPresent.push(axis);
-                if (axis === 'opsz') {
-                    mdm = [ar.min];
-                    if (ar['default'] !== ar.min) {
-                        mdm.push(ar['default']);
-                    }
-                    if (ar.max !== ar['default']) {
-                        mdm.push(ar.max);
-                    }
-                } else {
-                    mdm = [ar['default']];
-                    if (ar['default'] !== ar.min) {
-                        mdm.push(ar.min);
-                    }
-                    if (ar.max !== ar['default']) {
-                        mdm.push(ar.max);
-                    }
-                }
-                axesMDM.push(mdm);
-            }else
+        // FIXME: registeredAxes is global
+        for(let axis of registeredAxes) {
+            // mdn stands for min-default-max, however, the order
+            // is default-min-max expect for opsz.
+            // FIXME: find out the reason behind this.
+            if (!(axis in axisRanges)) {
                 console.log(`axis ${axis} not in axisRanges`, axisRanges);
-        });
+                continue;
+            }
+            axesOrder.push(axis);
 
-        if (!raxisPresent.length) {
+            let mdmOrder = axis === 'opsz'
+                    ? ['min', 'default', 'max']
+                    : ['default', 'min', 'max']
+              , axisRange = axisRanges[axis]
+              , mdm = mdmOrder.filter(k=>{ // jshint ignore:line
+                        // This was loosely adopted from previous code
+                        // where I didn't understand the full reasoning
+                        // but for the present examples it produces the
+                        // same result and is much more consise.
+                        if (k === 'default')
+                            return true;
+                        return (axisRange[k] !== axisRange['default']);
+                    })
+                    .map(k=>axisRange[k]) // jshint ignore:line
+              ;
+            axesMDM.push(mdm);
+        }
+
+        if (!axesOrder.length)
             return [];
-        }
 
-        var permutations = [];
-        var i, maxperms, j, l;
-        var raxisCount = raxisPresent.length;
-        var perm, filler, prev, current;
+        var fvsPerms = []
+          , prev
+          ;
 
-        function getPermutations() {
-            var max = axesMDM.length-1;
-            function helper(arr, i) {
-                var a;
-                for (var j=0, l=axesMDM[i].length; j<l; j++) {
-                    a = arr.slice(0); // clone arr
-                    a.push(axesMDM[i][j]);
-                    if (i===max)
-                        permutations.push(a);
-                    else
-                        helper(a, i+1);
-                }
-            }
-            helper([], 0);
-        }
-
-        getPermutations();
-
-        var fvsPerms = [];
-        $.each(permutations, function(i, perm) {
-            var fvs = {};
-            $.each(raxisPresent, function(j, axis) {
-                fvs[axis] = perm[j];
-            });
-            fvs = axesToFVS(fvs);
-            if (fvs !== prev) {
+        for(let axesValues of cartesianProductGen(axesMDM)) {
+            let variationSettings = Object.fromEntries(zip(axesOrder, axesValues));
+            // FIXME: axesToFVS could take just the result of the zip
+            //        but it may get replaced entirely, so I leave it here
+            //        for the time being.
+            let fvs = axesToFVS(variationSettings);
+            // FIXME: I currently think there should be no duplicates.
+            if (fvs !== prev)
                 fvsPerms.push(fvs);
-            }
+            else
+                console.warn(`Found a case of duplication: ${fvs}`);
             prev = fvs;
-        });
-
+        }
         return fvsPerms;
     }
 
@@ -612,7 +690,7 @@ var layouts = {
             clearInterval(videoproofOutputInterval);
             videoproofOutputInterval = null;
         }
-    };
+    }
 
     function jumpToTimestamp(timestamp) {
         animTarget = theProof.querySelector('.animation-target') || theProof;
@@ -743,13 +821,15 @@ var layouts = {
         }
 
         var keyframes = currentKeyframes = calculateKeyframes(currentFont);
+        console.log(`calculateKeyframes result:`, keyframes.slice());
 
-        if(!keyframes.length){
+        if(!keyframes.length) {
             // want to see the stack trace
             console.log('currentFont:', currentFont);
             throw new Error('keyframes is empty!');
         }
         var perstep = 100 / keyframes.length;
+        // 2 seconds per keyframe!
         $('#animation-duration').val(keyframes.length * 2).trigger('change');
         updateAnimationParam('animation-delay', '0');
         var stepwise = [];
@@ -786,8 +866,10 @@ var layouts = {
                     + '; }');
 
             //add CSS step
-            keyframes[i] =  percent + '% { font-variation-settings: ' + fvs
-                           + '; outline-offset: ' + percent + 'px; }';
+            keyframes[i] =  percent + '% { '
+                            + 'font-variation-settings: ' + fvs + '; '
+                            + 'outline-offset: ' + percent + 'px; '
+                            + '}';
         });
 
         document.getElementById('videoproof-keyframes').textContent =
@@ -820,9 +902,8 @@ var layouts = {
         moar.innerHTML = "";
 
         currentFont.axisOrder.forEach(function(axis) {
-            if (registeredAxes.indexOf(axis) >= 0) {
+            if (registeredAxes.indexOf(axis) !== -1)
                 return;
-            }
             var info = currentFont.axes[axis];
             var li = document.createElement('li');
             var a = document.createElement('a');
@@ -943,7 +1024,7 @@ var layouts = {
             let select = document.getElementById('select-font')
               , defaultOptgroup = document.createElement('optgroup')
               ;
-            defaultOptgroup.label = 'Defaults'
+            defaultOptgroup.label = 'Defaults';
             defaultOptgroup.append(...select.children);
             select.append(defaultOptgroup);
 
@@ -1002,7 +1083,7 @@ var layouts = {
 
         let promise = new Promise((resolve, reject)=>{
             reader.addEventListener('load', (/*event*/)=>resolve(reader.result));
-            let failHandler = event=>reject(`Failed readAsDataURL with ${event.type}: ${event.loaded}.`)
+            let failHandler = event=>reject(`Failed readAsDataURL with ${event.type}: ${event.loaded}.`);
             reader.addEventListener('error', failHandler);
             reader.addEventListener('abort', failHandler);
         });
@@ -1019,16 +1100,21 @@ var layouts = {
                             /* args = [fonttag, datauri, format, font] */
             file=>loadFontFromFile(file).then(args=>addCustomFont(...args))
                         .then(null, err=>{console.error(err); alert(err);})
-        ))
+        ));
     }
 
     function bracketRap(src, tol) {
+        // source is a "para"(graph) element
         theProof.style.animationName = "none";
         theProof.style.fontVariationSettings = 'normal';
         var style = getComputedStyle(src);
+        // Here it's set! opsz is never animated
+        // wght and wdth are animated within the range of their tolerances
+        // and min/max axis values.
         rapBracket = fvsToAxes(style.fontVariationSettings);
         if (!('opsz' in rapBracket) && currentFont && 'opsz' in currentFont.axes) {
-            rapBracket.opsz = parseFloat(style.fontSize);
+            // This should be in pt but style.fontSize is in px.
+            rapBracket.opsz = parseFloat(style.fontSize) * 0.75;
         }
         if (!('wght' in rapBracket) && currentFont && 'wght' in currentFont.axes) {
             rapBracket.wght = parseInt(style.fontWeight) || 400;
@@ -1039,6 +1125,8 @@ var layouts = {
 
         console.log('new "rapBracket":', rapBracket, 'currentFont:', currentFont);
 
+        // global, also the defaults are nerver used because tol is always
+        // set.
         rapTolerances = tol || {
             'opsz': [1, 1],
             'wght': [-100, +100],
@@ -1167,7 +1255,7 @@ var layouts = {
                     }
                     for(let input of inputs) {
                         if(input.value === value) {
-                            input.checked = true
+                            input.checked = true;
                             break;
                         }
                     }
@@ -1181,7 +1269,7 @@ var layouts = {
 
                 break;
             }
-        };
+        }
 
         //set keyframe after they're calculated
         $(document).off('videoproof:animationReset.urlToControls');
@@ -1334,7 +1422,7 @@ var layouts = {
             updateURL();
             return false;
         });
-    };
+    }
 
 
 function main() {

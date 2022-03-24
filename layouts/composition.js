@@ -132,7 +132,9 @@ export default {
 				//restore the previous settings if it had been modified before
 				para.style.removeProperty('font-variation-settings');
 
-				var tol = currentSize === 'small' ? { 'wght': [-100, +100], 'wdth': [0.8, 1.2] } : { 'wght': [-1000000, +10000000], 'wdth': [-100000000, +10000000] };
+				var tol = currentSize === 'small'
+                                                        ? { 'wght': [-100, +100], 'wdth': [0.8, 1.2] }
+                                                        : { 'wght': [-1000000, +10000000], 'wdth': [-100000000, +10000000] };
 
 				VideoProof.bracketRap(para, tol);
 				$(para).addClass('animation-target');
