@@ -7,6 +7,8 @@ import typeYourOwn from './layouts/type-your-own.js';
 import contextual from './layouts/contextual.js';
 import composition from './layouts/composition.js';
 
+import { VideoproofController } from './lib/js/videoproof-controller.mjs'
+
 var layouts = {
     grid: grid,
     'type-your-own': typeYourOwn,
@@ -1424,7 +1426,6 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
         });
     }
 
-
 function main() {
     onDOMContentLoaded();
     //this timeout is for the sidebar load
@@ -1460,6 +1461,11 @@ function main() {
         }
         resizeTimeout = setTimeout(realResize, 500);
     });
-}
 
+    // This is the new World, after some bottom up rewriting/refactoring
+    // this is the top down adoption.
+    let controllerElement = document.querySelector('.videoproof-controller')
+    videoproofCtrl.initUI(controllerElement);
+}
+const videoproofCtrl = new VideoproofController(window);
 window.addEventListener('load', main);

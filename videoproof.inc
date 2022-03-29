@@ -125,6 +125,15 @@ class VideoProof {
 	}
 
 	public function pageHead() {
+                print "\n<script>\n"
+                . "// With this pattern it's save to load the controller javascript asyncronously.\n"
+                . "if(!window.remoteFonts)\n"
+                . "     window.remoteFonts = [];\n";
+                foreach ($this->fontinfo as $filebase => $info) {
+                    print "window.remoteFonts.push('./fonts/". $filebase .".woff');\n";
+                }
+                print "</script>\n";
+
 		foreach ($this->fontinfo as $filebase => $info) {
 			print <<<EOD
 			<style>

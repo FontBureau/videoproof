@@ -87,6 +87,7 @@ $videoproof = new VideoProof();
 			</nav>
 
 			<!-- SIDEBAR! -->
+                        <aside class="videoproof-controller"></aside>
 			<aside class="content-filters">
 				<a class="content-filters-close" href="#">Close</a>
 
