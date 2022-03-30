@@ -557,7 +557,6 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
     return axisRanges;
 }
 
-    // TODO: rewrite this next!
     function calculateKeyframes(currentFont) {
 
         var axesMDM = []; // min-default-max
