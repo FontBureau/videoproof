@@ -128,11 +128,14 @@ class VideoProof {
                 print "\n<script>\n"
                 . "// With this pattern it's save to load the controller javascript asyncronously.\n"
                 . "if(!window.remoteFonts)\n"
-                . "     window.remoteFonts = [];\n";
+                . "     window.remoteFonts = [];\n"
+                . "window.remoteFonts.push(\n";
+                // push all fonts at once to make it clear which
+                // font to put into the UI (the first font).
                 foreach ($this->fontinfo as $filebase => $info) {
-                    print "window.remoteFonts.push('./fonts/". $filebase .".woff');\n";
+                    print "'    ./fonts/". $filebase .".woff',\n";
                 }
-                print "</script>\n";
+                print ");\n</script>\n";
 
 		foreach ($this->fontinfo as $filebase => $info) {
 			print <<<EOD
