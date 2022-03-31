@@ -51,7 +51,7 @@ $videoproof = new VideoProof();
 		<link rel="stylesheet" href="form-controls.css">
 
 		<script src="videoproof.js" async type="module"></script>
-
+                <script src="lib/js/main.mjs" async type="module"></script>
 		<?= $videoproof->pageHead(); ?>
 	</head>
 	<body>
