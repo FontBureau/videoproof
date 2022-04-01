@@ -393,3 +393,8 @@ ul.sidebar-list a:hover {
 #comment-box textarea {
 	width: 100%;
 }
+
+.videoproof-controller {
+    z-index: 10000;
+    position: relative;
+}
