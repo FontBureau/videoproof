@@ -15,33 +15,54 @@ $videoproof = new VideoProof();
 		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/fonts-momentum-sans.css">
 		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/style.css">
 		<link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-		<script src="opentype.js/dist/opentype.min.js"></script>
 
+
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+		<!--
+		<script src="opentype.js/dist/opentype.min.js"></script>
+		-->
+
+		<!--
+		Color pickers are supported in all browsers expect interent explorer.
 		<script src="spectrum/spectrum.js"></script>
 		<link rel="stylesheet" href="./spectrum/spectrum.css">
+		-->
+
+		<!--
+		Not sure what this is supposed to do, but it triggers an error
+		where  `const moreBtn = document.querySelector('.pop_button');`
+		is null:
+			"Uncaught TypeError: moreBtn is null"
+		in: <anonymous> https://www.typenetwork.com/assets_content/js/functions.js:110
 
 		<script src="https://www.typenetwork.com/assets_content/js/functions.js"></script>
+		-->
 
 		<script src="user-guide.js" defer></script>
+		<!--
 		<script src="text-to-width.js" defer></script>
-
+		-->
 		<style id='videoproof-keyframes'></style>
 		<style id='videoproof-moar-animation'></style>
-		
+
 		<link rel="stylesheet" href="videoproof.css">
 		<link rel="stylesheet" href="form-controls.css">
 
-		<script src="videoproof.js"></script>
-
+		<script src="videoproof.js" async type="module"></script>
+                <script src="lib/js/main.mjs" async type="module"></script>
 		<?= $videoproof->pageHead(); ?>
 	</head>
 	<body>
 		<div class="wrapper">
-			<header class="header-global">
+			<header> <!--  class="header-global"> -->
+				<h1>Video Proof</h1>
+				<!--
 				<h1><a href="https://www.typenetwork.com/">Type Network</a></h1>
+				-->
 			</header>
-		
+
 			<nav class="nav-global">
 				<a class="nav-global-reveal" href="#">Menu</a>
 				<ul>
@@ -53,7 +74,7 @@ $videoproof = new VideoProof();
 -->
 				</ul>
 			</nav>
-			
+
 			<nav class="nav-user">
 				<a class="nav-user-reveal" href="#">Menu</a>
 				<ul>
@@ -64,12 +85,15 @@ $videoproof = new VideoProof();
 -->
 				</ul>
 			</nav>
-			
+
 			<!-- SIDEBAR! -->
+                        <aside class="videoproof-controller"></aside>
 			<aside class="content-filters">
 				<a class="content-filters-close" href="#">Close</a>
 
 				<form id='controls'>
+					<input id="comment-store" name="comment" type="hidden" />
+
 					<?= $videoproof->selectFont() ?>
 					<?= $videoproof->selectMode() ?>
 					<?= $videoproof->selectGlyphGroup() ?>
@@ -86,7 +110,7 @@ $videoproof = new VideoProof();
 					</div>
 
 					<?= $videoproof->animationKeyframes() ?>
-					
+
 					<h3>Meta</h3>
 					<ul>
 <!-- 						<li><a id="bookmark" href="?">Bookmark these settings</a></li> -->
@@ -99,20 +123,25 @@ $videoproof = new VideoProof();
 				</form>
 
 			</aside>
-			
+
 			<div class="content-main">
 				<a class="content-options-show-filters" href="#">Sidebar</a>
 
 				<?= $videoproof->animationControls(); ?>
 				<output id='aniparams'>This animation will eat your CPU alive (depending on browser), so it doesn’t auto-start. Ready? <span id='first-play'>▶️</span></output>
-				
+
+				<div id="comment-box">
+					Leave a comment here, it will be shared together with the page link.<br />
+					<textarea></textarea>
+				</div>
+
 				<div id='the-proof'></div>
 
 				<footer class="footer-global">
 					<ul>
-						<li><a href="//www.typenetwork.com/about">About Type Network</a></li>
-						<li><a href="https://github.com/TypeNetwork/videoproof">Source code on GitHub</a></li>
-						<li><a href="https://github.com/TypeNetwork/videoproof/issues">Bug reports &amp; feature&nbsp;requests</a></li>
+						<!--<li><a href="//www.typenetwork.com/about">About Type Network</a></li>-->
+						<li><a href="https://github.com/graphicore/videoproof">Source code on GitHub</a></li>
+						<li><a href="https://github.com/graphicore/videoproof/issues">Bug reports &amp; feature&nbsp;requests</a></li>
 					</ul>
 				</footer>
 			</div> <!-- content-main -->

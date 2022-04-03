@@ -1,6 +1,6 @@
-(function() {
-"use strict";
-VideoProof.registerLayout('type-your-own', {
+/* jshint browser: true, esversion: 7, laxcomma: true, laxbreak: true */
+
+export default {
 	'controls': {
 		'Text': '<input type="text" id="custom-text" name="text" value="Type your own">'
 	},
@@ -13,26 +13,26 @@ VideoProof.registerLayout('type-your-own', {
 			selectGlyphs.disabled = true;
 			showExtended.disabled = false;
 		});
-		
+
 		function fitToSpace() {
 			if (proof.textContent.trim().length === 0) {
 				return;
 			}
 
 			//VideoProof.setWidest();
-			
+
 			var winHeight = window.innerHeight - 96;
 			var gridBox = proof.getBoundingClientRect();
 			var gridHeight = gridBox.height;
 			var fullWidth = gridBox.width;
 			var fontsize = parseFloat(getComputedStyle(proof).fontSize);
-	
+
 			while (gridHeight < winHeight && proof.scrollWidth <= fullWidth) {
 				fontsize *= 1.5;
 				proof.style.fontSize = Math.floor(fontsize) + 'px';
 				gridHeight = proof.getBoundingClientRect().height;
 			}
-	
+
 			while (gridHeight > winHeight || proof.scrollWidth > fullWidth) {
 				fontsize *= 0.9;
 				proof.style.fontSize = Math.floor(fontsize) + 'px';
@@ -44,7 +44,7 @@ VideoProof.registerLayout('type-your-own', {
 
 			//VideoProof.unsetWidest();
 		}
-		
+
 		function updateProof() {
 			proof.textContent = document.getElementById('custom-text').value;
 			if (showExtended.checked) {
@@ -85,5 +85,4 @@ VideoProof.registerLayout('type-your-own', {
 		$(document).off('.typeyourown');
 		document.getElementById('select-glyphs').disabled = false;
 	}
-});
-})();
+};
