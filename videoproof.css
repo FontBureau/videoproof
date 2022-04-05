@@ -359,7 +359,7 @@ ul.sidebar-list a:hover {
 /* ANIMATION */
 
 #the-proof, #the-proof .animation-target, #keyframes-display a {
-    animation-name: videoproof;
+    -x--animation-name: videoproof;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
     animation-duration: 60s;
@@ -380,7 +380,7 @@ ul.sidebar-list a:hover {
 }
 
 .moar #the-proof, .moar #the-proof .animation-target {
-	animation-name: moar;
+	--x-animation-name: moar;
 	animation-duration: 6s;
 	animation-iteration-count: infinite;
 }

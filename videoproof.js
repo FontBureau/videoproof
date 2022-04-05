@@ -100,6 +100,7 @@ var layouts = {
     }
 
     function slidersToElement() {
+        return;
         var styleEl = $('#style-general');
         // FIXME: stuff like this could go directly to element.style
         var selector = '#the-proof';
@@ -344,13 +345,17 @@ var layouts = {
         if ('opsz' in axes) {
             fvs.opsz = axes.opsz.min;
         }
-
         theProof.style.fontVariationSettings = axesToFVS(fvs);
     }
 
     function unsetWidest() {
         //re-enable the animation and remove the wide settings
-        theProof.style.removeProperty('font-variation-settings');
+        // this is the rest of the hack
+        if('genuineFontVariationSettings' in theProof.dataset) {
+             theProof.style.fontVariationSettings = theProof.dataset.genuineFontVariationSettings;
+        }
+        else
+            theProof.style.removeProperty('font-variation-settings');
         theProof.style.removeProperty('animation-name');
     }
 
@@ -708,11 +713,11 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
 
         setTimeout(animationUpdateOutput);
 
-        //need to do a bit of extra hoop jumping for the keyframe display
-        $('#keyframes-display a').css('animation-name', 'none');
-        setTimeout(function() {
-            $('#keyframes-display a').css('animation-name', '');
-        }, 100);
+    //    //need to do a bit of extra hoop jumping for the keyframe display
+    //    $('#keyframes-display a').css('animation-name', 'none');
+    //    setTimeout(function() {
+    //        $('#keyframes-display a').css('animation-name', '');
+    //    }, 100);
     }
 
     var currentKeyframe;
@@ -799,6 +804,7 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
     }
 
     function updateAnimationParam(k, v) {
+        return;
         var style = $('style.' + k);
         if (!style.length) {
             $('head').append("<style class='" + k + "'></style>");
@@ -812,6 +818,7 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
     }
 
     function resetAnimation() {
+        return;
         console.log('reset');
         stopAnimation();
 
@@ -1036,6 +1043,7 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
     }
 
     function addCustomFont(fonttag, url, format, font) {
+        return;
         var info = getFontInfo(font);
 
         // changing a lot of globl state ...
@@ -1150,7 +1158,8 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
         }
 
         theProof.className = layout;
-        theProof.removeAttribute('style');
+        // :-(
+        // theProof.removeAttribute('style');
         customControls.innerHTML = "";
 
         if (options.fixedLineBreaks) {
