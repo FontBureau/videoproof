@@ -645,6 +645,7 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
 
     var videoproofOutputInterval, theProof, animTarget, animationRunning = false;
     function animationUpdateOutput() {
+        return;
         var output = document.getElementById('aniparams');
         var mode = $('#select-layout')[0];
 
@@ -1243,6 +1244,8 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
     };
 
     function urlToControls() {
+
+        return;
         if (!window.location.search || window.location.search === '?') {
             return;
         }

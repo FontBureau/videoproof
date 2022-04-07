@@ -184,11 +184,7 @@ EOD;
 	?>
 		<div id='select-font-container'>
 			<h3 class="inline"><label for="select-font">Family:</label></h3>
-			<select name="font" id='select-font'>
-<?php foreach ($this->fontinfo as $filebase => $info): ?>
-				<option value="<?= $filebase ?>"<?php if ($info->name === 'Amstelvar Roman') print " selected"; ?>><?= $info->name ?></option>
-<?php endforeach ?>
-			</select>
+			<select name="font" id='select-font'></select>
 			<a id='add-your-own-button' style='white-space:nowrap' title="…or drag a font file onto the window">+ Add your own</a>
 		</div>
 <!--
