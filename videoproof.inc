@@ -189,8 +189,7 @@ EOD;
 				<option value="<?= $filebase ?>"<?php if ($info->name === 'Amstelvar Roman') print " selected"; ?>><?= $info->name ?></option>
 <?php endforeach ?>
 			</select>
-			<input type='file' name='custom-fonts' id='custom-fonts'>
-			<a id='add-your-own-button' href='#add-your-own' style='white-space:nowrap' title="…or drag a font file onto the window">+ Add your own</a>
+			<a id='add-your-own-button' style='white-space:nowrap' title="…or drag a font file onto the window">+ Add your own</a>
 		</div>
 <!--
 		<div>

@@ -954,7 +954,7 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
     }
 
     function handleFontChange() {
-
+        return;
         var fonturl = document.getElementById('select-font').value;
 
        // FIXME: looks unused
@@ -1217,13 +1217,13 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
         'customFonts': {},
         'clone': function(obj) { return JSON.parse(JSON.stringify(obj)); },
         'slidersToElement': slidersToElement,
-        'handleFontChange': handleFontChange,
+        // 'handleFontChange': handleFontChange,
         'fvsToAxes': fvsToAxes,
         'axesToFVS': axesToFVS,
         'setWidest': setWidest,
         'unsetWidest': unsetWidest,
-        'addCustomFonts': addCustomFonts,
-        'addCustomFont': addCustomFont,
+        //'addCustomFonts': addCustomFonts,
+        //'addCustomFont': addCustomFont,
         'resetAnimation': resetAnimation,
         'getMiscChars': getMiscChars,
         'getKnownGlyphs': getKnownGlyphs,
@@ -1324,7 +1324,7 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
         });
 
         $('#select-layout').on('change', handleLayoutChange);
-        $('#select-font').on('change', handleFontChange);
+        // $('#select-font').on('change', handleFontChange);
                                                          // sets bg/fg-colors, CSS-font-family
         $('#foreground, #background').on('change input', slidersToElement);
         $('#select-glyphs').on('change', handleGlyphsChange);
@@ -1344,38 +1344,39 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
         $(commentStore).on('change:from-url',
                             evt=>commentBox.value = evt.target.value);
 
-        $('#add-your-own-button').on('click', function(evt) {
-            $('#custom-fonts')[0].click();
-            return false;
-        });
+        // $('#add-your-own-button').on('click', function(evt) {
+        //     $('#custom-fonts')[0].click();
+        //     return false;
+        // });
 
-        $('#custom-fonts').on('change', function() {
-            addCustomFonts(this.files);
-        });
+        // $('#custom-fonts').on('change', function() {
+        //     addCustomFonts(this.files);
+        // });
 
-        var dragging = false;
-        $('body').on('dragover', function(evt) {
-            if (dragging) return false;
-            dragging = true;
-            evt.originalEvent.dataTransfer.dropEffect = 'copy';
-            $('body').addClass('dropzone');
-            return false;
-        }).on('dragleave', function(evt) {
-            if (evt.target !== document.body) {
-                return;
-            }
-            dragging = false;
-            $('body').removeClass('dropzone');
-            return false;
-        }).on('dragend', function(evt) {
-            $('body').removeClass('dropzone');
-            dragging = false;
-            return false;
-        }).on('drop', function(evt) {
-            addCustomFonts(evt.originalEvent.dataTransfer.files);
-            $(this).trigger('dragend');
-            return false;
-        });
+        // TODO: port this! see how it uses <body> as drop-zone...
+        // var dragging = false;
+        // $('body').on('dragover', function(evt) {
+        //     if (dragging) return false;
+        //     dragging = true;
+        //     evt.originalEvent.dataTransfer.dropEffect = 'copy';
+        //     $('body').addClass('dropzone');
+        //     return false;
+        // }).on('dragleave', function(evt) {
+        //     if (evt.target !== document.body) {
+        //         return;
+        //     }
+        //     dragging = false;
+        //     $('body').removeClass('dropzone');
+        //     return false;
+        // }).on('dragend', function(evt) {
+        //     $('body').removeClass('dropzone');
+        //     dragging = false;
+        //     return false;
+        // }).on('drop', function(evt) {
+        //     addCustomFonts(evt.originalEvent.dataTransfer.files);
+        //     $(this).trigger('dragend');
+        //     return false;
+        // });
 
         $('#grab-new-fonts').on('click', function() {
             var clocks = ['🕛','🕧','🕐','🕜','🕑','🕝','🕒','🕞','🕓','🕟','🕔','🕠','🕕','🕢','🕖','🕢','🕗','🕣','🕘','🕤','🕙','🕥','🕚','🕦'];
