@@ -127,14 +127,17 @@ class VideoProof {
 	public function pageHead() {
                 print "\n<script>\n"
                 . "// With this pattern it's save to load the controller javascript asyncronously.\n"
-                . "if(!window.remoteFonts)\n"
-                . "     window.remoteFonts = [];\n"
-                . "window.remoteFonts.push(\n";
+                . "if(!window.remoteResources)\n"
+                . "     window.remoteResources = [];\n"
+                . "window.remoteResources.push(\n";
                 // push all fonts at once to make it clear which
                 // font to put into the UI (the first font).
                 foreach ($this->fontinfo as $filebase => $info) {
-                    print "    fetch('./fonts/". $filebase .".woff'),\n";
+                    print "    ['font', fetch('./fonts/". $filebase .".woff')],\n";
                 }
+
+                print "    ['glyphGroups', fetch('./glyph-groups.json')],\n";
+
                 print ");\n</script>\n";
 
 		foreach ($this->fontinfo as $filebase => $info) {
