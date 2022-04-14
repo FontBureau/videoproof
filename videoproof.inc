@@ -133,7 +133,7 @@ class VideoProof {
                 // push all fonts at once to make it clear which
                 // font to put into the UI (the first font).
                 foreach ($this->fontinfo as $filebase => $info) {
-                    print "'    ./fonts/". $filebase .".woff',\n";
+                    print "    fetch('./fonts/". $filebase .".woff'),\n";
                 }
                 print ");\n</script>\n";
 
