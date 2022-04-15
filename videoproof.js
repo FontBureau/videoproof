@@ -1472,4 +1472,5 @@ function main() {
         resizeTimeout = setTimeout(realResize, 500);
     });
 }
-window.addEventListener('load', main);
+
+// window.addEventListener('load', main);
