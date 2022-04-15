@@ -218,59 +218,6 @@ EOD;
 		<div id='select-glyphs-container'>
 			<h3 class="inline"><label for="select-glyphs">Glyphs:</label></h3>
 			<select id='select-glyphs' name='glyph-group'>
-				<optgroup label="All">
-					<option value='all-gid' select>All by GlyphID</option>
-					<option value='all-groups'>All by group</option>
-				</optgroup>
-EOD;
-
-print "<!-- ";
-var_dump($this->glyphsets);
-print " -->";
-
-		$showgroup = function($name, $group, $optgroup=false, $extended='') use (&$showgroup) {
-			if ($name[0] === '_') {
-				return;
-			}
-			if (is_array($group)) {
-				if (isset($group['_default']) and isset($group['_extended'])) {
-					$showgroup($name, $group['_default'], $optgroup, $group['_extended']);
-				} else {
-					if ($optgroup) {
-						print "</optgroup>";
-					}
-					print "<optgroup label='$name'>";
-					foreach ($group as $nn => $gg) {
-						$showgroup(is_array($gg) && !isset($gg['_default']) ? "$name $nn" : $nn, $gg, true);
-					}
-					print "</optgroup>";
-				}
-			} else {
-				print '<option value="' . htmlspecialchars($group) . '"';
-				if (!is_string($extended)) {
-					$extended = "";
-				}
-
-				for ($i=0, $l=mb_strlen($group); $i < $l; $i++) {
-					$c = mb_substr($group, $i, 1);
-					if (isset($this->glyphsets['_extended'][$c])) {
-						$extended .= $this->glyphsets['_extended'][$c];
-					}
-				}
-
-				if ($extended) {
-					print ' data-extended="' . htmlspecialchars($extended) . '"';
-				}
-				print ">$name</option>";
-			}
-		};
-
-		foreach ($this->glyphsets as $n => $g) {
-			$showgroup($n, $g);
-		}
-
-		print <<<EOD
-				<option value='misc'>None of the above</option>
 			</select>
 			<div>
 				<input id='show-extended-glyphs' type='checkbox' name='extended'> <label for='show-extended-glyphs'>Show Extended</label>
