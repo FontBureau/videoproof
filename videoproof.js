@@ -194,11 +194,13 @@ var layouts = {
                 break;
             case 'all-gid':
             case 'all-groups':
-            default:
                 glyphset = getAllGlyphs();
                 break;
         }
 
+        if (!glyphset) {
+            glyphset = getAllGlyphs();
+        }
         //and now sort them by the selected method
         if (!currentFont || !currentFont.fontobj) {
             return glyphset;
