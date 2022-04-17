@@ -169,8 +169,6 @@ var layouts = {
 
     // impure
     function getGlyphString(glyphset, extended) {
-        var input = document.querySelector('#select-glyphs :checked');
-
         if (typeof glyphset === 'string') {
             input = document.querySelector('#select-glyphs option[value="' + cssStringEscape(glyphset) + '"]');
         } else {

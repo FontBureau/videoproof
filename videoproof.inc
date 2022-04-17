@@ -136,7 +136,7 @@ class VideoProof {
                     print "    ['font', fetch('./fonts/". $filebase .".woff')],\n";
                 }
 
-                print "    ['glyphGroups', fetch('./glyph-groups.json')],\n";
+                print "    ['charGroups', fetch('./glyph-groups.json')],\n";
 
                 print ");\n</script>\n";
 
