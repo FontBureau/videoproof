@@ -206,7 +206,7 @@ var layouts = {
         return _pure_getGlyphString(currentFont.fontobj, glyphsort, glyphset, extended);
     }
 
-    function _pure_getGlyphString(fontobj, glyphsort, glyphset, extended) {
+    function _pure_getGlyphString(fontobj, glyphsort, glyphset) {
         var cmap = fontobj.tables.cmap.glyphIndexMap;
         var unicodes = [];
         var checkCmap = false;
