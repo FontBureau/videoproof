@@ -140,17 +140,17 @@ class VideoProof {
 
                 print ");\n</script>\n";
 
-		foreach ($this->fontinfo as $filebase => $info) {
-			print <<<EOD
-			<style>
-				@font-face {
-					font-family: "$filebase-VP";
-					src: url("./fonts/$filebase.woff") format("woff");
-					font-weight: 100 900;
-				}
-			</style>
-EOD;
-		}
+// 		foreach ($this->fontinfo as $filebase => $info) {
+// 			print <<<EOD
+// 			<style>
+// 				@font-face {
+// 					font-family: "$filebase-VP";
+// 					src: url("./fonts/$filebase.woff") format("woff");
+// 					font-weight: 100 900;
+// 				}
+// 			</style>
+// EOD;
+// 		}
 
 		foreach ($this->tools as $tool => $name) {
 			print "<link rel='stylesheet' href='layouts/$tool.css'>\n";
@@ -173,11 +173,7 @@ EOD;
 	?>
 		<div>
 			<h3 class="inline"><label for="select-layout">Layout:</label></h3>
-			<select name="mode" id='select-layout'>
-<?php foreach ($this->tools as $tool => $name): ?>
-				<option value="<?= $tool ?>"><?= $name ?></option>
-<?php endforeach ?>
-			</select>
+			<select name="mode" id='select-layout'></select>
 		</div>
 	<?php
 		return "";
