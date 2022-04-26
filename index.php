@@ -87,7 +87,6 @@ $videoproof = new VideoProof();
 			</nav>
 
 			<!-- SIDEBAR! -->
-                        <aside class="videoproof-controller"></aside>
 			<aside class="content-filters">
 				<a class="content-filters-close" href="#">Close</a>
 
@@ -110,7 +109,10 @@ $videoproof = new VideoProof();
 					</div>
 
 					<?= $videoproof->animationKeyframes() ?>
-
+                                        <div id="comment-box">
+                                                Leave a comment here, it will be shared together with the page link.<br />
+                                                <textarea></textarea>
+                                        </div>
 					<h3>Meta</h3>
 					<ul>
 <!-- 						<li><a id="bookmark" href="?">Bookmark these settings</a></li> -->
@@ -126,14 +128,7 @@ $videoproof = new VideoProof();
 
 				<?= $videoproof->animationControls(); ?>
 				<output id='aniparams'>This animation will eat your CPU alive (depending on browser), so it doesn’t auto-start. Ready? <span id='first-play'>▶️</span></output>
-
-				<div id="comment-box">
-					Leave a comment here, it will be shared together with the page link.<br />
-					<textarea></textarea>
-				</div>
-
 				<div id='the-proof'></div>
-
 				<footer class="footer-global">
 					<ul>
 						<!--<li><a href="//www.typenetwork.com/about">About Type Network</a></li>-->

@@ -54,7 +54,7 @@ body.dropzone::after {
 /* CONTROLS */
 
 #videoproof aside.content-filters {
-	padding-top: 2.625rem;
+	padding: 1rem;
 }
 
 #controls > * {
@@ -106,6 +106,9 @@ body.dropzone::after {
 	left: -200vw;
 }
 
+#controls input[type=text][disabled] {
+    display: none;
+}
 
 /* sliders */
 
