@@ -352,7 +352,7 @@ ul.sidebar-list a:hover {
 
 #the-proof.fixed-line-breaks span {
 	display: inline-block;
-	min-width: 1em;
+        min-width: .1em;
 /* 	font: inherit; */
 	text-align: left;
 	margin-right: 0.3em;
