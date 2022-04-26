@@ -243,16 +243,25 @@ input[type=range][disabled] {
 }
 
 #animation-controls > * {
-	width: 2em;
 	text-align: center;
-	font-size: 100%;
+	font-size: 1em;
 }
 
 #animation-controls button {
-	border: none;
 	background: transparent;
-	box-shadow: none;
-	padding: 0;
+        padding: 0 0.5em;
+        background: lightsteelblue;
+        border: 0.2em ridge;
+        border-radius: .5em;
+        box-shadow: 2px 2px 2px grey;
+        vertical-align: middle;
+        margin: 0 .3em;
+}
+
+#animation-controls button svg {
+    height: 2em;
+    vertical-align: middle;
+    fill: white
 }
 
 #animation-controls button.start {
@@ -262,8 +271,7 @@ input[type=range][disabled] {
 }
 
 #animation-controls button.play-pause {
-	vertical-align: middle;
-	font-size: 200%;
+      width: 10em;
 }
 
 #animation-controls button.forward {

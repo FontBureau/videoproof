@@ -226,11 +226,16 @@ EOD;
 	public function animationControls() {
 ?>
 		<div id='animation-controls'>
-			<button type='button' class='beginning' title="Go to start">⏮</button>
-			<button type='button' class='back' title="Previous keyframe">⏪</button>
-			<button type='button' class='play-pause' title="Play/Pause">⏯</button>
-			<button type='button' class='forward' title="Next keyframe">⏩</button>
-			<button type='button' class='end' title="Go to end">⏭</button>
+			<button type='button' class='beginning' title="Go to start">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M9.35 37.65V10.35H13.55V37.65ZM38.65 37.65 18.85 24 38.65 10.35Z"/></svg></button><!--
+			--><button type='button' class='back' title="Previous keyframe">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M44.9 37.65 25.15 24 44.9 10.35ZM22.9 37.65 3.15 24 22.9 10.35Z"/></svg></button><!--
+			--><button type='button' class='play-pause' title="Play/Pause">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 12 24 24"><path d="M10 31.4V16.6L21 24ZM27 32V16H30V32ZM35 32V16H38V32Z"/></svg></button><!--
+			--><button type='button' class='forward' title="Next keyframe">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M3.05 37.65V10.35L22.8 24ZM25.3 37.65V10.35L45.05 24Z"/></svg></button><!--
+			--><button type='button' class='end' title="Go to end">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M34.45 37.65V10.35H38.65V37.65ZM9.35 37.65V10.35L29.15 24Z"/></svg></button>
 <!--
 			<input type='range' min="0" max="100" step="0.1" id='animation-scrub' value='0'>
 			<label for='animation-scrub'>0</label>
