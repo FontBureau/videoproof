@@ -231,7 +231,7 @@ EOD;
 			--><button type='button' class='back' title="Previous keyframe">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M44.9 37.65 25.15 24 44.9 10.35ZM22.9 37.65 3.15 24 22.9 10.35Z"/></svg></button><!--
 			--><button type='button' class='play-pause' title="Play/Pause">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 12 24 24"><path d="M10 31.4V16.6L21 24ZM27 32V16H30V32ZM35 32V16H38V32Z"/></svg></button><!--
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 12 28 24"><path d="M10 31.4V16.6L21 24ZM27 32V16H30V32ZM35 32V16H38V32Z"/></svg></button><!--
 			--><button type='button' class='forward' title="Next keyframe">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M3.05 37.65V10.35L22.8 24ZM25.3 37.65V10.35L45.05 24Z"/></svg></button><!--
 			--><button type='button' class='end' title="Go to end">
