@@ -35,6 +35,7 @@ def getVarAxes(ttf):
     return axes
 
 for fontfile in glob.glob(infiles):
+    print(f'> {fontfile}')
     fontfilebase = os.path.basename(fontfile)[:-4]
     outbase = os.path.join(outdir, fontfilebase)
 
