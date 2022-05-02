@@ -118,6 +118,7 @@ $videoproof = new VideoProof();
 <!-- 						<li><a id="bookmark" href="?">Bookmark these settings</a></li> -->
 						<li><a href="/" id='reset'>Reset to font defaults</a></li>
 						<li><a href="#view-intro" onclick="videoproofViewIntroHints(); return false;" title="Show the interactive introduction guide">Show introduction</a></li>
+                                                <li><a href="/" id='share-state'>Comment on Issue</a></li>
 					</ul>
 				</form>
 
