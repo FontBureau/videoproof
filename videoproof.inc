@@ -37,7 +37,8 @@ class VideoProof {
 
 		$this->fontinfo = json_decode(file_get_contents($this->axesFile));
 		$this->fontinfo = get_object_vars($this->fontinfo);
-		ksort($this->fontinfo);
+                // SORT_NUMERIC makes it that RobotoFlex comes out as first item ...
+                ksort($this->fontinfo, SORT_NUMERIC);
 
 		$specific_font = false;
 		if (isset($_SERVER['HTTP_HOST']) and preg_match('/^(.+)-videoproof\./', $_SERVER['HTTP_HOST'], $matches)) {
