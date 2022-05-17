@@ -113,6 +113,7 @@ $videoproof = new VideoProof();
                                                 Leave a comment here, it will be shared together with the page link.<br />
                                                 <textarea></textarea>
                                         </div>
+                                        <input type="text" id="paste-state" placeholder="Paste a state string!" />
 					<h3>Meta</h3>
 					<ul>
 <!-- 						<li><a id="bookmark" href="?">Bookmark these settings</a></li> -->
