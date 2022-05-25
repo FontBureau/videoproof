@@ -114,13 +114,12 @@ $videoproof = new VideoProof();
                                                 Leave a comment here, it will be shared together with the page link.<br />
                                                 <textarea></textarea>
                                         </div>
-                                        <input type="text" id="paste-state" placeholder="Paste a state string!" />
 					<h3>Meta</h3>
 					<ul>
 <!-- 						<li><a id="bookmark" href="?">Bookmark these settings</a></li> -->
 						<li><a href="/" id='reset'>Reset to font defaults</a></li>
 						<li><a href="#view-intro" onclick="videoproofViewIntroHints(); return false;" title="Show the interactive introduction guide">Show introduction</a></li>
-                                                <li><a href="/" id='share-state'>Comment on Issue</a></li>
+                                                <!--<li><a href="/" id='share-state'>Comment on Issue</a></li>-->
 					</ul>
 				</form>
 
