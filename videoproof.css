@@ -409,3 +409,12 @@ ul.sidebar-list a:hover {
     z-index: 10000;
     position: relative;
 }
+
+
+/* CSS is nice to potentially diversify this behavior
+ * i.e. using the :not() selector, to leave disabled elements visible.
+ */
+.input-disabled {
+    display: none;
+}
+
