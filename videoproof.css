@@ -54,7 +54,7 @@ body.dropzone::after {
 /* CONTROLS */
 
 #videoproof aside.content-filters {
-	padding: 1rem;
+	padding-top: 2.625rem;
 }
 
 #controls > * {
@@ -106,9 +106,6 @@ body.dropzone::after {
 	left: -200vw;
 }
 
-#controls input[type=text][disabled] {
-    display: none;
-}
 
 /* sliders */
 
@@ -243,25 +240,16 @@ input[type=range][disabled] {
 }
 
 #animation-controls > * {
+	width: 2em;
 	text-align: center;
-	font-size: 1em;
+	font-size: 100%;
 }
 
 #animation-controls button {
+	border: none;
 	background: transparent;
-        padding: 0 0.5em;
-        background: lightsteelblue;
-        border: 0.2em ridge;
-        border-radius: .5em;
-        box-shadow: 2px 2px 2px grey;
-        vertical-align: middle;
-        margin: 0 .3em;
-}
-
-#animation-controls button svg {
-    height: 2em;
-    vertical-align: middle;
-    fill: white
+	box-shadow: none;
+	padding: 0;
 }
 
 #animation-controls button.start {
@@ -271,7 +259,8 @@ input[type=range][disabled] {
 }
 
 #animation-controls button.play-pause {
-      width: 10em;
+	vertical-align: middle;
+	font-size: 200%;
 }
 
 #animation-controls button.forward {
@@ -339,10 +328,6 @@ ul.sidebar-list a:hover {
 	max-width: none;
 	margin: 0;
 	padding: 1rem;
-
-       color: var(--color-fg, #000);
-       background-color: var(--color-bg, #fff);
-
 }
 
 #the-proof.fixed-line-breaks {
@@ -364,7 +349,7 @@ ul.sidebar-list a:hover {
 
 #the-proof.fixed-line-breaks span {
 	display: inline-block;
-        min-width: .1em;
+	min-width: 1em;
 /* 	font: inherit; */
 	text-align: left;
 	margin-right: 0.3em;
@@ -374,7 +359,7 @@ ul.sidebar-list a:hover {
 /* ANIMATION */
 
 #the-proof, #the-proof .animation-target, #keyframes-display a {
-    -x--animation-name: videoproof;
+    animation-name: videoproof;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
     animation-duration: 60s;
@@ -395,7 +380,7 @@ ul.sidebar-list a:hover {
 }
 
 .moar #the-proof, .moar #the-proof .animation-target {
-	--x-animation-name: moar;
+	animation-name: moar;
 	animation-duration: 6s;
 	animation-iteration-count: infinite;
 }
@@ -408,17 +393,3 @@ ul.sidebar-list a:hover {
 #comment-box textarea {
 	width: 100%;
 }
-
-.videoproof-controller {
-    z-index: 10000;
-    position: relative;
-}
-
-
-/* CSS is nice to potentially diversify this behavior
- * i.e. using the :not() selector, to leave disabled elements visible.
- */
-.input-disabled {
-    display: none;
-}
-

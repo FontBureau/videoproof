@@ -49,10 +49,9 @@ $videoproof = new VideoProof();
 
 		<link rel="stylesheet" href="videoproof.css">
 		<link rel="stylesheet" href="form-controls.css">
-                <!--
+
 		<script src="videoproof.js" async type="module"></script>
-                -->
-                <script src="lib/js/main.mjs" async type="module"></script>
+
 		<?= $videoproof->pageHead(); ?>
 	</head>
 	<body>
@@ -110,16 +109,15 @@ $videoproof = new VideoProof();
 					</div>
 
 					<?= $videoproof->animationKeyframes() ?>
-                                        <div id="comment-box">
-                                                Leave a comment here, it will be shared together with the page link.<br />
-                                                <textarea></textarea>
-                                        </div>
+
 					<h3>Meta</h3>
 					<ul>
 <!-- 						<li><a id="bookmark" href="?">Bookmark these settings</a></li> -->
 						<li><a href="/" id='reset'>Reset to font defaults</a></li>
+						<?php /* don't print this if not PHP */
+							print "<li><a href='updatefonts.php' id='grab-new-fonts' title='Last updated " . $videoproof->lastFontUpdate() . "'>Grab latest font files</a></li>";
+						?>
 						<li><a href="#view-intro" onclick="videoproofViewIntroHints(); return false;" title="Show the interactive introduction guide">Show introduction</a></li>
-                                                <!--<li><a href="/" id='share-state'>Comment on Issue</a></li>-->
 					</ul>
 				</form>
 
@@ -130,7 +128,14 @@ $videoproof = new VideoProof();
 
 				<?= $videoproof->animationControls(); ?>
 				<output id='aniparams'>This animation will eat your CPU alive (depending on browser), so it doesn’t auto-start. Ready? <span id='first-play'>▶️</span></output>
+
+				<div id="comment-box">
+					Leave a comment here, it will be shared together with the page link.<br />
+					<textarea></textarea>
+				</div>
+
 				<div id='the-proof'></div>
+
 				<footer class="footer-global">
 					<ul>
 						<!--<li><a href="//www.typenetwork.com/about">About Type Network</a></li>-->

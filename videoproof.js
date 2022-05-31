@@ -100,7 +100,6 @@ var layouts = {
     }
 
     function slidersToElement() {
-        return;
         var styleEl = $('#style-general');
         // FIXME: stuff like this could go directly to element.style
         var selector = '#the-proof';
@@ -169,6 +168,8 @@ var layouts = {
 
     // impure
     function getGlyphString(glyphset, extended) {
+        var input = document.querySelector('#select-glyphs :checked');
+
         if (typeof glyphset === 'string') {
             input = document.querySelector('#select-glyphs option[value="' + cssStringEscape(glyphset) + '"]');
         } else {
@@ -192,13 +193,11 @@ var layouts = {
                 break;
             case 'all-gid':
             case 'all-groups':
+            default:
                 glyphset = getAllGlyphs();
                 break;
         }
 
-        if (!glyphset) {
-            glyphset = getAllGlyphs();
-        }
         //and now sort them by the selected method
         if (!currentFont || !currentFont.fontobj) {
             return glyphset;
@@ -206,7 +205,7 @@ var layouts = {
         return _pure_getGlyphString(currentFont.fontobj, glyphsort, glyphset, extended);
     }
 
-    function _pure_getGlyphString(fontobj, glyphsort, glyphset) {
+    function _pure_getGlyphString(fontobj, glyphsort, glyphset, extended) {
         var cmap = fontobj.tables.cmap.glyphIndexMap;
         var unicodes = [];
         var checkCmap = false;
@@ -345,17 +344,13 @@ var layouts = {
         if ('opsz' in axes) {
             fvs.opsz = axes.opsz.min;
         }
+
         theProof.style.fontVariationSettings = axesToFVS(fvs);
     }
 
     function unsetWidest() {
         //re-enable the animation and remove the wide settings
-        // this is the rest of the hack
-        if('genuineFontVariationSettings' in theProof.dataset) {
-             theProof.style.fontVariationSettings = theProof.dataset.genuineFontVariationSettings;
-        }
-        else
-            theProof.style.removeProperty('font-variation-settings');
+        theProof.style.removeProperty('font-variation-settings');
         theProof.style.removeProperty('animation-name');
     }
 
@@ -560,6 +555,7 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
     return axisRanges;
 }
 
+    // TODO: rewrite this next!
     function calculateKeyframes(currentFont) {
 
         var axesMDM = []; // min-default-max
@@ -645,7 +641,6 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
 
     var videoproofOutputInterval, theProof, animTarget, animationRunning = false;
     function animationUpdateOutput() {
-        return;
         var output = document.getElementById('aniparams');
         var mode = $('#select-layout')[0];
 
@@ -714,11 +709,11 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
 
         setTimeout(animationUpdateOutput);
 
-    //    //need to do a bit of extra hoop jumping for the keyframe display
-    //    $('#keyframes-display a').css('animation-name', 'none');
-    //    setTimeout(function() {
-    //        $('#keyframes-display a').css('animation-name', '');
-    //    }, 100);
+        //need to do a bit of extra hoop jumping for the keyframe display
+        $('#keyframes-display a').css('animation-name', 'none');
+        setTimeout(function() {
+            $('#keyframes-display a').css('animation-name', '');
+        }, 100);
     }
 
     var currentKeyframe;
@@ -805,7 +800,6 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
     }
 
     function updateAnimationParam(k, v) {
-        return;
         var style = $('style.' + k);
         if (!style.length) {
             $('head').append("<style class='" + k + "'></style>");
@@ -819,7 +813,6 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
     }
 
     function resetAnimation() {
-        return;
         console.log('reset');
         stopAnimation();
 
@@ -955,7 +948,7 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
     }
 
     function handleFontChange() {
-        return;
+
         var fonturl = document.getElementById('select-font').value;
 
        // FIXME: looks unused
@@ -1044,7 +1037,6 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
     }
 
     function addCustomFont(fonttag, url, format, font) {
-        return;
         var info = getFontInfo(font);
 
         // changing a lot of globl state ...
@@ -1159,8 +1151,7 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
         }
 
         theProof.className = layout;
-        // :-(
-        // theProof.removeAttribute('style');
+        theProof.removeAttribute('style');
         customControls.innerHTML = "";
 
         if (options.fixedLineBreaks) {
@@ -1218,13 +1209,13 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
         'customFonts': {},
         'clone': function(obj) { return JSON.parse(JSON.stringify(obj)); },
         'slidersToElement': slidersToElement,
-        // 'handleFontChange': handleFontChange,
+        'handleFontChange': handleFontChange,
         'fvsToAxes': fvsToAxes,
         'axesToFVS': axesToFVS,
         'setWidest': setWidest,
         'unsetWidest': unsetWidest,
-        //'addCustomFonts': addCustomFonts,
-        //'addCustomFont': addCustomFont,
+        'addCustomFonts': addCustomFonts,
+        'addCustomFont': addCustomFont,
         'resetAnimation': resetAnimation,
         'getMiscChars': getMiscChars,
         'getKnownGlyphs': getKnownGlyphs,
@@ -1244,8 +1235,6 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
     };
 
     function urlToControls() {
-
-        return;
         if (!window.location.search || window.location.search === '?') {
             return;
         }
@@ -1327,7 +1316,7 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
         });
 
         $('#select-layout').on('change', handleLayoutChange);
-        // $('#select-font').on('change', handleFontChange);
+        $('#select-font').on('change', handleFontChange);
                                                          // sets bg/fg-colors, CSS-font-family
         $('#foreground, #background').on('change input', slidersToElement);
         $('#select-glyphs').on('change', handleGlyphsChange);
@@ -1347,39 +1336,38 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
         $(commentStore).on('change:from-url',
                             evt=>commentBox.value = evt.target.value);
 
-        // $('#add-your-own-button').on('click', function(evt) {
-        //     $('#custom-fonts')[0].click();
-        //     return false;
-        // });
+        $('#add-your-own-button').on('click', function(evt) {
+            $('#custom-fonts')[0].click();
+            return false;
+        });
 
-        // $('#custom-fonts').on('change', function() {
-        //     addCustomFonts(this.files);
-        // });
+        $('#custom-fonts').on('change', function() {
+            addCustomFonts(this.files);
+        });
 
-        // TODO: port this! see how it uses <body> as drop-zone...
-        // var dragging = false;
-        // $('body').on('dragover', function(evt) {
-        //     if (dragging) return false;
-        //     dragging = true;
-        //     evt.originalEvent.dataTransfer.dropEffect = 'copy';
-        //     $('body').addClass('dropzone');
-        //     return false;
-        // }).on('dragleave', function(evt) {
-        //     if (evt.target !== document.body) {
-        //         return;
-        //     }
-        //     dragging = false;
-        //     $('body').removeClass('dropzone');
-        //     return false;
-        // }).on('dragend', function(evt) {
-        //     $('body').removeClass('dropzone');
-        //     dragging = false;
-        //     return false;
-        // }).on('drop', function(evt) {
-        //     addCustomFonts(evt.originalEvent.dataTransfer.files);
-        //     $(this).trigger('dragend');
-        //     return false;
-        // });
+        var dragging = false;
+        $('body').on('dragover', function(evt) {
+            if (dragging) return false;
+            dragging = true;
+            evt.originalEvent.dataTransfer.dropEffect = 'copy';
+            $('body').addClass('dropzone');
+            return false;
+        }).on('dragleave', function(evt) {
+            if (evt.target !== document.body) {
+                return;
+            }
+            dragging = false;
+            $('body').removeClass('dropzone');
+            return false;
+        }).on('dragend', function(evt) {
+            $('body').removeClass('dropzone');
+            dragging = false;
+            return false;
+        }).on('drop', function(evt) {
+            addCustomFonts(evt.originalEvent.dataTransfer.files);
+            $(this).trigger('dragend');
+            return false;
+        });
 
         $('#grab-new-fonts').on('click', function() {
             var clocks = ['🕛','🕧','🕐','🕜','🕑','🕝','🕒','🕞','🕓','🕟','🕔','🕠','🕕','🕢','🕖','🕢','🕗','🕣','🕘','🕤','🕙','🕥','🕚','🕦'];
@@ -1436,6 +1424,7 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
         });
     }
 
+
 function main() {
     onDOMContentLoaded();
     //this timeout is for the sidebar load
@@ -1473,4 +1462,4 @@ function main() {
     });
 }
 
-// window.addEventListener('load', main);
+window.addEventListener('load', main);
