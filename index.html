@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" id="videoproof">
+	<head>
+		<meta charset="utf-8">
+		<title>Video Proof</title>
+		<meta name="viewport" content="initial-scale=1,shrink-to-fit=no">
+		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/reset.css">
+		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/adobe-blank.css">
+		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/fonts-momentum-sans.css">
+		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/style.css">
+		<link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32">
+
+
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+		<script src="user-guide.js" defer></script>
+		<style id='videoproof-keyframes'></style>
+		<style id='videoproof-moar-animation'></style>
+
+		<link rel="stylesheet" href="videoproof.css">
+		<link rel="stylesheet" href="form-controls.css">
+        <script src="lib/js/main.mjs" async type="module"></script>
+
+<script>
+    // With this pattern it's save to load the controller javascript asyncronously.
+    if(!window.remoteResources)
+         window.remoteResources = [];
+    window.remoteResources.push(
+        ['font', fetch('./fonts/RobotoFlex[GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght].woff')],
+        ['font', fetch('./fonts/Roboto-Italic[wdth,wght].woff')],
+        ['font', fetch('./fonts/Roboto[wdth,wght].woff')],
+        ['charGroups', fetch('./glyph-groups.json')],
+    );
+</script>
+
+<!-- TODO: take care of these! -->
+<link rel='stylesheet' href='layouts/grid.css'>
+<link rel='stylesheet' href='layouts/type-your-own.css'>
+<link rel='stylesheet' href='layouts/contextual.css'>
+<link rel='stylesheet' href='layouts/composition.css'>
+	</head>
+	<body>
+		<div class="wrapper">
+			<header>
+				<h1>Video Proof</h1>
+			</header>
+
+			<nav class="nav-global">
+				<a class="nav-global-reveal" href="#">Menu</a>
+				<ul>
+<!--
+					<li><a class="nav-home-link" href="https://www.typenetwork.com/">Home</a></li>
+					<li><a href="http://store.typenetwork.com">Fonts</a></li>
+					<li><a href="https://www.typenetwork.com/news" >News</a></li>
+					<li><a href="https://www.typenetwork.com/gallery" >Gallery</a></li>
+-->
+				</ul>
+			</nav>
+
+			<nav class="nav-user">
+				<a class="nav-user-reveal" href="#">Menu</a>
+				<ul>
+<!--
+					<li><a href="http://store.typenetwork.com/account/licenses" class="nav-user-account"></a></li>
+					<li><a href="http://store.typenetwork.com/account/favorites" class="nav-user-favorites"></a></li>
+					<li><a href="http://store.typenetwork.com/cart" class="nav-user-cart"></a></li>
+-->
+				</ul>
+			</nav>
+
+			<!-- SIDEBAR! -->
+			<aside class="content-filters">
+				<a class="content-filters-close" href="#">Close</a>
+
+				<form id='controls'>
+					<input id="comment-store" name="comment" type="hidden" />
+
+							<div id='select-font-container'>
+			<h3 class="inline"><label for="select-font">Family:</label></h3>
+			<select name="font" id='select-font'></select>
+			<a id='add-your-own-button' style='white-space:nowrap' title="…or drag a font file onto the window">+ Add your own</a>
+		</div>
+<!--
+		<div>
+			<h3 class="inline"><label for="select-instance">Style:</label></h3>
+			<select name="instance" id='select-instance' aria-label="Instance">
+			</select>
+		</div>
+-->
+								<div>
+			<h3 class="inline"><label for="select-layout">Layout:</label></h3>
+			<select name="mode" id='select-layout'></select>
+		</div>
+								<div id='select-glyphs-container'>
+			<h3 class="inline"><label for="select-glyphs">Glyphs:</label></h3>
+			<select id='select-glyphs' name='glyph-group'>
+			</select>
+			<div>
+				<input id='show-extended-glyphs' type='checkbox' name='extended'> <label for='show-extended-glyphs'>Show Extended</label>
+			</div>
+		</div>
+					<ul id='layout-specific-controls'>
+					</ul>
+
+					<div id='colors'>
+						<label for='foreground'>FG</label>
+						<input type='color' id='foreground' name='foreground' value='#000000'>
+						<button type='button' id='fg-bg-invert'>⇄</button>
+						<label for='background'>BG</label>
+						<input type='color' id='background' name='background' value='#FFFFFF'>
+					</div>
+
+							<div id='keyframes-display-container'>
+			<label>Keyframes</label>
+			<ul id='keyframes-display' class='sidebar-list'>
+			</ul>
+
+			<label>But wait, there’s more</label>
+			<ul id='moar-axes-display' class='sidebar-list'>
+			</ul>
+		</div>
+                                        <div id="comment-box">
+                                                Leave a comment here, it will be shared together with the page link.<br />
+                                                <textarea></textarea>
+                                        </div>
+					<h3>Meta</h3>
+					<ul>
+						<li><a href="/" id='reset'>Reset to font defaults</a></li>
+						<li><a href="#view-intro" onclick="videoproofViewIntroHints(); return false;" title="Show the interactive introduction guide">Show introduction</a></li>
+					</ul>
+				</form>
+
+			</aside>
+
+			<div class="content-main">
+				<a class="content-options-show-filters" href="#">Sidebar</a>
+
+						<div id='animation-controls'>
+			<button type='button' class='beginning' title="Go to start">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M9.35 37.65V10.35H13.55V37.65ZM38.65 37.65 18.85 24 38.65 10.35Z"/></svg></button><!--
+			--><button type='button' class='back' title="Previous keyframe">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M44.9 37.65 25.15 24 44.9 10.35ZM22.9 37.65 3.15 24 22.9 10.35Z"/></svg></button><!--
+			--><button type='button' class='play-pause' title="Play/Pause">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 12 28 24"><path d="M10 31.4V16.6L21 24ZM27 32V16H30V32ZM35 32V16H38V32Z"/></svg></button><!--
+			--><button type='button' class='forward' title="Next keyframe">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M3.05 37.65V10.35L22.8 24ZM25.3 37.65V10.35L45.05 24Z"/></svg></button><!--
+			--><button type='button' class='end' title="Go to end">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M34.45 37.65V10.35H38.65V37.65ZM9.35 37.65V10.35L29.15 24Z"/></svg></button>
+		</div>
+
+		<div id='animation-duration-container'>
+			<label for='animation-duration'>Full cycle</label>
+			<input id='animation-duration' type='number' min="1" step="1" value="60">sec
+		</div>
+				<output id='aniparams'>This animation will eat your CPU alive (depending on browser), so it doesn’t auto-start. Ready? <span id='first-play'>▶️</span></output>
+				<div id='the-proof'></div>
+				<footer class="footer-global">
+					<ul>
+						<li><a href="https://github.com/graphicore/videoproof">Source code on GitHub</a></li>
+						<li><a href="https://github.com/graphicore/videoproof/issues">Bug reports &amp; feature&nbsp;requests</a></li>
+					</ul>
+				</footer>
+			</div> <!-- content-main -->
+		</div> <!-- wrapper -->
+	</body>
+</html>
