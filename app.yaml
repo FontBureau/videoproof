@@ -2,6 +2,9 @@ runtime: php74
 
 handlers:
 # Serve a directory as a static resource.
+- url: /(.+\.php)$
+  script: auto
+  secure: always
 - url: /images
   static_dir: images
 - url: /fonts
@@ -17,7 +20,10 @@ handlers:
 - url: /texts
   static_dir: texts
 
-
+- url: /(.*\.mjs)
+  mime_type: text/javascript
+  static_files: \1
+  upload: .+\.(mjs)$
 
 # Serve files as static resources.
 - url: /(.+\.(gif|png|jpg|svg|js|pdf|css|map|scss|yaml|json))$
@@ -25,6 +31,6 @@ handlers:
   upload: .+\.(gif|png|jpg|svg|js|pdf|css|map|scss|yaml|json)$
 
 # Serve your app through a front controller at index.php or public/index.php.
-- url: .*
-  script: auto
-  secure: always
+#- url: .*
+#  script: auto
+#  secure: always

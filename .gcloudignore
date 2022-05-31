@@ -21,9 +21,9 @@ venv
 /venv
 /venv/
 # ignore as this is not the default, but a local specialty
-/fonts/repos/Roboto-Flex/
-fonts/RobotoFlex*
-fonts/axes.json
+/fonts/repos/
+# fonts/RobotoFlex*
+# fonts/axes.json
 
 # PHP Composer dependencies:
 /vendor/
