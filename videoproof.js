@@ -1,4 +1,4 @@
-/* jshint browser: true, esversion: 8, laxcomma: true, laxbreak: true */
+/* jshint browser: true, esversion: 7, laxcomma: true, laxbreak: true */
 
 import opentype from './opentype.js/dist/opentype.module.js';
 
@@ -31,10 +31,8 @@ var layouts = {
         }
         var axes = {};
         $.each(fvs, function(i, setting) {
-            var k, v
-              , temp = setting.match(/["'](....)['"]\s+([\-\d\.]+)/)
-              ;
-            if (temp) {
+            var k, v;
+            if (temp = setting.match(/["'](....)['"]\s+([\-\d\.]+)/)) {
                 k = temp[1];
                 v = parseFloat(temp[2]);
                 axes[k] = v;
@@ -76,11 +74,7 @@ var layouts = {
         var clauses = [];
 
         //workaround Safari default-opsz bug
-        //   FIXME: does this still exist? Would be nice to have a reference
-        //          link to this.
         try {
-            // FIXME: Why would this thow an error? Maybe because the
-            // font has no opsz?
             if ('opsz' in axes && axes.opsz == currentFont.axes.opsz['default']) {
                 axes.opsz = currentFont.axes.opsz['default'] + 0.1;
             }
@@ -101,7 +95,6 @@ var layouts = {
 
     function slidersToElement() {
         var styleEl = $('#style-general');
-        // FIXME: stuff like this could go directly to element.style
         var selector = '#the-proof';
 
         var rules = [];
@@ -166,7 +159,6 @@ var layouts = {
         return getKnownGlyphs() + getMiscChars();
     }
 
-    // impure
     function getGlyphString(glyphset, extended) {
         var input = document.querySelector('#select-glyphs :checked');
 
@@ -184,29 +176,28 @@ var layouts = {
         if (extended && input.hasAttribute('data-extended')) {
             glyphset += input.getAttribute('data-extended');
         }
-
         var glyphsort = glyphset === 'all-gid' ? 'gid' : 'group';
 
         switch (glyphset) {
+            case 'all-gid':
+            case 'all-groups':
+                glyphset = getAllGlyphs();
+                break;
             case 'misc':
                 glyphset = getMiscChars();
                 break;
-            case 'all-gid':
-            case 'all-groups':
-            default:
-                glyphset = getAllGlyphs();
-                break;
+        }
+
+        if (!glyphset) {
+            glyphset = getAllGlyphs();
         }
 
         //and now sort them by the selected method
         if (!currentFont || !currentFont.fontobj) {
             return glyphset;
         }
-        return _pure_getGlyphString(currentFont.fontobj, glyphsort, glyphset, extended);
-    }
 
-    function _pure_getGlyphString(fontobj, glyphsort, glyphset, extended) {
-        var cmap = fontobj.tables.cmap.glyphIndexMap;
+        var cmap = currentFont.fontobj.tables.cmap.glyphIndexMap;
         var unicodes = [];
         var checkCmap = false;
         switch (glyphsort) {
@@ -221,7 +212,6 @@ var layouts = {
                 unicodes = Array.from(glyphset);
                 checkCmap = true;
                 break;
-            case 'unicode':
             default: // sort by unicode
                 unicodes = Object.keys(cmap);
                 unicodes.sort(function(a, b) { return a-b; });
@@ -245,14 +235,7 @@ var layouts = {
     }
 
     function sizeToSpace() {
-        // In general I think this could be made quicker, as the size change
-        // is linear because it doesn't change i.e. opsz when chahnging
-        // font-size. Hence, we can change once to min-font-size and measure
-        // then to max-font-size and measure, and then interpolate to
-        // the size we want.
-
-
-        //grow/shrink the font so it "fits" on the page
+        //shrink the font so it fits on the page
         var winHeight = window.innerHeight - 96;
         var gridBox = theProof.getBoundingClientRect();
         var gridHeight = gridBox.height;
@@ -260,56 +243,17 @@ var layouts = {
         var fontsize = parseFloat(getComputedStyle(theProof).fontSize);
         var minFontSize = 24, maxFontSize = 144;
 
-        // growing until
-        //      first term:
-        //          as in shrinking, this has the problem of surpassing
-        //          maxFontSize :-(. However, it will be shrunken in the
-        //          next loop.
-        //      AND
-        //      second term
-        //          grid height must fit into "window.innerHeight - 96;"
-        //          I can only speculate what evil kind of hardcoding the
-        //          96 px is supposed to be...
-        //          AND scrollWidth must be lower than getBoundingClientRect.width
-        //          i.e. we want to avoid horizontal/x scroll
-        //          THIS TERM as well will go just beyond the point until
-        //          there is scrolling, hence the shrinking is required.
-        //
-        //          This will do one of both: gridHeight >= winHeight
-        //                                    OR theProof.scrollWidth > fullWidth
         while (fontsize <= maxFontSize && (gridHeight < winHeight && theProof.scrollWidth <= fullWidth)) {
             fontsize *= 1.5;
-            // apply font-size (floored?)
             theProof.style.fontSize = Math.floor(fontsize) + 'px';
-            // after setting font-size, get new height of theProof/grid
             gridHeight = theProof.getBoundingClientRect().height;
         }
 
-        // shrinking until
-        //      first term:
-        //          it's funny, when fontsize is just below minFontSize
-        //          this will stop, so it will be smaller than minFontSize
-        //          should be: fontsize = Math.max(minFontSize, fontsize * 09)
-        //      AND
-        //      second term:
-        //          gridHeight must shrink below win-height, so we fit
-        //          on page vertically.
-        //          OR scroll width shrinks below getBoundingClientRect.width
-        //          i.e. we stop when there's no more scrolling in the
-        //          horizontal direction
-        //
-        //          This will do both:   gridHeight <= winHeight
-        //                              AND theProof.scrollWidth <= fullWidth
-        //          so if possible within min/max, it should fit on the page
-        //          without scrolling, if I read this correctly.
         while (fontsize >= minFontSize && (gridHeight > winHeight || theProof.scrollWidth > fullWidth)) {
             fontsize *= 0.9;
             theProof.style.fontSize = Math.floor(fontsize) + 'px';
             gridHeight = theProof.getBoundingClientRect().height;
         }
-
-        // and now, we clamp to min/max fontsize, could be earlier or:
-        // theProof.style.fontSize = Math.min(maxFontSize, Math.max(minFontSize, Math.floor(fontsize)));
 
         if (fontsize < minFontSize) {
             theProof.style.fontSize = minFontSize + 'px';
@@ -326,10 +270,6 @@ var layouts = {
         }
 
         //disable the animation for a minute
-
-        // one would think there's no way to override element.style properties
-        // yet, still we're using !important. Which means the author has
-        // no clue where and how the property is handled.
         theProof.style.animationName = 'none !important';
 
         //get the stuff as wide as possible
@@ -354,14 +294,6 @@ var layouts = {
         theProof.style.removeProperty('animation-name');
     }
 
-    // OK, I think this is to make the longest possible lines, that won't
-    // break, even when wdth etc. go to their max values. it's interesting,
-    // that this seems to be NOT working right now!
-    // Ii IS WORKING, it's only applied in grid, nowhere else.
-    // It doesn't work as expected, when applied to contextual, likely
-    // because of the width set to the spans, which indeed stops "stuff"
-    // from moving around, but since that is a more line based then grid
-    // based view, it would be nice when the lines grow/and shrink.
     function fixLineBreaks() {
         var grid = document.querySelector('#the-proof.fixed-line-breaks');
         if (!grid) {
@@ -370,14 +302,8 @@ var layouts = {
 
         //reset
         grid.style.removeProperty('font-size');
-
-        // OOF, this is bad style, meant to remove the divs
-        // which represent/style the individual lines, but one should
-        // not use regex to manipulate (or even read within) the DOM.
         grid.innerHTML = grid.innerHTML.replace(/<\/?div[^>]*>/g, '');
 
-        // Setting the widest wdth/wght/opsz combination the font can
-        // handle.
         setWidest();
 
         var fontsize = VideoProof.sizeToSpace();
@@ -385,45 +311,24 @@ var layouts = {
         var lines = [], line = [], lastX = Infinity;
         $.each(grid.childNodes, function(i, span) {
             if (!span.tagName || span.tagName !== 'SPAN') {
-                // In cases like this I must wonder who controls the
-                // content! If we'd iterate grid.children we'd get only
-                // elements and if we had control, we'd get only spans.
-                // So why is there no control? I believe and hope there \
-                // is actually control, but it's written with an insecure
-                // style.
                 return;
             }
             var box = span.getBoundingClientRect();
             if (box.width > 0) {
-                // WHY would it already be set? If fontsize changes,
-                // width should maybe change as well. OK, width is set
-                // in em and in this case em scales linearly ...
-                // but then again, why should it ever "move around"?
-                // I hope I will learn the answers...
                 if (!span.style.width) {
-                    // hard-code the max width so it doesn't move around
-                    // Maybe, for the "grid" view, this all could be
-                    // simplified using css table, grid or flex layout.
-                    // besides, the grid is not very strictly a grid,
-                    // depending on glyph-widths columns align sloppily.
-                    // It's not too bad though, because of min-width: 1em;
-                    // for each element, but e.g. "Ǆ" can be wider than
-                    // 1em.
+                    //hard-code the max width so it doesn't move around
                     span.style.width = (box.width / fontsize) + 'em';
                 }
                 if (box.left < lastX) {
-                    // a line break
                     if (line && line.length) {
                         lines.push(line);
                     }
                     line = [];
                 }
-                // moves the cursor
                 lastX = box.left;
             }
             line.push(span);
         });
-        // keep the last line
         if (line && line.length) {
             lines.push(line);
         }
@@ -439,184 +344,112 @@ var layouts = {
         unsetWidest();
     }
 
-    // definitely one of the evil global states
-    // set by bracketRap in init of comosition, unset via
-    // options of each other layout,
+    // definitely one of the eval global states
     var rapBracket = false;
 
     //acceptable ranges of various axes
     var rapTolerances = {};
 
-/**
- * Array.from( cartesianProductGen([['a', 'b'], ['c', 'd']]) )
- * >>> [['a', 'c'], ['a', 'd'], ['b', 'c'], ['b', 'd']]
- *
- * No intermediate arrays are created.
- */
-function* cartesianProductGen([head, ...tail]) {
-    if(!head)
-        yield [];
-    else {
-        // NOTE: the sequence of productGen(tail) could be stored
-        // here as an intermediate array, but it may not improve
-        // performance, as it's heavier on memory:
-        // let products = [...productGen(tail)];
-        for(let item of head)
-            for(let prod of cartesianProductGen(tail))
-                yield [item, ...prod];
-    }
-}
-
-/**
- *  Just like Pythons zip.
- */
-function* zip(...arrays) {
-    let len = Math.min(...arrays.map(a=>a.length));
-    for(let i=0;i<len;i++)
-        yield arrays.map(a=>a[i]); // jshint ignore:line
-}
-
-function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
-    let axisRanges = {};
-    console.log('"rapBracket":', rapBracket);
-    // Composition @ small
-    // {
-    //     opsz: 19.919999999999998,
-    //     wdth: 100,
-    //     wght: 400
-    // }
-    // Composition @ large
-    // {
-    //     opsz: 63.99997499999999,
-    //     wdth: 100,
-    //     wght: 400
-    // }
-
-    console.log('"rapTolerances":', rapTolerances);
-    // rapTolerances: acceptable ranges of various axes
-    //
-    // Composition @ small
-    // In this case wdth will be multiplied while
-    // wght will be added.
-    // {
-    //      wdth: Array [ 0.8, 1.2 ]
-    //      wght: Array [ -100, 100 ]
-    // }
-    //
-    // Composition @ large
-    // Both will be added, this forces always min/max
-    // instead of lower/upper.
-    // {
-    //         wdth: Array [ -100000000, 10000000 ]
-    //         wght: Array [ -1000000, 10000000 ]
-    //}
-
-    // Here are generic tolerances, from the function bracketRap,
-    // but they are never used because bracketRap is only called
-    // in one position, and there always witht the tol argument.
-    // rapTolerances = tol || {
-    //     'opsz': [1, 1],
-    //     'wght': [-100, +100],
-    //     'wdth': [0.8, 1.2],
-    //     'default': [0.5, 2.0]
-    // };
-
-    // tol is defined in composition like this:
-    // var tol = currentSize === 'small'
-    //                 ? { 'wght': [-100, +100], 'wdth': [0.8, 1.2] }
-    //                 : { 'wght': [-1000000, +10000000], 'wdth': [-100000000, +10000000] };
-
-    for(let [axis, pivot] of Object.entries(rapBracket)) {
-        let  [tolMin, tolMax] = axis in rapTolerances
-                                    ? rapTolerances[axis]
-                                    : [1, 1]
-          , min = fontAxes[axis].min
-          , max = fontAxes[axis].max
-          // Make the product if tolMin is netween 0 and 1 otherwise
-          // make the sum. because it's the product for tolMin == 1
-          // [tolMin, tolMax] = [1, 1] will create an identity function
-          // as well as [tolMin, tolMax] = [0, 0] where addition
-          // is used.
-          // FIXME: I think this is VERY implicit and not at all
-          //        clear in which case and why which mode is
-          //        chosen
-          , operation = tolMin > 0 && tolMin <= 1
-                        ? (a, b)=>a * b
-                        : (a, b)=>a + b
-          , lower = operation(pivot, tolMin)
-          , upper = operation(pivot, tolMax)
-          ;
-        axisRanges[axis] = {
-            min: Math.max(min, lower),
-            'default': pivot,
-            max: Math.min(max, upper)
-        };
-    }
-    return axisRanges;
-}
-
-    // TODO: rewrite this next!
     function calculateKeyframes(currentFont) {
+        //O(3^n)? this might get ugly
+        var keyframes = [];
 
-        var axesMDM = []; // min-default-max
-        var axesOrder = [];
-        var axisRanges = (typeof rapBracket === 'object')
-            // FIXME: rapBracket, rapTolerances are global
-            ? axisRangesForRapBracket(currentFont.axes, rapBracket, rapTolerances)
-            : currentFont.axes
-            ;
+        var axesMDM = [];
+        var raxisPresent = [];
+
+        var axisRanges = currentFont.axes;
 
         console.log('axisRanges:', axisRanges);
 
-        // FIXME: registeredAxes is global
-        for(let axis of registeredAxes) {
-            // mdn stands for min-default-max, however, the order
-            // is default-min-max expect for opsz.
-            // FIXME: find out the reason behind this.
-            if (!(axis in axisRanges)) {
+        if (typeof rapBracket === 'object') {
+            axisRanges = {};
+            console.log('"rapBracket":', rapBracket);
+            var span = 0.5;
+            $.each(rapBracket, function(axis, pivot) {
+                var tol = axis in rapTolerances ? rapTolerances[axis] : [1,1];
+                var min = currentFont.axes[axis].min;
+                var max = currentFont.axes[axis].max;
+
+                var lower = tol[0] > 0 && tol[0] <= 1 ? pivot * tol[0] : pivot + tol[0];
+                //yes these first two should be tol[0] and not tol[1]
+                var upper = tol[0] > 0 && tol[0] <= 1 ? pivot * tol[1] : pivot + tol[1];
+
+                axisRanges[axis] = {};
+                axisRanges[axis].min = Math.max(min, lower);
+                axisRanges[axis]['default'] = pivot;
+                axisRanges[axis].max = Math.min(max, upper);
+            });
+        }
+
+        console.log('axisRanges:', axisRanges);
+
+        $.each(registeredAxes, function(index, axis) {
+            var ar, mdm;
+            if (axis in axisRanges) {
+                ar = axisRanges[axis];
+                raxisPresent.push(axis);
+                if (axis === 'opsz') {
+                    mdm = [ar.min];
+                    if (ar['default'] !== ar.min) {
+                        mdm.push(ar['default']);
+                    }
+                    if (ar.max !== ar['default']) {
+                        mdm.push(ar.max);
+                    }
+                } else {
+                    mdm = [ar['default']];
+                    if (ar['default'] !== ar.min) {
+                        mdm.push(ar.min);
+                    }
+                    if (ar.max !== ar['default']) {
+                        mdm.push(ar.max);
+                    }
+                }
+                axesMDM.push(mdm);
+            }else
                 console.log(`axis ${axis} not in axisRanges`, axisRanges);
-                continue;
-            }
-            axesOrder.push(axis);
+        });
 
-            let mdmOrder = axis === 'opsz'
-                    ? ['min', 'default', 'max']
-                    : ['default', 'min', 'max']
-              , axisRange = axisRanges[axis]
-              , mdm = mdmOrder.filter(k=>{ // jshint ignore:line
-                        // This was loosely adopted from previous code
-                        // where I didn't understand the full reasoning
-                        // but for the present examples it produces the
-                        // same result and is much more consise.
-                        if (k === 'default')
-                            return true;
-                        return (axisRange[k] !== axisRange['default']);
-                    })
-                    .map(k=>axisRange[k]) // jshint ignore:line
-              ;
-            axesMDM.push(mdm);
-        }
-
-        if (!axesOrder.length)
+        if (!raxisPresent.length) {
             return [];
-
-        var fvsPerms = []
-          , prev
-          ;
-
-        for(let axesValues of cartesianProductGen(axesMDM)) {
-            let variationSettings = Object.fromEntries(zip(axesOrder, axesValues));
-            // FIXME: axesToFVS could take just the result of the zip
-            //        but it may get replaced entirely, so I leave it here
-            //        for the time being.
-            let fvs = axesToFVS(variationSettings);
-            // FIXME: I currently think there should be no duplicates.
-            if (fvs !== prev)
-                fvsPerms.push(fvs);
-            else
-                console.warn(`Found a case of duplication: ${fvs}`);
-            prev = fvs;
         }
+
+        var permutations = [];
+        var i, maxperms, j, l;
+        var raxisCount = raxisPresent.length;
+        var perm, filler, prev, current;
+
+        function getPermutations() {
+            var max = axesMDM.length-1;
+            function helper(arr, i) {
+                var a;
+                for (var j=0, l=axesMDM[i].length; j<l; j++) {
+                    a = arr.slice(0); // clone arr
+                    a.push(axesMDM[i][j]);
+                    if (i===max)
+                        permutations.push(a);
+                    else
+                        helper(a, i+1);
+                }
+            }
+            helper([], 0);
+        }
+
+        getPermutations();
+
+        var fvsPerms = [];
+        $.each(permutations, function(i, perm) {
+            var fvs = {};
+            $.each(raxisPresent, function(j, axis) {
+                fvs[axis] = perm[j];
+            });
+            fvs = axesToFVS(fvs);
+            if (fvs !== prev) {
+                fvsPerms.push(fvs);
+            }
+            prev = fvs;
+        });
+
         return fvsPerms;
     }
 
@@ -658,7 +491,7 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
         }
         var bits = [
             currentFont.name,
-            `${mode.options[mode.selectedIndex].textContent} (${mode.value})`,
+            mode.options[mode.selectedIndex].textContent,
             outputAxes.join(' ')
         ];
         output.textContent = bits.join(": ");
@@ -690,7 +523,7 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
             clearInterval(videoproofOutputInterval);
             videoproofOutputInterval = null;
         }
-    }
+    };
 
     function jumpToTimestamp(timestamp) {
         animTarget = theProof.querySelector('.animation-target') || theProof;
@@ -821,15 +654,13 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
         }
 
         var keyframes = currentKeyframes = calculateKeyframes(currentFont);
-        console.log(`calculateKeyframes result:`, keyframes.slice());
 
-        if(!keyframes.length) {
+        if(!keyframes.length){
             // want to see the stack trace
             console.log('currentFont:', currentFont);
             throw new Error('keyframes is empty!');
         }
         var perstep = 100 / keyframes.length;
-        // 2 seconds per keyframe!
         $('#animation-duration').val(keyframes.length * 2).trigger('change');
         updateAnimationParam('animation-delay', '0');
         var stepwise = [];
@@ -866,10 +697,8 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
                     + '; }');
 
             //add CSS step
-            keyframes[i] =  percent + '% { '
-                            + 'font-variation-settings: ' + fvs + '; '
-                            + 'outline-offset: ' + percent + 'px; '
-                            + '}';
+            keyframes[i] =  percent + '% { font-variation-settings: ' + fvs
+                           + '; outline-offset: ' + percent + 'px; }';
         });
 
         document.getElementById('videoproof-keyframes').textContent =
@@ -902,8 +731,9 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
         moar.innerHTML = "";
 
         currentFont.axisOrder.forEach(function(axis) {
-            if (registeredAxes.indexOf(axis) !== -1)
+            if (registeredAxes.indexOf(axis) >= 0) {
                 return;
+            }
             var info = currentFont.axes[axis];
             var li = document.createElement('li');
             var a = document.createElement('a');
@@ -950,9 +780,7 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
     function handleFontChange() {
 
         var fonturl = document.getElementById('select-font').value;
-
-       // FIXME: looks unused
-       var spectropts = {
+        var spectropts = {
             'showInput': true,
             'showAlpha': true,
             'showPalette': true,
@@ -971,7 +799,7 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
             $(document).trigger('videoproof:fontLoaded');
         } else {
             var url = 'fonts/' + fonturl + '.woff';
-            // FIXME: This shouldn't be done here: having opentype.js handle
+            // FIXME: This shouldn't be done here, having opentype.js handle
             // the XHR requerst
             opentype.load(url, function (err, font) {
                 if (err) {
@@ -986,10 +814,7 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
         }
     }
 
-    function getFontInfo(font) {
-        // Feels like we could always get the data live from the font
-        // instead of caching it, there are othere cases where fontobj
-        // is still used, and the extraction of info.axes is trivial.
+    function addCustomFont(fonttag, url, format, font) {
         var info = {
             'name': font.getEnglishName('fontFamily'),
             'axes': {},
@@ -998,7 +823,7 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
             'isCustom': true
         };
         if ('fvar' in font.tables && 'axes' in font.tables.fvar) {
-            for (let axis of font.tables.fvar.axes) {
+            $.each(font.tables.fvar.axes, function(i, axis) {
                 info.axes[axis.tag] = {
                     'name': 'name' in axis ? axis.name.en : axis.tag,
                     'min': axis.minValue,
@@ -1006,115 +831,66 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
                     'default': axis.defaultValue
                 };
                 info.axisOrder.push(axis.tag);
-            }
+            });
         }
-        return info;
-    }
 
-    // queries document for element ids, not ideal...
-    function addCustomFontToSelectInterface(fonttag, fontname) {
-        // add to interface
-        let optgroup = document.getElementById('custom-optgroup')
-          , option = document.createElement('option')
-          ;
+        window.font = font;
+
+        $('head').append('<style>@font-face { font-family:"' + fonttag + '-VP"; src: url("' + url + '") format("' + format + '"); font-weight: 100 900; }</style>');
+
+        window.font = currentFont = window.fontInfo[fonttag] = info;
+        var optgroup = $('#custom-optgroup');
+        var option = document.createElement('option');
         option.value = fonttag;
-        option.textContent = fontname;
+        option.innerHTML = info.name;
         option.selected = true;
-        if (optgroup === null) {
-            let select = document.getElementById('select-font')
-              , defaultOptgroup = document.createElement('optgroup')
-              ;
-            defaultOptgroup.label = 'Defaults';
-            defaultOptgroup.append(...select.children);
-            select.append(defaultOptgroup);
-
-            optgroup =  document.createElement('optgroup');
-            optgroup.id = 'custom-optgroup';
-            optgroup.label = 'Your fonts';
-            select.insertBefore(optgroup, defaultOptgroup);
+        if (!optgroup.length) {
+            $('#select-font').wrapInner('<optgroup label="Defaults"></optgroup>');
+            optgroup = $('<optgroup id="custom-optgroup" label="Your fonts"></optgroup>').prependTo($('#select-font'));
         }
         optgroup.append(option);
-    }
-
-    function addCustomFont(fonttag, url, format, font) {
-        var info = getFontInfo(font);
-
-        // changing a lot of globl state ...
-        window.font = font;
-        $('head').append('<style>@font-face { '
-                + 'font-family:"' + fonttag + '-VP"; '
-                + 'src: url("' + url + '") format("' + format + '"); '
-                + 'font-weight: 100 900; '
-                + '}</style>');
-        window.font = currentFont = window.fontInfo[fonttag] = info;
-
-        // queries document for element ids, not ideal...
-        addCustomFontToSelectInterface(fonttag, info.name);
 
         updateURL();
         setTimeout(handleFontChange);
     }
 
-    async function loadFontFromFile(file) {
-        var reader = new FileReader();
-        var mimetype, format;
-        if (file.name.match(/\.[ot]tf$/)) {
-            mimetype = "application/font-sfnt";
-            format = "opentype";
-        } else if (file.name.match(/\.(woff2?)$/)) {
-            mimetype = "application/font-" + RegExp.$1;
-            format = RegExp.$1;
-        } else {
-            // alert(file.name + " not a supported file type");
-            throw new Error(file.name + " not a supported file type");
-        }
-
-        let fontBuffer = await file.arrayBuffer();
-        // If you already have an ArrayBuffer, you can use opentype.parse(buffer)
-        // to parse the buffer. This method always returns a Font, but check
-        // font.supported to see if the font is in a supported format.
-        // (Fonts can be marked unsupported if they have encoding tables we can't read).
-        const font = opentype.parse(fontBuffer);
-        // Not sure this is still required as it also says in the opentype.js
-        // sources about supported:
-        //      Deprecated: parseBuffer will throw an error if font is not supported.
-        if(!font.supported)
-            throw new Error(file.name + " not a supported font file type");
-
-        let promise = new Promise((resolve, reject)=>{
-            reader.addEventListener('load', (/*event*/)=>resolve(reader.result));
-            let failHandler = event=>reject(`Failed readAsDataURL with ${event.type}: ${event.loaded}.`);
-            reader.addEventListener('error', failHandler);
-            reader.addEventListener('abort', failHandler);
+    function addCustomFonts(files) {
+        $.each(files, function(i, file) {
+            var reader = new FileReader();
+            var mimetype, format;
+            if (file.name.match(/\.[ot]tf$/)) {
+                mimetype = "application/font-sfnt";
+                format = "opentype";
+            } else if (file.name.match(/\.(woff2?)$/)) {
+                mimetype = "application/font-" + RegExp.$1;
+                format = RegExp.$1;
+            } else {
+                alert(file.name + " not a supported file type");
+                return;
+            }
+            var blob = new Blob([file], {'type': mimetype});
+            reader.addEventListener('load', function() {
+                var datauri = this.result;
+                opentype.load(datauri, function(err, font) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    var fonttag = 'custom-' + file.name.replace(/(-VF)?\.\w+$/, '');
+                    addCustomFont(fonttag, datauri, format, font);
+                });
+            });
+            reader.readAsDataURL(blob);
         });
-
-        reader.readAsDataURL(file);
-        return promise.then(datauri=>{
-            var fonttag = 'custom-' + file.name.replace(/(-VF)?\.\w+$/, '');
-            return [fonttag, datauri, format, font];
-        });
-    }
-
-    async function addCustomFonts(files) {
-        return Promise.all(Array.from(files).map(
-                            /* args = [fonttag, datauri, format, font] */
-            file=>loadFontFromFile(file).then(args=>addCustomFont(...args))
-                        .then(null, err=>{console.error(err); alert(err);})
-        ));
     }
 
     function bracketRap(src, tol) {
-        // source is a "para"(graph) element
         theProof.style.animationName = "none";
         theProof.style.fontVariationSettings = 'normal';
         var style = getComputedStyle(src);
-        // Here it's set! opsz is never animated
-        // wght and wdth are animated within the range of their tolerances
-        // and min/max axis values.
         rapBracket = fvsToAxes(style.fontVariationSettings);
         if (!('opsz' in rapBracket) && currentFont && 'opsz' in currentFont.axes) {
-            // This should be in pt but style.fontSize is in px.
-            rapBracket.opsz = parseFloat(style.fontSize) * 0.75;
+            rapBracket.opsz = parseFloat(style.fontSize);
         }
         if (!('wght' in rapBracket) && currentFont && 'wght' in currentFont.axes) {
             rapBracket.wght = parseInt(style.fontWeight) || 400;
@@ -1125,8 +901,6 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
 
         console.log('new "rapBracket":', rapBracket, 'currentFont:', currentFont);
 
-        // global, also the defaults are nerver used because tol is always
-        // set.
         rapTolerances = tol || {
             'opsz': [1, 1],
             'wght': [-100, +100],
@@ -1140,7 +914,6 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
     function handleLayoutChange() {
         var layout = $('#select-layout').val();
         var options = layouts[layout] || {};
-        // FIXME: use classlist.remove for these things
         var previousLayout = (theProof.className || '').replace(/ (fixed-line-breaks|size-to-space)/g, '');
         var customControls = document.getElementById('layout-specific-controls');
 
@@ -1221,14 +994,8 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
         'getKnownGlyphs': getKnownGlyphs,
         'getAllGlyphs': getAllGlyphs,
         'getGlyphString': getGlyphString,
-
-        // It seems to me, these should be in the layout code
-        // and the layout should expose a reset/layoutchange api
-        // so that the controller doesn't have to know all the
-        // details of the "proof" tool implementation.
-        'fixLineBreaks': fixLineBreaks, // required/used by/in layout grid.js
-        'sizeToSpace': sizeToSpace, // required/used by/in layout contextual.js
-
+        'fixLineBreaks': fixLineBreaks,
+        'sizeToSpace': sizeToSpace,
         'getTimestamp': getTimestamp,
         'jumpToTimestamp': jumpToTimestamp,
         'bracketRap': bracketRap
@@ -1255,7 +1022,7 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
                     }
                     for(let input of inputs) {
                         if(input.value === value) {
-                            input.checked = true;
+                            input.checked = true
                             break;
                         }
                     }
@@ -1269,7 +1036,7 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
 
                 break;
             }
-        }
+        };
 
         //set keyframe after they're calculated
         $(document).off('videoproof:animationReset.urlToControls');
@@ -1303,6 +1070,10 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
     }
 
 
+    // FIXME
+    //jquery overhead is sometimes causing window.load to fire before this! So use native events.
+    // document.addEventListener('DOMContentLoaded',
+
     function onDOMContentLoaded() {
         urlToControls();
 
@@ -1311,13 +1082,12 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
         $('head').append("<style id='style-general'></style>");
 
         $(document).on('videoproof:fontLoaded', function() {
-            slidersToElement(); // sets bg/fg-colors, CSS-font-family
+            slidersToElement();
             resetAnimation();
         });
 
         $('#select-layout').on('change', handleLayoutChange);
         $('#select-font').on('change', handleFontChange);
-                                                         // sets bg/fg-colors, CSS-font-family
         $('#foreground, #background').on('change input', slidersToElement);
         $('#select-glyphs').on('change', handleGlyphsChange);
 
@@ -1422,7 +1192,7 @@ function axisRangesForRapBracket(fontAxes, rapBracket, rapTolerances) {
             updateURL();
             return false;
         });
-    }
+    };
 
 
 function main() {
@@ -1440,7 +1210,6 @@ function main() {
     handleFontChange();
     $('#select-glyphs').trigger('change');
 
-    // waiting for what?
     setTimeout(urlToControls);
 
     var theProof = $('#the-proof');
@@ -1448,7 +1217,6 @@ function main() {
         if (theProof.hasClass('fixed-line-breaks')) {
             VideoProof.fixLineBreaks();
         } else if (theProof.hasClass('size-to-space')) {
-            // NOTE: fixLineBreaks will itself call sizeToSpace
             VideoProof.sizeToSpace();
         }
     }
