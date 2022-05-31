@@ -139,8 +139,8 @@ $videoproof = new VideoProof();
 				<footer class="footer-global">
 					<ul>
 						<!--<li><a href="//www.typenetwork.com/about">About Type Network</a></li>-->
-						<li><a href="https://github.com/graphicore/videoproof">Source code on GitHub</a></li>
-						<li><a href="https://github.com/graphicore/videoproof/issues">Bug reports &amp; feature&nbsp;requests</a></li>
+						<li><a href="https://github.com/FontBureau/videoproof">Source code on GitHub</a></li>
+						<li><a href="https://github.com/FontBureau/videoproof/issues">Bug reports &amp; feature&nbsp;requests</a></li>
 					</ul>
 				</footer>
 			</div> <!-- content-main -->
