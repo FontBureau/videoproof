@@ -339,6 +339,10 @@ ul.sidebar-list a:hover {
 	max-width: none;
 	margin: 0;
 	padding: 1rem;
+
+       color: var(--color-fg, #000);
+       background-color: var(--color-bg, #fff);
+
 }
 
 #the-proof.fixed-line-breaks {
