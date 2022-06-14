@@ -418,7 +418,7 @@ ul.sidebar-list a:hover {
 /* CSS is nice to potentially diversify this behavior
  * i.e. using the :not() selector, to leave disabled elements visible.
  */
-.input-disabled {
+#videoproof .input-disabled {
     display: none;
 }
 
