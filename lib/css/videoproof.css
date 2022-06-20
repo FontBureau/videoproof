@@ -405,6 +405,11 @@ ul.sidebar-list a:hover {
 }
 
 
+#comment-box {
+    /* initially hidden */
+    display: none;
+}
+
 #comment-box textarea {
 	width: 100%;
 }
