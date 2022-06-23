@@ -72,10 +72,8 @@
 			<aside class="content-filters">
 				<a class="content-filters-close" href="#">Close</a>
 
-				<form id='controls'>
-					<input id="comment-store" name="comment" type="hidden" />
-
-							<div id='select-font-container'>
+    <form id='controls'>
+        <div id='select-font-container'>
 			<h3 class="inline"><label for="select-font">Family:</label></h3>
 			<select name="font" id='select-font'></select>
 			<a id='add-your-own-button' style='white-space:nowrap' title="…or drag a font file onto the window">+ Add your own</a>
@@ -91,7 +89,20 @@
 			<h3 class="inline"><label for="select-layout">Layout:</label></h3>
 			<select name="mode" id='select-layout'></select>
 		</div>
-								<div id='select-glyphs-container'>
+
+        <div id='contextual-pad-mode-container'>
+            <h3 class="inline"><label for="contextual-pad-mode">Pad</label></h3>
+            <select id="contextual-pad-mode" name="pad">
+                <option value="auto-short">Auto short</option>
+                <option value="auto-long">Auto long</option>
+                <option value="kern-upper">Kern upper</option>
+                <option value="kern-mixed">Kern mixed</option>
+                <option value="kern-lower">Kern lower</option>
+                <option value="custom">Custom Pad</option>
+            </select>
+        </div>
+
+        <div id='select-glyphs-container'>
 			<h3 class="inline"><label for="select-glyphs">Glyphs:</label></h3>
 			<select id='select-glyphs' name='glyph-group'>
 			</select>
@@ -99,8 +110,13 @@
 				<input id='show-extended-glyphs' type='checkbox' name='extended'> <label for='show-extended-glyphs'>Show Extended</label>
 			</div>
 		</div>
-					<ul id='layout-specific-controls'>
-					</ul>
+
+        <ul id='layout-specific-controls'>
+            <li id='contextual-pad-custom-container'>
+                <label for="contextual-pad-custom">Custom pad</label>
+                <input type="text" maxlength="2" id="contextual-pad-custom" name="custom-pad" value="">
+            </li>
+        </ul>
 
 					<div id='colors'>
 						<label for='foreground'>FG</label>

@@ -439,3 +439,8 @@ ul.sidebar-list a:hover {
     display: none;
 }
 
+#contextual-pad-custom {
+    width: 2em;
+    box-sizing: content-box;
+}
+
