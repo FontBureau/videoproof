@@ -338,7 +338,7 @@ ul.sidebar-list a:hover {
 /* 	width: 100%; */
 	max-width: none;
 	margin: 0;
-	padding: 1rem;
+	/*padding: 1rem;*/
 
        color: var(--color-fg, #000);
        background-color: var(--color-bg, #fff);
@@ -352,6 +352,11 @@ ul.sidebar-list a:hover {
 	font-size: 36pt;
 	line-height: 1.5;
 	text-align: left;
+}
+
+#the-proof .end-of-line:after {
+    display: block;
+    content: '';
 }
 
 #the-proof.fixed-line-breaks div, #the-proof.fixed-line-breaks span {
@@ -368,6 +373,13 @@ ul.sidebar-list a:hover {
 /* 	font: inherit; */
 	text-align: left;
 	margin-right: 0.3em;
+}
+
+/* used in contextual/kerning mode */
+#the-proof.fixed-lines span {
+        display: inline;
+        margin-right: 0;
+        white-space: nowrap;
 }
 
 
