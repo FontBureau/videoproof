@@ -444,3 +444,7 @@ ul.sidebar-list a:hover {
     box-sizing: content-box;
 }
 
+span.selection{
+    background: lightblue;
+}
+
