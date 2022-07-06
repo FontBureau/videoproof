@@ -239,6 +239,7 @@ input[type=range][disabled] {
 #animation-controls {
 	display: inline-block;
 	margin-top: 0.5rem;
+        margin-bottom:0.1rem;
 	font-size: 100%;
 }
 
@@ -444,7 +445,26 @@ ul.sidebar-list a:hover {
     box-sizing: content-box;
 }
 
-span.selection{
+/* required for the selection/highlight boxes */
+#the-proof {
+    position: relative;
+    z-index: 0;
+}
+
+span.selection {
+    /* Using an alpha channel here, so .temp-selection can shine through.
+     * Color is similar to lightblue when background is white. */
+    background: #4ba5c378;
+}
+
+div.selection {
+    position: absolute;
+    z-index: -2;
     background: lightblue;
 }
 
+div.temp-selection {
+    position: absolute;
+    z-index: -1;
+    background: plum;
+}
