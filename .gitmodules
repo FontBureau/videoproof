@@ -7,3 +7,6 @@
 [submodule "intro.js"]
 	path = intro.js
 	url = https://github.com/usablica/intro.js
+[submodule "diff-match-patch"]
+	path = diff-match-patch
+	url = https://github.com/google/diff-match-patch.git
