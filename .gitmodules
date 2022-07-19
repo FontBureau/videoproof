@@ -10,3 +10,6 @@
 [submodule "diff-match-patch"]
 	path = diff-match-patch
 	url = https://github.com/google/diff-match-patch.git
+[submodule "lib/js/wawoff2"]
+	path = lib/js/wawoff2
+	url = https://github.com/graphicore/wawoff2.git
