@@ -27,3 +27,18 @@ venv
 
 # PHP Composer dependencies:
 /vendor/
+
+# submodules or unnecessary parts of submodules
+/diff-match-patch/
+/opentype.js/examples/
+/opentype.js/g/
+node_modules
+package-lock.json
+/opentype.js/test
+/opentype.js/bin       
+/opentype.js/externs
+/opentype.js/fonts
+/opentype.js/src
+
+
+
