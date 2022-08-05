@@ -468,3 +468,11 @@ div.temp-selection {
     z-index: -1;
     background: plum;
 }
+
+#the-proof.typespec div[contenteditable] {
+    /* Required to be able place a cursor when element is empty. */
+    min-height: 1.5em;
+    /* Solves jumping cursor when inputing into empty element. */
+    border-top: 1px solid transparent;
+    white-space: pre-wrap; /* alternatively:  break-spaces or pre-wrap; not sure what is better*/
+}
