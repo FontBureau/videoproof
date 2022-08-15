@@ -473,6 +473,20 @@ div.temp-selection {
     --line-height: 1.375em;
 }
 
+#the-proof.typespec .typespec-element > * {
+    display: table-cell;
+    vertical-align: baseline;
+    border: none;
+}
+
+#the-proof.typespec .typespec-element > label {
+    padding: 0.5rem 0.5rem 1rem;
+}
+
+#the-proof.typespec .typespec-element > .typespec-element_target {
+    padding-left: .25rem;
+}
+
 #the-proof.typespec div[contenteditable] {
     /* Required to be able place a cursor when element is empty. */
     min-height: var(--line-height);
@@ -484,3 +498,9 @@ div.temp-selection {
 #the-proof.typespec div[contenteditable] p {
     min-height: var(--line-height);
 }
+
+#the-proof.typespec .typespec-element--active label{
+    background: lightblue;
+}
+
+
