@@ -118,15 +118,47 @@
             </li>
         </ul>
 
-					<div id='colors'>
-						<label for='foreground'>FG</label>
-						<input type='color' id='foreground' name='foreground' value='#000000'>
-						<button type='button' id='fg-bg-invert'>⇄</button>
-						<label for='background'>BG</label>
-						<input type='color' id='background' name='background' value='#FFFFFF'>
-					</div>
+            <div id='colors'>
+                <label for='foreground'>FG</label>
+                <input type='color' id='foreground' name='foreground' value='#000000'>
+                <button type='button' id='fg-bg-invert'>⇄</button>
+                <label for='background'>BG</label>
+                <input type='color' id='background' name='background' value='#FFFFFF'>
+            </div>
 
-			<!-- insert: manualAxisLocations -->
+            <div id='column-width-container'>
+                <div class='slider'>
+                    <label for="column-width-range">Column width</label>
+                    <input type='number' id="column-width-input" name='column-width' min='10' max='80' value='40' step='0.1'>
+                    <input type='range' id="column-width-range" name='column-width' min='10' max='80' value='40' step='0.1'>
+                </div>
+            </div>
+            <div id='typography-container'>
+                <div id='size-leading-container'>
+                    <div id='size-leading'>
+                        <label for='edit-size'>Size:</label>
+                        <input type="number" name='size' id='edit-size' min='8' max='288' value='12'>
+                        <!--
+                        <label for='edit-to-size' style='display:none'>to</label>
+                        <input type="number" name='to-size' style='display:none' id='edit-to-size' min='8' max='288' value='12'>
+                        -->
+                        <label for='edit-leading'>Leading:</label>
+                        <input type="number" name='leading' id='edit-leading' min='8' max='576' value='14'>
+                    </div>
+                </div>
+                <div id='alignment-color-container'>
+                    <label>Alignment</label>
+                    <input id='align-left' type='radio' checked name='alignment' value='l'>
+                    <label for='align-left'>Left</label>
+                    <input id='align-center' type='radio' name='alignment' value='c'>
+                    <label for='align-center'>Center</label>
+                    <input id='align-right' type='radio' name='alignment' value='r'>
+                    <label for='align-right'>Right</label>
+                    <input id='align-justify' type='radio' name='alignment' value='j'>
+                    <label for='align-justify'>Justify</label>
+                </div>
+            </div>
+            <!-- insert: manualAxisLocations -->
 
 							<div id='keyframes-display-container'>
 			<label>Keyframes</label>
