@@ -473,6 +473,7 @@ div.temp-selection {
     --line-height: 1.375em;
 }
 
+
 #the-proof.typespec .typespec-element > * {
     display: table-cell;
     vertical-align: baseline;
@@ -484,6 +485,11 @@ div.temp-selection {
 }
 
 #the-proof.typespec .typespec-element > .typespec-element_target {
+    /* FIXME: need to set and use typespec-element font-size for this to work*/
+    --typespec-font-size: 16; /* in PT TODO: add control */
+    /* 0.5pt because we use EN not EM */
+    width: calc(0.5pt * var(--typespec-font-size) * var(--column-width));
+    box-sizing: content-box;
     padding-left: .25rem;
 }
 
@@ -492,6 +498,8 @@ div.temp-selection {
 
     font-size: calc(1pt * var(--font-size, 1em));
     font-variation-settings: "opsz"  var(--font-size);
+    /* FIXME: input should be in EM! */
+    line-height: calc(var(--font-leading)/var(--font-size));
 }
 
 #the-proof.typespec div[contenteditable] {

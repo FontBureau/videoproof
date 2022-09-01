@@ -127,10 +127,11 @@
             </div>
 
             <div id='column-width-container'>
-                <div class='slider'>
+                <div class='x-slider'>
                     <label for="column-width-range">Column width</label>
-                    <input type='number' id="column-width-input" name='column-width' min='10' max='80' value='40' step='0.1'>
-                    <input type='range' id="column-width-range" name='column-width' min='10' max='80' value='40' step='0.1'>
+                    <input type='number' id="column-width-input" name='column-width' min='10' max='80' value='40' step='0.1' />&nbsp;EN
+
+                    <input type='range' id="column-width-range" name='column-width' min='10' max='80' value='40' step='0.1' />
                 </div>
             </div>
             <div id='typography-container'>
@@ -142,7 +143,15 @@
                         <label for='edit-to-size' style='display:none'>to</label>
                         <input type="number" name='to-size' style='display:none' id='edit-to-size' min='8' max='288' value='12'>
                         -->
+
                         <label for='edit-leading'>Leading:</label>
+                        <select>
+                            <option selected value="auto">auto</option>
+                            <option value="manual">manual</option>
+                        </select>
+                        <!-- FIXME: show only when "manual", maybe as disabled when "auto"
+                            Auto requires column-width and font-size!
+                        -->
                         <input type="number" name='leading' id='edit-leading' min='8' max='576' value='14'>
                     </div>
                 </div>
