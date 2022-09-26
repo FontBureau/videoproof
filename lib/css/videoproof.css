@@ -500,6 +500,7 @@ div.temp-selection {
     font-variation-settings: "opsz"  var(--font-size);
     /* FIXME: input should be in EM! */
     line-height: calc(var(--font-leading)/var(--font-size));
+    text-align: var(--alignment);
 }
 
 #the-proof.typespec div[contenteditable] {
