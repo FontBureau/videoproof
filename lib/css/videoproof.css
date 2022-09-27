@@ -497,7 +497,7 @@ div.temp-selection {
 #the-proof.typespec .typespec-element > .typespec-element_target * {
 
     font-size: calc(1pt * var(--font-size, 1em));
-    font-variation-settings: "opsz"  var(--font-size);
+    font-variation-settings: inherit;/*"opsz"  var(--font-size);*/
     /* FIXME: input should be in EM! */
     line-height: calc(var(--font-leading)/var(--font-size));
     text-align: var(--alignment);
@@ -513,6 +513,7 @@ div.temp-selection {
 
 #the-proof.typespec div[contenteditable] p {
     min-height: var(--line-height);
+    font-variation-settings: inherit;
 }
 
 #the-proof.typespec .typespec-element--active label{
