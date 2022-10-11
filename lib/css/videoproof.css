@@ -499,7 +499,7 @@ div.temp-selection {
     font-size: calc(1pt * var(--font-size, 1em));
     font-variation-settings: inherit;/*"opsz"  var(--font-size);*/
     /* FIXME: input should be in EM! */
-    line-height: calc(var(--font-leading)/var(--font-size));
+    line-height: calc(100% * var(--font-leading));
     text-align: var(--alignment);
 }
 
@@ -521,3 +521,12 @@ div.temp-selection {
 }
 
 
+input.font_leading-mode{
+    display: none;
+}
+input.font_leading-mode + .font_leading-mode_label::after {
+    content: 'auto';
+}
+input.font_leading-mode:checked + .font_leading-mode_label::after {
+    content: 'manual';
+}
