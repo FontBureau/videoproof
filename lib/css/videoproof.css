@@ -22,6 +22,14 @@ footer.footer-global {
 	padding-bottom: 4em;
 }
 
+select, input, label input, textarea {
+    font-size: 1rem;
+}
+
+form button{
+    color: black;
+}
+
 
 body.dropzone::after {
 	position: fixed;
@@ -482,6 +490,7 @@ div.temp-selection {
 
 #the-proof.typespec .typespec-element > label {
     padding: 0.5rem 0.5rem 1rem;
+    font-variation-settings: initial;
 }
 
 #the-proof.typespec .typespec-element > .typespec-element_target {
