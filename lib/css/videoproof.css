@@ -69,10 +69,6 @@ body.dropzone::after {
 	margin: 1em 0;
 }
 
-#controls select {
-	font-size: 80%;
-}
-
 #controls input {
 	vertical-align: baseline;
 }
