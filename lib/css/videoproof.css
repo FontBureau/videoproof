@@ -489,7 +489,7 @@ div.temp-selection {
     font-variation-settings: initial;
 }
 
-#the-proof.typespec .typespec-element > .typespec-element_target {
+#the-proof.typespec .typespec-element > .typespec-element_wrapper {
     /* FIXME: need to set and use typespec-element font-size for this to work*/
     --typespec-font-size: 16; /* in PT TODO: add control */
     /* 0.5pt because we use EN not EM */
@@ -498,8 +498,14 @@ div.temp-selection {
     padding-left: .25rem;
 }
 
-#the-proof.typespec .typespec-element > .typespec-element_target,
-#the-proof.typespec .typespec-element > .typespec-element_target * {
+#the-proof.typespec .typespec-element .blue-params {
+    color: #09f;
+    font-size: .75rem;
+    text-align: right;
+}
+
+#the-proof.typespec .typespec-element  .typespec-element_target,
+#the-proof.typespec .typespec-element .typespec-element_target * {
 
     font-size: calc(1pt * var(--font-size, 1em));
     font-variation-settings: inherit;/*"opsz"  var(--font-size);*/
