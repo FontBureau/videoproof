@@ -498,7 +498,7 @@ div.temp-selection {
     padding-left: .25rem;
 }
 
-#the-proof.typespec .typespec-element .blue-params {
+#the-proof.typespec .typespec-element .typespec-element_show-parameters {
     color: #09f;
     font-size: .75rem;
     text-align: right;
