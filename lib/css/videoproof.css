@@ -1,5 +1,12 @@
 
+
+
 /* override a few global TN styles */
+
+body {
+   font-variation-settings: initial
+}
+
 footer.footer-global {
 	position: fixed;
 	bottom: 0;
@@ -541,3 +548,15 @@ input.font_leading-mode + .font_leading-mode_label::after {
 input.font_leading-mode:checked + .font_leading-mode_label::after {
     content: 'manual';
 }
+
+
+
+#the-proof.waterfall .waterfall-container {
+    line-height: 1.2;
+    text-align: var(--alignment);
+}
+
+#the-proof.waterfall .line{
+    font-size: calc(1pt * var(--font-size, 1em));
+}
+
