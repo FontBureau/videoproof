@@ -552,6 +552,9 @@ input.font_leading-mode:checked + .font_leading-mode_label::after {
 }
 
 
+#the-proof.waterfall {
+    overflow-x: auto;
+}
 
 #the-proof.waterfall .waterfall-container {
     line-height: 1.2;
