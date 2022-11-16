@@ -505,10 +505,12 @@ div.temp-selection {
     padding-left: .25rem;
 }
 
-#the-proof.typespec .typespec-element .typespec-element_show-parameters {
+#the-proof.typespec .typespec-element .typespec-element_show-parameters,
+#the-proof.waterfall .waterfall-line .waterfall-show_parameters {
     color: #09f;
     font-size: .75rem;
     text-align: right;
+    font-family: monospace;
 }
 
 #the-proof.typespec .typespec-element  .typespec-element_target,
@@ -557,7 +559,7 @@ input.font_leading-mode:checked + .font_leading-mode_label::after {
 }
 
 
-#the-proof.waterfall .line {
+#the-proof.waterfall .waterfall-line {
     position: relative;
     font-size: calc(1pt * var(--font-size, 1em));
     --toggle-edit-size: 1.5rem;
@@ -566,34 +568,35 @@ input.font_leading-mode:checked + .font_leading-mode_label::after {
     padding-left: calc(var(--toggle-edit-width) + var(--toggle-edit-gap));
 }
 
-#the-proof.waterfall .line .toggle-edit::before {
+#the-proof.waterfall .waterfall-line .waterfall-toggle_edit::before {
     counter-reset: fontsize var(--font-size);
     content: counter(fontsize);
-    font-size: min(1em, var(--toggle-edit-size));
+    font-size: min(.7em, var(--toggle-edit-size));
+    vertical-align: middle;
 }
 
 
-#the-proof.waterfall .line .toggle-edit:hover::before {
+#the-proof.waterfall .waterfall-line .waterfall-toggle_edit:hover::before {
     content: '✎';
 }
 
-#the-proof.waterfall .line-content {
+#the-proof.waterfall .waterfall-line_content {
     white-space: nowrap;
 }
-#the-proof.waterfall .line-content[contenteditable=true] {
+#the-proof.waterfall .waterfall-line_content[contenteditable=true] {
     /* For better feedback when typing while editing. */
     white-space: break-spaces;
 }
 
-#the-proof.waterfall .line .toggle-edit {
+#the-proof.waterfall .waterfall-line .waterfall-toggle_edit {
     width: var(--toggle-edit-width);
     height: 100%;
     display: block;
     position: absolute;
     cursor: pointer;
     left: 0;
+    bottom: 0;
     text-align: right;
-    /* FIXME: we're likely going to replace this, but it's the curent UI font.*/
-    font-family: MomentumSansText, sans-serif;
+    font-family: monospace; /* Use at least something with tabular figures! */
 }
 
