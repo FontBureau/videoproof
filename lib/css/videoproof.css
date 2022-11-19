@@ -628,3 +628,23 @@ line-height: 1;
     margin: .5em 0;
 }
 
+#controls .grid_dimension-axis_label, #controls .grid_dimension-stepping_label {
+  display: block;
+  margin: .5em 0;
+}
+#controls label, #controls legend {
+  text-transform: none;
+  color: black;
+  font-weight: bold;
+  letter-spacing: 0;
+  font-size: 0.625rem;
+  font-variation-settings: "opsz" 12;
+}
+#controls label {
+  display: inline;
+  line-height: inherit;
+}
+#controls .disabled {
+    opacity: 0.7;
+}
+
