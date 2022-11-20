@@ -508,7 +508,8 @@ div.temp-selection {
 }
 
 #the-proof.typespec .typespec-element .typespec-element_show-parameters,
-#the-proof.waterfall .waterfall-line .waterfall-show_parameters {
+#the-proof.waterfall .waterfall-line .waterfall-show_parameters,
+#the-proof.vartools-grid .grid-show_parameters {
     color: #09f;
     font-size: .75rem;
     text-align: right;
@@ -554,7 +555,8 @@ input.font_leading-mode:checked + .font_leading-mode_label::after {
 }
 
 
-#the-proof.waterfall {
+#the-proof.waterfall,
+#the-proof.vartools-grid {
     overflow-x: auto;
 }
 
@@ -573,7 +575,8 @@ input.font_leading-mode:checked + .font_leading-mode_label::after {
     padding-left: calc(var(--toggle-edit-width) + var(--toggle-edit-gap));
 }
 
-#the-proof.waterfall .waterfall-line .waterfall-toggle_edit::before {
+#the-proof.waterfall .waterfall-line .waterfall-toggle_edit::before,
+#the-proof.vartools-grid .grid-toggle_edit::before {
     counter-reset: fontsize var(--font-size);
     content: counter(fontsize);
     font-size: min(.7em, var(--toggle-edit-size));
@@ -581,7 +584,8 @@ input.font_leading-mode:checked + .font_leading-mode_label::after {
 }
 
 
-#the-proof.waterfall .waterfall-line .waterfall-toggle_edit:hover::before {
+#the-proof.waterfall .waterfall-line .waterfall-toggle_edit:hover::before,
+#the-proof.vartools-grid .grid-toggle_edit::before {
     content: '✎';
 }
 
@@ -593,7 +597,8 @@ input.font_leading-mode:checked + .font_leading-mode_label::after {
     white-space: break-spaces;
 }
 
-#the-proof.waterfall .waterfall-line .waterfall-toggle_edit {
+#the-proof.waterfall .waterfall-line .waterfall-toggle_edit,
+#the-proof.vartools-grid .grid-toggle_edit {
     width: var(--toggle-edit-width);
     height: 100%;
     display: block;
@@ -622,10 +627,27 @@ line-height: 1;
     padding: .2em;
     white-space: nowrap;
 }
+.grid_dimension_controls .grid_dimension_x legend::after{
+    content: ' ▸';
+}
+.grid_dimension_controls .grid_dimension_y legend::after {
+    content: ' ▾';
+}
+
+.grid_dimension_controls .grid_dimension_x legend::after,
+.grid_dimension_controls .grid_dimension_y legend::after {
+    font-size: 1.5em;
+}
+
+
 #controls .grid_dimension-axis_label,
 #controls .grid_dimension-stepping_label {
     display: block;
     margin: .5em 0;
+}
+
+#controls .grid_dimension-stepping_value {
+    width: 3em;
 }
 
 #controls .grid_dimension-axis_label, #controls .grid_dimension-stepping_label {
@@ -648,3 +670,32 @@ line-height: 1;
     opacity: 0.7;
 }
 
+.grid-container {
+    display: table-table;
+}
+
+.grid-row {
+    display: table-row;
+}
+
+.grid-cell {
+    display: table-cell;
+    position: relative;
+}
+
+#the-proof.vartools-grid .grid-show_parameters {
+    padding: .3em;
+}
+
+
+.grid-cell_content {
+    font-size: calc(1pt * var(--font-size, 1em));
+    text-align: var(--alignment);
+}
+
+#the-proof.vartools-grid .grid-cell .grid-toggle_edit {
+    display: none;
+}
+#the-proof.vartools-grid .grid-cell:hover .grid-toggle_edit {
+    display: block;
+}
