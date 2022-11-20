@@ -685,12 +685,14 @@ line-height: 1;
 
 #the-proof.vartools-grid .grid-show_parameters {
     padding: .3em;
+    text-align: left;
 }
 
 
 .grid-cell_content {
     font-size: calc(1pt * var(--font-size, 1em));
     text-align: var(--alignment);
+    white-space: pre-line;
 }
 
 #the-proof.vartools-grid .grid-cell .grid-toggle_edit {
