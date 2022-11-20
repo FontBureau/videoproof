@@ -692,7 +692,7 @@ line-height: 1;
 .grid-cell_content {
     font-size: calc(1pt * var(--font-size, 1em));
     text-align: var(--alignment);
-    white-space: pre-line;
+    white-space: break-spaces;
 }
 
 #the-proof.vartools-grid .grid-cell .grid-toggle_edit {
