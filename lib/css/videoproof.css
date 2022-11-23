@@ -73,7 +73,7 @@ body.dropzone::after {
 }
 
 #controls > * {
-	margin: 1em 0;
+	margin: .5em 0;
 }
 
 #controls input {
@@ -104,6 +104,28 @@ body.dropzone::after {
 	line-height: inherit;
 	text-transform: inherit;
 	letter-spacing: inherit;
+}
+
+#controls select {
+    max-width: 100%;
+}
+
+.color_chooser input{
+    padding: 0;
+}
+
+#controls .color_chooser label > *,
+#controls .color_chooser .colors_chooser-invert {
+    font-size: 1.1rem;
+    vertical-align: middle;
+    height: 1.5em;
+    line-height: 1;
+    border-width: 1px;
+}
+
+.color_chooser .colors_chooser-invert{
+    padding: 0 .3em;
+    margin: 0 .3em;
 }
 
 #controls #add-your-own-button {
@@ -247,6 +269,117 @@ input[type=range][disabled] {
 }
 
 
+
+
+:root {
+    /* Note: using \ to escape newlines works well in Chrome and Firefox
+     * but it destroys syntax highlighting in my editor. Actually, having
+     * a full stop at the end of this comment and some magic(?) number
+     * of characters in the last line restores syntax highlighting again.
+     */
+    --alignment-left-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='9' height='9'>\
+            <line stroke='%23CCC' x1='0' y1='2' x2='6' y2='2' stroke-width='1'/>\
+            <line stroke='%23CCC' x1='0' y1='4' x2='8' y2='4' stroke-width='1'/>\
+            <line stroke='%23CCC' x1='0' y1='6' x2='4' y2='6' stroke-width='1'/>\
+        </svg>");
+    --alignment-left-active-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='9' height='9'>\
+            <line stroke='black' x1='0' y1='2' x2='6' y2='2' stroke-width='1'/>\
+            <line stroke='black' x1='0' y1='4' x2='8' y2='4' stroke-width='1'/>\
+            <line stroke='black' x1='0' y1='6' x2='4' y2='6' stroke-width='1'/>\
+        </svg>");
+    --alignment-center-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='9' height='9'>\
+            <line stroke='%23CCC' x1='1' y1='2' x2='7' y2='2' stroke-width='1'/>\
+            <line stroke='%23CCC' x1='0' y1='4' x2='8' y2='4' stroke-width='1'/>\
+            <line stroke='%23CCC' x1='2' y1='6' x2='6' y2='6' stroke-width='1'/>\
+        </svg>");
+    --alignment-center-active-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='9' height='9'>\
+            <line stroke='black' x1='1' y1='2' x2='7' y2='2' stroke-width='1'/>\
+            <line stroke='black' x1='0' y1='4' x2='8' y2='4' stroke-width='1'/>\
+            <line stroke='black' x1='2' y1='6' x2='6' y2='6' stroke-width='1'/>\
+        </svg>");
+    --alignment-right-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='9' height='9'>\
+            <line stroke='%23CCC' x1='8' y1='2' x2='2' y2='2' stroke-width='1'/>\
+            <line stroke='%23CCC' x1='8' y1='4' x2='0' y2='4' stroke-width='1'/>\
+            <line stroke='%23CCC' x1='8' y1='6' x2='4' y2='6' stroke-width='1'/>\
+        </svg>");
+    --alignment-right-active-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='9' height='9'>\
+            <line stroke='black' x1='8' y1='2' x2='2' y2='2' stroke-width='1'/>\
+            <line stroke='black' x1='8' y1='4' x2='0' y2='4' stroke-width='1'/>\
+            <line stroke='black' x1='8' y1='6' x2='4' y2='6' stroke-width='1'/>\
+        </svg>");
+    --alignment-justify-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='9' height='9'>\
+            <line stroke='%23CCC' x1='0' y1='2' x2='8' y2='2' stroke-width='1'/>\
+            <line stroke='%23CCC' x1='0' y1='4' x2='8' y2='4' stroke-width='1'/>\
+            <line stroke='%23CCC' x1='0' y1='6' x2='8' y2='6' stroke-width='1'/>\
+        </svg>");
+    --alignment-left-justify-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='9' height='9'>\
+            <line stroke='black' x1='0' y1='2' x2='8' y2='2' stroke-width='1'/>\
+            <line stroke='black' x1='0' y1='4' x2='8' y2='4' stroke-width='1'/>\
+            <line stroke='black' x1='0' y1='6' x2='8' y2='6' stroke-width='1'/>\
+        </svg>");
+}
+
+#alignment-color-container label {
+    display: block;
+}
+.radio-icon {
+    display: none;
+}
+
+#alignment-color-container label.radio-main-label{
+
+}
+
+#alignment-color-container input + .radio-icon {
+    display: block;
+    width: 3em;
+    height: 3em;
+    background: no-repeat;
+    background-size: cover;
+    background-position: center center;
+}
+
+#alignment-color-container label.radio-label {
+    display: inline-block;
+    vertical-align: text-top;
+    position: relative;
+    width: 3em;
+    height: 4.5em;
+    overflow: hidden;
+}
+#alignment-color-container input {
+    position: absolute;
+    top: -100em;
+}
+
+#alignment-color-container input.alignment-left + .radio-icon {
+    background-image: var(--alignment-left-icon);
+}
+#alignment-color-container input.alignment-left:checked + .radio-icon {
+    background-image: var(--alignment-left-active-icon);
+}
+
+#alignment-color-container input.alignment-center + .radio-icon {
+    background-image: var(--alignment-center-icon);
+}
+#alignment-color-container input.alignment-center:checked + .radio-icon {
+    background-image: var(--alignment-center-active-icon);
+}
+
+#alignment-color-container input.alignment-right + .radio-icon {
+    background-image: var(--alignment-right-icon);
+}
+#alignment-color-container input.alignment-right:checked + .radio-icon {
+    background-image: var(--alignment-right-active-icon);
+}
+
+#alignment-color-container input.alignment-justify + .radio-icon {
+    background-image: var(--alignment-justify-icon);
+}
+#alignment-color-container input.alignment-justify:checked + .radio-icon {
+    background-image: var(--alignment-justify-active-icon);
+}
+
 /* ANIMATIION */
 
 #animation-controls {
@@ -344,6 +477,49 @@ ul.sidebar-list a {
 
 ul.sidebar-list a:hover {
 	color: red;
+}
+
+.number-and-range-input {
+    margin: 0.75em 0 0.5em 0;
+    display: block;
+    position: relative;
+    text-align: right;
+}
+
+#controls .number-and-range-input label{
+    position: absolute;
+    left: 0;
+    bottom: 1.5em;
+}
+.number-and-range-input input[type=number] {
+    width: 4em;
+}
+.number-and-range-input input[type=range] {
+    display: block;
+    width: 100%;
+    margin-top: .3em;
+}
+.number-and-range-input > *  {
+    vertical-align: text-top;
+}
+
+#axis-opsz_container,
+#axis-opsz_range {
+
+}
+
+#controls h3,
+#controls .manual_axis_locatioms h3,
+#controls .variation_settings_flags-head_label {
+    margin: .5rem 0 .35rem 0;
+}
+
+#controls  #size-leading {
+     margin-bottom: .75rem;
+}
+
+#controls  #size-leading  > * {
+        margin-bottom: .5rem;
 }
 
 /* CONTENT */
@@ -663,7 +839,7 @@ line-height: 1;
   font-variation-settings: "opsz" 12;
 }
 #controls label {
-  display: inline;
+  display: inline-block;
   line-height: inherit;
 }
 #controls .disabled {
