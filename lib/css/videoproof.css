@@ -2,35 +2,96 @@
 
 
 /* override a few global TN styles */
+html {
+    overflow-y: auto;
+}
 
 body {
    font-variation-settings: initial
 }
 
-footer.footer-global {
-	position: fixed;
-	bottom: 0;
-	width: 100%;
+body > .wrapper {
+  display: grid;
+  grid-template-columns: 17.375rem auto;
+  grid-template-rows: auto auto auto;
+  grid-template-areas:  "header main"
+                        "sidebar main"
+                        "sidebar footer";
+  height: 100vh;
 }
 
-@media screen and (min-width: 56.25rem) {
-	footer.footer-global {
-		width: calc(100vw - 15.625rem);
-	}
+body > .wrapper > header{
+    grid-area: header;
+    padding: 1rem;
+}
+header h1{
+    font-size: 1.5em;
+}
+body > .wrapper > .sidebar {
+    padding: 0 1rem 1rem 1rem;
+    width: 100%;
+    height: 100%;
+    grid-area: sidebar;
+    overflow-y: auto;
 }
 
-@media (min-width: 78.75rem) {
-	footer.footer-global {
-		width: calc(100vw - 17.375rem);
-	}
+body > .wrapper > .main-stage{
+    grid-area: main;
+    overflow: auto;
+}
+
+body > .wrapper > footer {
+    grid-area: footer;
+    width: 100%;
+}
+
+header, .sidebar{
+    background: white;
+    border-right: 1px solid rgba(183, 180, 176, 0.5);
+}
+
+footer {
+    background-color: #121212;
+    font-size: .8em;
+    padding: 0.5em;
+}
+
+footer li::after{
+    display: inline-block;
+    content: " •";
+    font-size: 2em;
+    color: white;
+    line-height: .5em; /* basically reset the 2 em font-size to 1em*/
+    vertical-align: middle;
+    overflow: hidden;
+}
+
+footer li:last-child::after{
+    content: none;
+}
+
+:is(footer) :is(a, a:visited, a:link) {
+    color: #fff;
+}
+
+:is(header, .sidebar, footer) :is(a, a:visited, a:link) {
+  text-decoration: none;
+}
+
+footer li {
+    display: inline;
+    padding: 0;
+    margin: 0;
 }
 
 .content-main {
-	padding-bottom: 4em;
+    padding-bottom: 4em;
 }
-
+.sidebar{
+    font-size: .8rem;
+}
 select, input, label input, textarea {
-    font-size: 1rem;
+    font-size: 1em;
 }
 
 form button{
@@ -68,12 +129,8 @@ body.dropzone::after {
 
 /* CONTROLS */
 
-#videoproof aside.content-filters {
-	padding: 1rem;
-}
-
-#controls > * {
-	margin: .5em 0;
+.sidebar * {
+	margin: .25em 0;
 }
 
 #controls input {
@@ -116,20 +173,19 @@ body.dropzone::after {
 
 #controls .color_chooser label > *,
 #controls .color_chooser .colors_chooser-invert {
-    font-size: 1.1rem;
     vertical-align: middle;
-    height: 1.5em;
+    height: 2.5em;
     line-height: 1;
     border-width: 1px;
 }
 
 .color_chooser .colors_chooser-invert{
-    padding: 0 .3em;
+    padding: 0 .7em;
     margin: 0 .3em;
 }
 
 #controls #add-your-own-button {
-	font-size: 0.8rem;
+	font-size: 0.8em;
 	display: block;
 	text-align: right;
 }
@@ -159,11 +215,19 @@ body.dropzone::after {
 
 #controls label, #controls legend{
     text-transform: none;
-    color: black;
+    color: inherit;
     font-weight: bold;
     letter-spacing: 0;
-    font-size: 0.625rem;
     font-variation-settings: "opsz" 12;
+
+}
+
+#controls label {
+    font-size: .75em;
+}
+
+#controls label > * {
+    font-size: 1.33em; /* 4/3 */
 }
 
 #controls .slider label abbr {
@@ -219,7 +283,6 @@ input[type=range][disabled] {
 	opacity: 0.5;
 }
 
-
 /* alignment - color */
 
 #colors > * {
@@ -230,7 +293,7 @@ input[type=range][disabled] {
 #colors button {
 	background: transparent;
 	padding: 0;
-	font-size: 1.2rem;
+	font-size: 1.2em;
 	width: 1.5em;
 	line-height: 1;
 	text-align: center;
@@ -332,18 +395,20 @@ input[type=range][disabled] {
 
 #alignment-color-container input + .radio-icon {
     display: block;
+    font-size: inherit;
     width: 3em;
     height: 3em;
     background: no-repeat;
     background-size: cover;
     background-position: center center;
+    margin: 0 auto;
 }
 
 #alignment-color-container label.radio-label {
     display: inline-block;
     vertical-align: text-top;
     position: relative;
-    width: 3em;
+    width: 4.5em;
     height: 4.5em;
     overflow: hidden;
 }
@@ -458,7 +523,7 @@ ul.sidebar-list {
 
 ul.sidebar-list li {
 	font-family: MomentumSansVariable !important;
-	font-size: 10px;
+	font-size: .8em;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
@@ -480,24 +545,25 @@ ul.sidebar-list a:hover {
 }
 
 .number-and-range-input {
-    margin: 0.75em 0 0.5em 0;
     display: block;
     position: relative;
-    text-align: right;
+    padding-top: 1em;
 }
 
 #controls .number-and-range-input label{
-    position: absolute;
-    left: 0;
-    bottom: 1.5em;
+
 }
 .number-and-range-input input[type=number] {
     width: 4em;
+    position: absolute;
+    right: 0;
+    top: 0;
 }
 .number-and-range-input input[type=range] {
     display: block;
     width: 100%;
-    margin-top: .3em;
+    margin-top: .2em;
+    height: 0.3em;
 }
 .number-and-range-input > *  {
     vertical-align: text-top;
@@ -511,15 +577,24 @@ ul.sidebar-list a:hover {
 #controls h3,
 #controls .manual_axis_locatioms h3,
 #controls .variation_settings_flags-head_label {
-    margin: .5rem 0 .35rem 0;
+    margin: .5em 0 .35em 0;
+    font-size: 1em;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+#controls .manual_axis_locatioms > * {
+  display: block;
+  margin: .5em 0;
 }
 
 #controls  #size-leading {
-     margin-bottom: .75rem;
+     margin-bottom: .75em;
 }
 
 #controls  #size-leading  > * {
-        margin-bottom: .5rem;
+        margin-bottom: .5em;
 }
 
 /* CONTENT */
@@ -625,7 +700,7 @@ ul.sidebar-list a:hover {
 /* CSS is nice to potentially diversify this behavior
  * i.e. using the :not() selector, to leave disabled elements visible.
  */
-#videoproof .input-disabled {
+#controls .input-disabled, .input-disabled {
     display: none;
 }
 
@@ -730,6 +805,19 @@ input.font_leading-mode:checked + .font_leading-mode_label::after {
     content: 'manual';
 }
 
+.font_leading .font_leading-value {
+    width: 4em;
+}
+.font_leading .font_leading-mode_label {
+    border: 1px solid #b7b4b0;
+    background: #F8F7F7;
+    display: inline-block;
+    padding: 0.3em 1em;
+}
+#controls .font_leading-mode_label {
+    font-size: inherit;
+}
+
 
 #the-proof.waterfall,
 #the-proof.vartools-grid {
@@ -830,14 +918,7 @@ line-height: 1;
   display: block;
   margin: .5em 0;
 }
-#controls label, #controls legend {
-  text-transform: none;
-  color: black;
-  font-weight: bold;
-  letter-spacing: 0;
-  font-size: 0.625rem;
-  font-variation-settings: "opsz" 12;
-}
+
 #controls label {
   display: inline-block;
   line-height: inherit;
