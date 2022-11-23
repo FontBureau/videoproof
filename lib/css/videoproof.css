@@ -700,7 +700,10 @@ ul.sidebar-list a:hover {
 /* CSS is nice to potentially diversify this behavior
  * i.e. using the :not() selector, to leave disabled elements visible.
  */
-#controls .input-disabled, .input-disabled {
+
+#controls .input-disabled,
+#main-stage .input-disabled,
+.input-disabled {
     display: none;
 }
 
