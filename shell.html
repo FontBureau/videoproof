@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>TypeRoof - minimal shell</title>
+        <meta name="viewport" content="initial-scale=1,shrink-to-fit=no">
+        <script src="lib/js/main-shell.mjs" async type="module"></script>
+<script>
+    // With this pattern it's save to load the controller javascript asyncronously.
+    if(!window.remoteResources)
+         window.remoteResources = [];
+    window.remoteResources.push(
+        ['font', fetch('./fonts/RobotoFlex[GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght].woff')],
+        ['font', fetch('./fonts/Roboto-Italic[wdth,wght].woff')],
+        ['font', fetch('./fonts/Roboto[wdth,wght].woff')],
+        ['charGroups', fetch('./glyph-groups.json')],
+    );
+</script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <header>
+                <h1>TypeRoof - minimal shell</h1>
+            </header>
+            <!-- SIDEBAR! -->
+            <aside class="typeroof-ui_main">
+            </aside>
+            <div class="typeroof-main">
+                <div class='typeroof-main_content'></div>
+                <footer class="footer-global">
+                    <ul>
+                        <li><a href="https://github.com/FontBureau/videoproof">Source code on GitHub</a></li>
+                        <li><a href="https://github.com/FontBureau/videoproof/issues">Bug reports &amp; feature&nbsp;requests</a></li>
+                    </ul>
+                </footer>
+            </div> <!-- typeroof-main -->
+        </div> <!-- wrapper -->
+    </body>
+</html>
