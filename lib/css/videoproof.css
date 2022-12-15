@@ -961,3 +961,12 @@ line-height: 1;
 #the-proof.vartools-grid .grid-cell:hover .grid-toggle_edit {
     display: block;
 }
+
+
+dialog p {
+    margin: 1em 0;
+}
+
+dialog legend{
+    font-weight: bold;
+}
