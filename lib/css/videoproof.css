@@ -963,10 +963,28 @@ line-height: 1;
 }
 
 
-dialog p {
+dialog p, dialog label, dialog menu, dialog blockquote {
     margin: 1em 0;
 }
+dialog menu > *:first-child {
+    margin-top: 0;
+}
 
-dialog legend{
+dialog legend {
     font-weight: bold;
+}
+
+dialog label {
+  color: #000;
+  display: block;
+  font-size: 1rem;
+  font-variation-settings: "opsz" 12;
+  letter-spacing: initial;
+  line-height: initial;
+  position: initial;
+  text-transform: initial;
+}
+
+dialog .dialog-line label {
+    display: inline;
 }
