@@ -988,3 +988,23 @@ dialog label {
 dialog .dialog-line label {
     display: inline;
 }
+
+dialog .dialog-multi_select_fonts label{
+    margin: 0;
+    line-height: 1.5;
+}
+
+dialog .dialog-multi_select_fonts{
+    overflow-y: auto;
+    max-height: 7.5em;
+    border: 1px solid grey;
+    padding: .5em;
+
+}
+
+dialog .dialog-multi_select_fonts > * {
+    background: lightyellow;
+}
+dialog .dialog-multi_select_fonts > *:nth-child(2n){
+    background: white;
+}
