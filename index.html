@@ -61,6 +61,15 @@
                 <select name="mode" id='select-layout'></select>
             </div>
 
+            <div id='select-glyphs-container'>
+                <h3 class="inline"><label for="select-glyphs">Glyphs:</label></h3>
+                <select id='select-glyphs' name='glyph-group'>
+                </select>
+                <div>
+                    <input id='show-extended-glyphs' type='checkbox' name='extended'> <label for='show-extended-glyphs'>Show Extended</label>
+                </div>
+            </div>
+
             <div id='contextual-pad-mode-container'>
                 <h3 class="inline"><label for="contextual-pad-mode">Pad</label></h3>
                 <select id="contextual-pad-mode" name="pad">
@@ -73,21 +82,14 @@
                 </select>
             </div>
 
-            <div id='select-glyphs-container'>
-                <h3 class="inline"><label for="select-glyphs">Glyphs:</label></h3>
-                <select id='select-glyphs' name='glyph-group'>
-                </select>
-                <div>
-                    <input id='show-extended-glyphs' type='checkbox' name='extended'> <label for='show-extended-glyphs'>Show Extended</label>
-                </div>
-            </div>
-
             <ul id='layout-specific-controls'>
                 <li id='contextual-pad-custom-container'>
                     <label for="contextual-pad-custom">Custom pad</label>
                     <input type="text" maxlength="2" id="contextual-pad-custom" name="custom-pad" value="x">
                 </li>
             </ul>
+
+            <!-- insert: otFeaturesChooser -->
 
             <!-- insert: colorsChooser -->
             <div id='alignment-color-container'>

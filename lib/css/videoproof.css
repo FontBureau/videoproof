@@ -1008,3 +1008,17 @@ dialog .dialog-multi_select_fonts > * {
 dialog .dialog-multi_select_fonts > *:nth-child(2n){
     background: white;
 }
+
+
+#controls .ot_features_chooser {
+    padding: 0 .4em;
+}
+
+#controls .ot_features_chooser.collapsed {
+    border: 0;
+    padding: 0;
+}
+
+#controls .ot_features_chooser.collapsed .ot_features_chooser-children_container {
+    display: none;
+}
