@@ -1022,3 +1022,14 @@ dialog .dialog-multi_select_fonts > *:nth-child(2n){
 #controls .ot_features_chooser.collapsed .ot_features_chooser-children_container {
     display: none;
 }
+
+#controls .ot_features_chooser-head_label label::after,
+#controls .ot_features_chooser-children_container label::after {
+    content: '*';
+    color: transparent;
+}
+
+#controls .ot_features_chooser-head_label.non_default label::after,
+#controls .ot_features_chooser-children_container label.non_default::after {
+    color: black;
+}
