@@ -522,7 +522,7 @@ ul.sidebar-list {
 }
 
 ul.sidebar-list li {
-	font-family: MomentumSansVariable !important;
+	font-family: RobotoFlex !important;
 	font-size: .8em;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
