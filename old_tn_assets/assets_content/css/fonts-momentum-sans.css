@@ -1,0 +1,222 @@
+
+@font-face {
+  font-family:'AdobeBlank';
+  src:url("./fonts/AdobeBlank?iefix") format("embedded-opentype"),
+      url("./fonts/AdobeBlank.woff2") format("woff2"),
+      url("./fonts/AdobeBlank.woff") format("woff"),
+      url("./fonts/AdobeBlank.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 100 900;
+}
+
+@font-face {
+  font-family:'AdobeBlank';
+  src:url("./fonts/AdobeBlank?iefix") format("embedded-opentype"),
+      url("./fonts/AdobeBlank.woff2") format("woff2"),
+      url("./fonts/AdobeBlank.woff") format("woff"),
+      url("./fonts/AdobeBlank.ttf") format("truetype");
+  font-style: italic;
+  font-weight: 100 900;
+}
+
+@font-face {
+  font-family:MomentumSansText;
+  src:url("./fonts/Momentum-opsz-12-wdth-100-wght-350?iefix") format("embedded-opentype"),
+      url("./fonts/Momentum-opsz-12-wdth-100-wght-350.woff2") format("woff2"),
+      url("./fonts/Momentum-opsz-12-wdth-100-wght-350.woff") format("woff"),
+      url("./fonts/Momentum-opsz-12-wdth-100-wght-350.ttf") format("truetype"),
+      url("./fonts/Momentum-opsz-12-wdth-100-wght-350.svg#web") format("svg");
+  font-style:normal;
+  font-weight:400;
+}
+
+@font-face {
+  font-family:MomentumSansText;
+  src:url("./fonts/Momentum-opsz-12-wdth-100-wght-400?iefix") format("embedded-opentype"),
+      url("./fonts/Momentum-opsz-12-wdth-100-wght-400.woff2") format("woff2"),
+      url("./fonts/Momentum-opsz-12-wdth-100-wght-400.woff") format("woff"),
+      url("./fonts/Momentum-opsz-12-wdth-100-wght-400.ttf") format("truetype"),
+      url("./fonts/Momentum-opsz-12-wdth-100-wght-400.svg#web") format("svg");
+  font-style:normal;
+  font-weight:500;
+}
+
+@font-face {
+  font-family:MomentumSansText;
+  src:url("./fonts/Momentum-opsz-12-wdth-100-wght-700?iefix") format("embedded-opentype"),
+      url("./fonts/Momentum-opsz-12-wdth-100-wght-700.woff2") format("woff2"),
+      url("./fonts/Momentum-opsz-12-wdth-100-wght-700.woff") format("woff"),
+      url("./fonts/Momentum-opsz-12-wdth-100-wght-700.ttf") format("truetype"),
+      url("./fonts/Momentum-opsz-12-wdth-100-wght-700.svg#web") format("svg");
+  font-style:normal;
+  font-weight: 600;
+}
+
+
+/*
+@font-face {
+  font-family:MomentumSansDeck;
+  src:url("./fonts/Momentum-opsz-16-wdth-100-wght-350?iefix") format("embedded-opentype"),
+      url("./fonts/Momentum-opsz-16-wdth-100-wght-350.woff2") format("woff2"),
+      url("./fonts/Momentum-opsz-16-wdth-100-wght-350.woff") format("woff"),
+      url("./fonts/Momentum-opsz-16-wdth-100-wght-350.ttf") format("truetype"),
+      url("./fonts/Momentum-opsz-16-wdth-100-wght-350.svg#web") format("svg");
+  font-style:normal;
+  font-weight:400;
+}
+*/
+
+
+
+@font-face {
+  font-family:MomentumSansDeck;
+  src:url("./fonts/Momentum-Italic-opsz-36-wdth-100-wght-350?iefix") format("embedded-opentype"),
+      url("./fonts/Momentum-Italic-opsz-36-wdth-100-wght-350.woff2") format("woff2"),
+      url("./fonts/Momentum-Italic-opsz-36-wdth-100-wght-350.woff") format("woff"),
+      url("./fonts/Momentum-Italic-opsz-36-wdth-100-wght-350.ttf") format("truetype"),
+      url("./fonts/Momentum-Italic-opsz-36-wdth-100-wght-350.svg#web") format("svg");
+  font-style:italic;
+  font-weight:350;
+}
+
+@font-face {
+  font-family:MomentumSansDeck;
+  src:url("./fonts/Momentum-Italic-opsz-36-wdth-100-wght-400?iefix") format("embedded-opentype"),
+      url("./fonts/Momentum-Italic-opsz-36-wdth-100-wght-400.woff2") format("woff2"),
+      url("./fonts/Momentum-Italic-opsz-36-wdth-100-wght-400.woff") format("woff"),
+      url("./fonts/Momentum-Italic-opsz-36-wdth-100-wght-400.ttf") format("truetype"),
+      url("./fonts/Momentum-Italic-opsz-36-wdth-100-wght-400.svg#web") format("svg");
+  font-style:italic;
+  font-weight:400;
+}
+
+@font-face {
+  font-family:MomentumSansDeck;
+  src:url("./fonts/Momentum-opsz-36-wdth-100-wght-400?iefix") format("embedded-opentype"),
+      url("./fonts/Momentum-opsz-36-wdth-100-wght-400.woff2") format("woff2"),
+      url("./fonts/Momentum-opsz-36-wdth-100-wght-400.woff") format("woff"),
+      url("./fonts/Momentum-opsz-36-wdth-100-wght-400.ttf") format("truetype"),
+      url("./fonts/Momentum-opsz-36-wdth-100-wght-400.svg#web") format("svg");
+  font-style:normal;
+  font-weight:400;
+}
+
+@font-face {
+  font-family:MomentumSansDeckNarrow;
+  src:url("./fonts/Momentum-opsz-44-wdth-90-wght-350?iefix") format("embedded-opentype"),
+      url("./fonts/Momentum-opsz-44-wdth-90-wght-350.woff2") format("woff2"),
+      url("./fonts/Momentum-opsz-44-wdth-90-wght-350.woff") format("woff"),
+      url("./fonts/Momentum-opsz-44-wdth-90-wght-350.ttf") format("truetype"),
+      url("./fonts/Momentum-opsz-44-wdth-90-wght-350.svg#web") format("svg");
+  font-style:normal;
+  font-weight:350;
+}
+
+@font-face {
+  font-family:MomentumSansDeckNarrow;
+  src:url("./fonts/Momentum-opsz-44-wdth-90-wght-400?iefix") format("embedded-opentype"),
+      url("./fonts/Momentum-opsz-44-wdth-90-wght-400.woff2") format("woff2"),
+      url("./fonts/Momentum-opsz-44-wdth-90-wght-400.woff") format("woff"),
+      url("./fonts/Momentum-opsz-44-wdth-90-wght-400.ttf") format("truetype"),
+      url("./fonts/Momentum-opsz-44-wdth-90-wght-400.svg#web") format("svg");
+  font-style:normal;
+  font-weight:400;
+}
+
+@font-face {
+  font-family:MomentumSansDeckNarrow;
+  src:url("./fonts/Momentum-opsz-44-wdth-90-wght-600?iefix") format("embedded-opentype"),
+      url("./fonts/Momentum-opsz-44-wdth-90-wght-600.woff2") format("woff2"),
+      url("./fonts/Momentum-opsz-44-wdth-90-wght-600.woff") format("woff"),
+      url("./fonts/Momentum-opsz-44-wdth-90-wght-600.ttf") format("truetype"),
+      url("./fonts/Momentum-opsz-44-wdth-90-wght-600.svg#web") format("svg");
+  font-style:normal;
+  font-weight:600;
+}
+
+@font-face {
+  font-family:MomentumSansDeckNarrow;
+  src:url("./fonts/Momentum-opsz-44-wdth-100-wght-275?iefix") format("embedded-opentype"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-275.woff2") format("woff2"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-275.woff") format("woff"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-275.ttf") format("truetype"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-275.svg#web") format("svg");
+  font-style:normal;
+  font-weight:275;
+}
+
+@font-face {
+  font-family:MomentumSansDeck;
+  src:url("./fonts/Momentum-opsz-44-wdth-100-wght-300?iefix") format("embedded-opentype"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-300.woff2") format("woff2"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-300.woff") format("woff"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-300.ttf") format("truetype"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-300.svg#web") format("svg");
+  font-style:normal;
+  font-weight:300;
+}
+
+@font-face {
+  font-family:MomentumSansDeck;
+  src:url("./fonts/Momentum-opsz-44-wdth-100-wght-350?iefix") format("embedded-opentype"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-350.woff2") format("woff2"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-350.woff") format("woff"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-350.ttf") format("truetype"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-350.svg#web") format("svg");
+  font-style:normal;
+  font-weight:350;
+}
+
+@font-face {
+  font-family:MomentumSansDeck;
+  src:url("./fonts/Momentum-opsz-44-wdth-100-wght-400?iefix") format("embedded-opentype"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-400.woff2") format("woff2"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-400.woff") format("woff"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-400.ttf") format("truetype"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-400.svg#web") format("svg");
+  font-style:normal;
+  font-weight:400;
+}
+
+@font-face {
+  font-family:MomentumSansDeck;
+  src:url("./fonts/Momentum-opsz-44-wdth-100-wght-500?iefix") format("embedded-opentype"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-500.woff2") format("woff2"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-500.woff") format("woff"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-500.ttf") format("truetype"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-500.svg#web") format("svg");
+  font-style:normal;
+  font-weight:500;
+}
+
+@font-face {
+  font-family:MomentumSansDeck;
+  src:url("./fonts/Momentum-opsz-44-wdth-100-wght-600?iefix") format("embedded-opentype"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-600.woff2") format("woff2"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-600.woff") format("woff"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-600.ttf") format("truetype"),
+      url("./fonts/Momentum-opsz-44-wdth-100-wght-600.svg#web") format("svg");
+  font-style:normal;
+  font-weight:600;
+}
+
+
+
+@supports (font-variation-settings: "wght" 100) {
+    @font-face {
+      font-family: MomentumSansVariable;
+      src:url("./fonts/MomentumSans-VF.woff2") format("woff2"),
+          url("./fonts/MomentumSans-VF.woff") format("woff");
+      font-weight:100 900;
+    }
+
+    @font-face {
+      font-family: MomentumSansVariable;
+      src:url("./fonts/MomentumSansItalic-VF.woff2") format("woff2"),
+          url("./fonts/MomentumSansItalic-VF.woff") format("woff");
+      font-style:italic;
+      font-weight:100 900;
+    }
+}
+
+
