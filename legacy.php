@@ -10,10 +10,10 @@ $videoproof = new VideoProof();
 		<meta charset="utf-8">
 		<title>Video Proof</title>
 		<meta name="viewport" content="initial-scale=1,shrink-to-fit=no">
-		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/reset.css">
-		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/adobe-blank.css">
-		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/fonts-momentum-sans.css">
-		<link rel="stylesheet" href="https://www.typenetwork.com/assets_content/css/style.css">
+		<link rel="stylesheet" href="old_tn_assets/assets_content/css/reset.css">
+		<link rel="stylesheet" href="old_tn_assets/assets_content/css/adobe-blank.css">
+		<link rel="stylesheet" href="lib/css/fonts.css">
+		<link rel="stylesheet" href="old_tn_assets/assets_content/css/style.css">
 		<link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32">
 
 
