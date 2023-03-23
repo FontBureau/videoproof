@@ -1,0 +1,8 @@
+.key_moments_timeline-items {
+    list-style: none;
+    padding: 0;
+}
+
+.active > .key_moments_timeline-button {
+    font-weight: 700
+}
