@@ -1,3 +1,45 @@
+
+body > .wrapper{
+    display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      grid-auto-rows: minmax(100px, auto);
+}
+
+
+
+.two {
+  grid-column: 2 / 4;
+  grid-row: 1 / 3;
+}
+.three {
+  grid-column: 1;
+  grid-row: 2 / 5;
+}
+
+body > .wrapper > header{
+    background: lightyellow;
+    grid-column: 1 / -1;
+    grid-row: 1;
+}
+body > .wrapper > .typeroof-ui_main {
+    background: mintcream;
+    grid-column: 1 ;
+    grid-row: 2 / 4 ;
+
+}
+body > .wrapper > .typeroof-main{
+    background: salmon;
+    grid-column: 2 / -1 ;
+    grid-row: 2;
+}
+body > .wrapper > footer{
+    background: lightblue;
+    grid-column: 2 / -1 ;
+    grid-row: 3;
+}
+
+
 .key_moments_timeline-items {
     list-style: none;
     padding: 0;
