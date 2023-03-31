@@ -48,3 +48,21 @@ body > .wrapper > footer{
 .active > .key_moments_timeline-button {
     font-weight: 700
 }
+
+.ui_time_control_circle{
+  touch-action: none;
+}
+
+.ui_time_control_circle-track {
+    fill: hsla(calc(1turn * var(--t)), 30%, 70%, calc(1 - var(--t)));
+    stroke: black;
+    stroke-width: 2px;
+}
+.ui_time_control_circle-track_back{
+    fill: #FFF;
+}
+.ui_time_control_circle-hand {
+    stroke: black;
+    stroke-width: 2px;
+    fill: hsl(calc(1turn * var(--t)), 30%, 70%);
+}
